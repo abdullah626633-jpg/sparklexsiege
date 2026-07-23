@@ -271,10 +271,16 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                         }`}
                       >
                         <span
-                          className={`w-3 h-3 rounded-full border border-black/20 ${
-                            color.toLowerCase() === 'golden' || color.toLowerCase() === 'gold'
+                          className={`w-3.5 h-3.5 rounded-full border border-black/20 ${
+                            color.toLowerCase() === 'red'
+                              ? 'bg-rose-600'
+                              : color.toLowerCase() === 'green'
+                              ? 'bg-emerald-600'
+                              : color.toLowerCase() === 'golden' || color.toLowerCase() === 'gold'
                               ? 'bg-amber-400'
-                              : 'bg-slate-300'
+                              : color.toLowerCase() === 'silver'
+                              ? 'bg-slate-300'
+                              : 'bg-neutral-400'
                           }`}
                         />
                         <span>{color}</span>
