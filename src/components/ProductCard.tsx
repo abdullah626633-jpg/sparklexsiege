@@ -42,14 +42,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         )}
 
         {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-col space-y-1 z-10">
+        <div className="absolute top-2 left-2 sm:top-3 sm:left-3 flex flex-col space-y-1 z-10">
           {product.isSale && (
-            <span className="bg-rose-600 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs">
+            <span className="bg-rose-600 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full shadow-xs">
               Sale
             </span>
           )}
           {product.isNew && (
-            <span className="bg-emerald-900 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs">
+            <span className="bg-emerald-900 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full shadow-xs">
               New
             </span>
           )}
@@ -61,18 +61,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             e.stopPropagation();
             onToggleWishlist(product);
           }}
-          className={`absolute top-3 right-3 p-2.5 rounded-full backdrop-blur-md transition-all z-10 cursor-pointer ${
+          className={`absolute top-2 right-2 p-1.5 sm:top-3 sm:right-3 sm:p-2.5 rounded-full backdrop-blur-md transition-all z-10 cursor-pointer ${
             isWishlisted
               ? 'bg-rose-50 text-rose-600 shadow-xs'
               : 'bg-white/80 text-neutral-600 hover:text-rose-600 hover:bg-white'
           }`}
           aria-label="Wishlist"
         >
-          <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
+          <Heart className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isWishlisted ? 'fill-current' : ''}`} />
         </button>
 
-        {/* Hover Quick View Overlay Bar */}
-        <div className="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 z-10">
+        {/* Hover Quick View Overlay Bar (Hidden on touch mobile for clean interaction) */}
+        <div className="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden sm:flex items-center gap-2 z-10">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -87,35 +87,35 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       </div>
 
       {/* Product Information */}
-      <div className="p-4 flex flex-col flex-1 justify-between">
+      <div className="p-3 sm:p-4 flex flex-col flex-1 justify-between">
         <div onClick={() => onSelect(product)} className="cursor-pointer">
-          <div className="flex items-center space-x-1 text-amber-500 text-xs mb-1">
-            <Star className="w-3.5 h-3.5 fill-current" />
+          <div className="flex items-center space-x-1 text-amber-500 text-[11px] sm:text-xs mb-1">
+            <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" />
             <span className="font-semibold text-neutral-700">{product.rating.toFixed(1)}</span>
             <span className="text-neutral-400">({product.reviewCount})</span>
           </div>
 
-          <h3 className="font-serif-luxury text-lg font-semibold text-neutral-900 group-hover:text-emerald-700 transition-colors line-clamp-1">
+          <h3 className="font-serif-luxury text-sm sm:text-base md:text-lg font-semibold text-neutral-900 group-hover:text-emerald-700 transition-colors line-clamp-2 leading-snug">
             {product.name}
           </h3>
 
-          <p className="text-xs text-neutral-500 mt-1 line-clamp-1 font-light">
+          <p className="text-[10px] sm:text-xs text-neutral-500 mt-0.5 sm:mt-1 line-clamp-1 font-light">
             {product.material}
           </p>
         </div>
 
-        <div className="mt-4 pt-3 border-t border-neutral-100 flex items-center justify-between">
-          <div className="flex flex-wrap items-baseline gap-x-1.5">
-            <span className="text-base font-bold text-neutral-900">
+        <div className="mt-3 pt-2.5 sm:mt-4 sm:pt-3 border-t border-neutral-100 flex items-center justify-between">
+          <div className="flex flex-wrap items-baseline gap-x-1">
+            <span className="text-sm sm:text-base font-bold text-neutral-900">
               {product.formattedPrice ? product.formattedPrice : `$${product.price.toLocaleString()}`}
             </span>
             {product.priceSubtitle && (
-              <span className="text-xs font-normal text-neutral-500">
+              <span className="text-[10px] sm:text-xs font-normal text-neutral-500">
                 {product.priceSubtitle}
               </span>
             )}
             {product.compareAtPrice && (
-              <span className="text-xs text-neutral-400 line-through">
+              <span className="text-[10px] sm:text-xs text-neutral-400 line-through">
                 ${product.compareAtPrice.toLocaleString()}
               </span>
             )}
@@ -123,10 +123,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
           <button
             onClick={() => onAddToCart(product)}
-            className="bg-emerald-900 hover:bg-white text-white hover:text-emerald-900 border border-transparent hover:border-emerald-800 p-2.5 rounded-xl transition-all duration-300 cursor-pointer shadow-xs flex items-center justify-center transform hover:scale-105"
+            className="bg-emerald-900 hover:bg-white text-white hover:text-emerald-900 border border-transparent hover:border-emerald-800 p-2 sm:p-2.5 rounded-lg sm:rounded-xl transition-all duration-300 cursor-pointer shadow-xs flex items-center justify-center transform hover:scale-105 shrink-0"
             title="Add to Cart"
           >
-            <ShoppingBag className="w-4 h-4" />
+            <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
         </div>
       </div>

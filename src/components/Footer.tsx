@@ -7,7 +7,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   return (
-    <footer className="bg-[#022c22] text-emerald-100 border-t border-emerald-900/80 py-12 px-4 sm:px-6 lg:px-8">
+    <footer className="bg-[#002D2F] text-emerald-100 border-t border-emerald-900/80 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
         {/* Brand Logo & Copyright */}
         <div className="text-center md:text-left flex flex-col items-center md:items-start">

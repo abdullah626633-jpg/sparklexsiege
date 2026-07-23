@@ -47,8 +47,8 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
           </button>
         </div>
 
-        {/* Grid of 8 products */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {/* Grid of 8 products (2 columns on mobile) */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-6">
           {featuredList.map((product) => (
             <ProductCard
               key={product.id}

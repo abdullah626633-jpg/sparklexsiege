@@ -74,8 +74,8 @@ export const Header: React.FC<HeaderProps> = ({
       <header
         className={`sticky top-0 z-40 w-full transition-all duration-300 ${
           isScrolled
-            ? 'bg-[#022c22]/95 backdrop-blur-md shadow-xl py-2.5 border-b border-emerald-900/80 text-white'
-            : 'bg-[#022c22] py-3 border-b border-emerald-900/60 text-white'
+            ? 'bg-[#002D2F]/95 backdrop-blur-md shadow-xl py-2.5 border-b border-emerald-900/80 text-white'
+            : 'bg-[#002D2F] py-3 border-b border-emerald-900/60 text-white'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -188,7 +188,7 @@ export const Header: React.FC<HeaderProps> = ({
           />
 
           {/* Drawer Content */}
-          <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-[#022c22] shadow-2xl flex flex-col z-50 text-white border-r border-emerald-900">
+          <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-[#002D2F] shadow-2xl flex flex-col z-50 text-white border-r border-emerald-900">
             <div className="p-5 border-b border-emerald-900/80 flex items-center justify-between">
               <img
                 src="/logo.jpg"

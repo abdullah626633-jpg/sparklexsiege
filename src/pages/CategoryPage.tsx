@@ -28,11 +28,11 @@ export const CategoryPage: React.FC<CategoryPageProps> = ({
   return (
     <div className="bg-white min-h-screen pb-20">
       {/* Category Banner */}
-      <div className="relative h-72 sm:h-96 w-full bg-neutral-900 overflow-hidden flex items-center justify-center">
+      <div className="relative h-72 sm:h-96 w-full bg-neutral-950 overflow-hidden flex items-center justify-center">
         <img
           src={categoryInfo.image}
           alt={categoryInfo.name}
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-50"
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-60 sm:opacity-50"
           referrerPolicy="no-referrer"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-900/40 to-transparent" />
@@ -66,7 +66,7 @@ export const CategoryPage: React.FC<CategoryPageProps> = ({
             <p className="text-base font-semibold">No products found in this category.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-6">
             {categoryProducts.map((prod) => (
               <ProductCard
                 key={prod.id}
