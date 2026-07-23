@@ -1,4 +1,4 @@
-export type CategoryType = 'bracelets' | 'bangles' | 'necklaces' | 'rings' | 'earrings';
+export type CategoryType = 'bracelets' | 'bangles' | 'necklaces' | 'rings' | 'earrings' | 'jewellery-sets';
 
 export interface Product {
   id: string;
@@ -16,6 +16,7 @@ export interface Product {
   description: string;
   material: string;
   sizes?: string[];
+  colors?: string[];
   specifications: { key: string; value: string }[];
   rating: number;
   reviewCount: number;
@@ -27,6 +28,7 @@ export interface CartItem {
   product: Product;
   quantity: number;
   selectedSize?: string;
+  selectedColor?: string;
 }
 
 export interface Review {

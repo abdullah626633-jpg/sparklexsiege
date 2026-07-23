@@ -50,6 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
     { label: 'Necklaces', page: 'category', category: 'necklaces' },
     { label: 'Rings', page: 'category', category: 'rings' },
     { label: 'Earrings', page: 'category', category: 'earrings' },
+    { label: 'Jewellery Sets', page: 'category', category: 'jewellery-sets' },
     { label: 'Contact', page: 'contact' },
   ];
 

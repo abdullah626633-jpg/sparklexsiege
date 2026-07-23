@@ -21,8 +21,8 @@ export const CategoriesGrid: React.FC<CategoriesGridProps> = ({ onSelectCategory
           <div className="w-12 h-0.5 bg-emerald-700 mx-auto mt-4" />
         </div>
 
-        {/* Responsive Grid Layout for 5 categories */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        {/* Responsive Grid Layout for 6 categories */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-5">
           {CATEGORIES.map((cat) => (
             <div
               key={cat.id}

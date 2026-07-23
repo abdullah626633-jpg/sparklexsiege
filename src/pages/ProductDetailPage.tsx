@@ -43,6 +43,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     product.sizes ? product.sizes[0] : undefined
   );
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(
+    product.colors ? product.colors[0] : undefined
+  );
   const [addedToast, setAddedToast] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<'delivery' | 'returns' | 'specs' | null>('delivery');
 
@@ -237,11 +240,44 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                         onClick={() => setSelectedSize(sz)}
                         className={`text-xs px-4 py-2.5 rounded-xl font-semibold border transition-all cursor-pointer ${
                           selectedSize === sz
-                            ? 'border-[#D4AF37] bg-[#D4AF37]/10 text-neutral-900 shadow-xs'
+                            ? 'border-emerald-800 bg-emerald-900/10 text-neutral-900 shadow-xs'
                             : 'border-neutral-200 text-neutral-700 hover:border-neutral-300'
                         }`}
                       >
                         {sz}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Colors if applicable */}
+              {product.colors && (
+                <div className="mt-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-bold text-neutral-900 uppercase tracking-wider">
+                      Color Option: <span className="font-semibold text-emerald-800">{selectedColor}</span>
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-2.5">
+                    {product.colors.map((color) => (
+                      <button
+                        key={color}
+                        onClick={() => setSelectedColor(color)}
+                        className={`text-xs px-5 py-2.5 rounded-xl font-bold border transition-all cursor-pointer flex items-center space-x-2 ${
+                          selectedColor === color
+                            ? 'border-emerald-800 bg-emerald-900 text-white shadow-md'
+                            : 'border-neutral-200 bg-white text-neutral-800 hover:border-emerald-700'
+                        }`}
+                      >
+                        <span
+                          className={`w-3 h-3 rounded-full border border-black/20 ${
+                            color.toLowerCase() === 'golden' || color.toLowerCase() === 'gold'
+                              ? 'bg-amber-400'
+                              : 'bg-slate-300'
+                          }`}
+                        />
+                        <span>{color}</span>
                       </button>
                     ))}
                   </div>
