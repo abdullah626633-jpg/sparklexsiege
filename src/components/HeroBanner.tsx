@@ -7,20 +7,20 @@ interface HeroBannerProps {
 
 export const HeroBanner: React.FC<HeroBannerProps> = ({ onShopNow }) => {
   return (
-    <section className="relative w-full h-[60vh] sm:h-[75vh] min-h-[400px] flex items-center justify-center bg-neutral-900 overflow-hidden">
+    <section className="relative w-full h-[55vh] sm:h-[75vh] min-h-[380px] sm:min-h-[500px] flex items-center justify-center bg-neutral-950 overflow-hidden">
       {/* Background Hero Image */}
       <div className="absolute inset-0 z-0">
         {/* Mobile Banner Image */}
         <img
           src="/mobile-banner.jpg"
-          alt="SparklezSiege Luxury Jewellery Lifestyle Mobile"
-          className="block sm:hidden w-full h-full object-cover object-center opacity-90 transition-opacity duration-700"
+          alt="SparklezSiege Luxury Jewellery Mobile Banner"
+          className="block sm:hidden w-full h-full object-cover object-center transition-opacity duration-700"
           referrerPolicy="no-referrer"
         />
         {/* Desktop Banner Image */}
         <img
           src="/desktop-banner.jpg"
-          alt="SparklezSiege Luxury Jewellery Lifestyle Desktop"
+          alt="SparklezSiege Luxury Jewellery Desktop Banner"
           className="hidden sm:block w-full h-full object-cover object-center opacity-90 transition-opacity duration-700"
           referrerPolicy="no-referrer"
         />
