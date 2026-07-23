@@ -46,6 +46,22 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const [selectedColor, setSelectedColor] = useState<string | undefined>(
     product.colors ? product.colors[0] : undefined
   );
+
+  const handleSelectColor = (color: string) => {
+    setSelectedColor(color);
+    if (product.colorImages && product.colorImages[color]) {
+      const imgUrl = product.colorImages[color];
+      const idx = product.images.indexOf(imgUrl);
+      if (idx !== -1) {
+        setActiveImgIndex(idx);
+      }
+    } else if (product.colors) {
+      const colorIndex = product.colors.indexOf(color);
+      if (colorIndex !== -1 && product.images[colorIndex]) {
+        setActiveImgIndex(colorIndex);
+      }
+    }
+  };
   const [addedToast, setAddedToast] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<'delivery' | 'returns' | 'specs' | null>('delivery');
 
@@ -263,7 +279,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                     {product.colors.map((color) => (
                       <button
                         key={color}
-                        onClick={() => setSelectedColor(color)}
+                        onClick={() => handleSelectColor(color)}
                         className={`text-xs px-5 py-2.5 rounded-xl font-bold border transition-all cursor-pointer flex items-center space-x-2 ${
                           selectedColor === color
                             ? 'border-emerald-800 bg-emerald-900 text-white shadow-md'

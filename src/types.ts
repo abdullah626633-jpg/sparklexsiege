@@ -17,6 +17,7 @@ export interface Product {
   material: string;
   sizes?: string[];
   colors?: string[];
+  colorImages?: Record<string, string>;
   specifications: { key: string; value: string }[];
   rating: number;
   reviewCount: number;

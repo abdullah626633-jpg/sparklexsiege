@@ -28,7 +28,26 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     product.sizes ? product.sizes[0] : undefined
   );
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(
+    product.colors ? product.colors[0] : undefined
+  );
   const [addedToast, setAddedToast] = useState(false);
+
+  const handleSelectColor = (color: string) => {
+    setSelectedColor(color);
+    if (product.colorImages && product.colorImages[color]) {
+      const imgUrl = product.colorImages[color];
+      const idx = product.images.indexOf(imgUrl);
+      if (idx !== -1) {
+        setActiveImgIndex(idx);
+      }
+    } else if (product.colors) {
+      const colorIndex = product.colors.indexOf(color);
+      if (colorIndex !== -1 && product.images[colorIndex]) {
+        setActiveImgIndex(colorIndex);
+      }
+    }
+  };
 
   const handleAdd = () => {
     onAddToCart(product, quantity, selectedSize);
@@ -152,6 +171,43 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                       }`}
                     >
                       {sz}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Color Options if available */}
+            {product.colors && (
+              <div className="mt-4">
+                <span className="text-xs font-semibold text-neutral-700 block mb-2">
+                  Color Option: <span className="text-emerald-800 font-bold">{selectedColor}</span>
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {product.colors.map((color) => (
+                    <button
+                      key={color}
+                      onClick={() => handleSelectColor(color)}
+                      className={`text-xs px-3 py-1.5 rounded-lg border font-medium transition-all flex items-center space-x-2 cursor-pointer ${
+                        selectedColor === color
+                          ? 'border-emerald-800 bg-emerald-900 text-white'
+                          : 'border-neutral-200 bg-white text-neutral-700 hover:border-emerald-700'
+                      }`}
+                    >
+                      <span
+                        className={`w-2.5 h-2.5 rounded-full border border-black/20 ${
+                          color.toLowerCase() === 'red'
+                            ? 'bg-rose-600'
+                            : color.toLowerCase() === 'green'
+                            ? 'bg-emerald-600'
+                            : color.toLowerCase() === 'golden' || color.toLowerCase() === 'gold'
+                            ? 'bg-amber-400'
+                            : color.toLowerCase() === 'silver'
+                            ? 'bg-slate-300'
+                            : 'bg-neutral-400'
+                        }`}
+                      />
+                      <span>{color}</span>
                     </button>
                   ))}
                 </div>
