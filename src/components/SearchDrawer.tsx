@@ -129,7 +129,7 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
                       </h4>
                       <p className="text-xs text-neutral-500 capitalize">{prod.category}</p>
                       <p className="text-sm font-bold text-neutral-900 mt-0.5">
-                        ${prod.price.toLocaleString()}
+                        {prod.formattedPrice ? prod.formattedPrice : `$${prod.price.toLocaleString()}`}
                       </p>
                     </div>
                     <ChevronRight className="w-5 h-5 text-neutral-400 group-hover:text-[#D4AF37] group-hover:translate-x-1 transition-all" />

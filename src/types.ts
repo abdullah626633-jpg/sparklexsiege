@@ -6,6 +6,8 @@ export interface Product {
   slug: string;
   category: CategoryType;
   price: number;
+  formattedPrice?: string;
+  priceSubtitle?: string;
   compareAtPrice?: number;
   isNew?: boolean;
   isSale?: boolean;

@@ -187,8 +187,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               {/* Pricing */}
               <div className="flex items-baseline space-x-3 mt-4">
                 <span className="text-3xl font-bold text-neutral-900">
-                  ${product.price.toLocaleString()}
+                  {product.formattedPrice ? product.formattedPrice : `$${product.price.toLocaleString()}`}
                 </span>
+                {product.priceSubtitle && (
+                  <span className="text-base font-normal text-neutral-500">
+                    {product.priceSubtitle}
+                  </span>
+                )}
                 {product.compareAtPrice && (
                   <span className="text-lg text-neutral-400 line-through">
                     ${product.compareAtPrice.toLocaleString()}

@@ -104,10 +104,15 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
               {product.name}
             </h2>
 
-            <div className="flex items-baseline space-x-3 mt-3">
+            <div className="flex items-baseline space-x-2 mt-3">
               <span className="text-2xl font-bold text-neutral-900">
-                ${product.price.toLocaleString()}
+                {product.formattedPrice ? product.formattedPrice : `$${product.price.toLocaleString()}`}
               </span>
+              {product.priceSubtitle && (
+                <span className="text-sm font-normal text-neutral-500">
+                  {product.priceSubtitle}
+                </span>
+              )}
               {product.compareAtPrice && (
                 <span className="text-sm text-neutral-400 line-through">
                   ${product.compareAtPrice.toLocaleString()}

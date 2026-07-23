@@ -105,10 +105,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </div>
 
         <div className="mt-4 pt-3 border-t border-neutral-100 flex items-center justify-between">
-          <div className="flex items-baseline space-x-2">
+          <div className="flex flex-wrap items-baseline gap-x-1.5">
             <span className="text-base font-bold text-neutral-900">
-              ${product.price.toLocaleString()}
+              {product.formattedPrice ? product.formattedPrice : `$${product.price.toLocaleString()}`}
             </span>
+            {product.priceSubtitle && (
+              <span className="text-xs font-normal text-neutral-500">
+                {product.priceSubtitle}
+              </span>
+            )}
             {product.compareAtPrice && (
               <span className="text-xs text-neutral-400 line-through">
                 ${product.compareAtPrice.toLocaleString()}

@@ -86,7 +86,7 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
                       </h4>
                       <p className="text-xs text-neutral-500 capitalize mt-0.5">{prod.category}</p>
                       <p className="text-sm font-bold text-neutral-900 mt-1">
-                        ${prod.price.toLocaleString()}
+                        {prod.formattedPrice ? prod.formattedPrice : `$${prod.price.toLocaleString()}`}
                       </p>
 
                       <div className="mt-3 flex items-center space-x-2">

@@ -108,7 +108,8 @@ export const CartPage: React.FC<CartPageProps> = ({
                           {item.product.category} {item.selectedSize ? `• Size: ${item.selectedSize}` : ''}
                         </p>
                         <p className="text-sm font-bold text-neutral-800 mt-1">
-                          ${item.product.price.toLocaleString()}
+                          {item.product.formattedPrice ? item.product.formattedPrice : `$${item.product.price.toLocaleString()}`}
+                          {item.product.priceSubtitle ? ` ${item.product.priceSubtitle}` : ''}
                         </p>
                       </div>
                     </div>
