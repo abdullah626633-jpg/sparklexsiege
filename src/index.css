@@ -18,21 +18,21 @@
   }
 }
 
-/* Custom Gold Accent Helper */
+/* Custom Emerald Accent Helper */
 .text-gold {
-  color: #D4AF37;
+  color: #047857;
 }
 
 .bg-gold {
-  background-color: #D4AF37;
+  background-color: #065f46;
 }
 
 .border-gold {
-  border-color: #D4AF37;
+  border-color: #047857;
 }
 
 .bg-gold-light {
-  background-color: #FAF6E9;
+  background-color: #ecfdf5;
 }
 
 /* Hide scrollbar for clean UI in horizontal scroll if needed */
@@ -53,9 +53,9 @@
   background: #f8f8f8;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d4d4d4;
+  background: #a7f3d0;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #D4AF37;
+  background: #059669;
 }

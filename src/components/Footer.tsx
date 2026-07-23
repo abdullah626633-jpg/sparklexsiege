@@ -7,14 +7,16 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   return (
-    <footer className="bg-neutral-900 text-neutral-300 border-t border-neutral-800 py-12 px-4 sm:px-6 lg:px-8">
+    <footer className="bg-[#022c22] text-emerald-100 border-t border-emerald-900/80 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
         {/* Brand Logo & Copyright */}
-        <div className="text-center md:text-left">
-          <span className="font-serif-luxury text-2xl font-bold tracking-tight text-white">
-            SparklezSiege
-          </span>
-          <p className="text-xs text-neutral-400 mt-1">
+        <div className="text-center md:text-left flex flex-col items-center md:items-start">
+          <img
+            src="/logo.jpg"
+            alt="SparklezSiege Jewellery"
+            className="h-12 sm:h-14 w-auto object-contain mb-2"
+          />
+          <p className="text-xs text-emerald-200/80 mt-1">
             © {new Date().getFullYear()} SparklezSiege Jewellery. All rights reserved.
           </p>
         </div>
@@ -23,37 +25,37 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <nav className="flex flex-wrap justify-center gap-6 text-sm">
           <button
             onClick={() => onNavigate('shop')}
-            className="hover:text-[#D4AF37] transition-colors cursor-pointer"
+            className="hover:text-white transition-all duration-200 hover:scale-105 cursor-pointer font-medium"
           >
             Shop
           </button>
           <button
             onClick={() => onNavigate('contact')}
-            className="hover:text-[#D4AF37] transition-colors cursor-pointer"
+            className="hover:text-white transition-all duration-200 hover:scale-105 cursor-pointer font-medium"
           >
             Contact
           </button>
           <button
             onClick={() => onNavigate('privacy')}
-            className="hover:text-[#D4AF37] transition-colors cursor-pointer"
+            className="hover:text-white transition-all duration-200 hover:scale-105 cursor-pointer font-medium"
           >
             Privacy Policy
           </button>
           <button
             onClick={() => onNavigate('terms')}
-            className="hover:text-[#D4AF37] transition-colors cursor-pointer"
+            className="hover:text-white transition-all duration-200 hover:scale-105 cursor-pointer font-medium"
           >
             Terms & Conditions
           </button>
         </nav>
 
         {/* Social Icons (Instagram, Facebook, TikTok, Pinterest) */}
-        <div className="flex items-center space-x-5 text-neutral-400">
+        <div className="flex items-center space-x-5 text-emerald-200">
           <a
             href="https://instagram.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#D4AF37] transition-colors p-1"
+            className="hover:text-white transition-all duration-200 hover:scale-125 p-1"
             aria-label="Instagram"
           >
             <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -64,7 +66,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             href="https://facebook.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#D4AF37] transition-colors p-1"
+            className="hover:text-white transition-all duration-200 hover:scale-125 p-1"
             aria-label="Facebook"
           >
             <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -75,7 +77,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             href="https://tiktok.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#D4AF37] transition-colors p-1"
+            className="hover:text-white transition-all duration-200 hover:scale-125 p-1"
             aria-label="TikTok"
           >
             <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -86,7 +88,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             href="https://pinterest.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#D4AF37] transition-colors p-1"
+            className="hover:text-white transition-all duration-200 hover:scale-125 p-1"
             aria-label="Pinterest"
           >
             <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">

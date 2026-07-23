@@ -73,8 +73,8 @@ export const Header: React.FC<HeaderProps> = ({
       <header
         className={`sticky top-0 z-40 w-full transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/95 backdrop-blur-md shadow-xs py-3 border-b border-neutral-100'
-            : 'bg-white py-4 border-b border-neutral-100'
+            ? 'bg-[#022c22]/95 backdrop-blur-md shadow-xl py-2.5 border-b border-emerald-900/80 text-white'
+            : 'bg-[#022c22] py-3 border-b border-emerald-900/60 text-white'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -82,7 +82,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Mobile Menu Hamburger */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden p-2 text-neutral-800 hover:text-[#D4AF37] focus:outline-hidden transition-colors"
+              className="lg:hidden p-2 text-emerald-100 hover:text-white focus:outline-hidden transition-all duration-200 hover:scale-110 cursor-pointer"
               aria-label="Open Mobile Menu"
             >
               <Menu className="w-6 h-6" />
@@ -92,14 +92,13 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex-1 lg:flex-initial text-center lg:text-left">
               <button
                 onClick={() => handleNavClick('home')}
-                className="group inline-flex items-center space-x-2 focus:outline-hidden cursor-pointer"
+                className="group inline-flex items-center space-x-3 focus:outline-hidden cursor-pointer"
               >
-                <span className="font-serif-luxury text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 group-hover:text-[#D4AF37] transition-colors">
-                  SparklezSiege
-                </span>
-                <span className="hidden sm:inline-block text-[10px] uppercase tracking-widest text-[#D4AF37] font-semibold border-l border-[#D4AF37]/30 pl-2">
-                  Luxury
-                </span>
+                <img
+                  src="/logo.jpg"
+                  alt="SparklezSiege Luxury Jewellery"
+                  className="h-10 sm:h-12 md:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                />
               </button>
             </div>
 
@@ -111,15 +110,15 @@ export const Header: React.FC<HeaderProps> = ({
                   <button
                     key={link.label}
                     onClick={() => handleNavClick(link.page, link.category)}
-                    className={`text-sm font-medium tracking-wide transition-all duration-200 cursor-pointer relative py-1 ${
+                    className={`text-sm font-medium tracking-wide transition-all duration-300 cursor-pointer relative py-1 ${
                       active
-                        ? 'text-[#D4AF37] font-semibold'
-                        : 'text-neutral-700 hover:text-[#D4AF37]'
+                        ? 'text-white font-bold'
+                        : 'text-emerald-100/90 hover:text-white hover:scale-105'
                     }`}
                   >
                     {link.label}
                     {active && (
-                      <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#D4AF37] rounded-full" />
+                      <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-white rounded-full shadow-sm animate-pulse" />
                     )}
                   </button>
                 );
@@ -130,7 +129,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center space-x-3 sm:space-x-5">
               <button
                 onClick={onOpenSearch}
-                className="p-2 text-neutral-700 hover:text-[#D4AF37] transition-colors cursor-pointer"
+                className="p-2 text-emerald-100 hover:text-white transition-all duration-200 hover:scale-110 cursor-pointer"
                 title="Search Products"
                 aria-label="Search"
               >
@@ -139,7 +138,7 @@ export const Header: React.FC<HeaderProps> = ({
 
               <button
                 onClick={onOpenAccount}
-                className="p-2 text-neutral-700 hover:text-[#D4AF37] transition-colors cursor-pointer"
+                className="p-2 text-emerald-100 hover:text-white transition-all duration-200 hover:scale-110 cursor-pointer"
                 title="Account"
                 aria-label="Account"
               >
@@ -148,13 +147,13 @@ export const Header: React.FC<HeaderProps> = ({
 
               <button
                 onClick={onOpenWishlist}
-                className="p-2 text-neutral-700 hover:text-[#D4AF37] transition-colors cursor-pointer relative"
+                className="p-2 text-emerald-100 hover:text-white transition-all duration-200 hover:scale-110 cursor-pointer relative"
                 title="Wishlist"
                 aria-label="Wishlist"
               >
                 <Heart className="w-5 h-5" />
                 {wishlistCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-[#D4AF37] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-0.5 -right-0.5 bg-white text-emerald-950 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-md">
                     {wishlistCount}
                   </span>
                 )}
@@ -162,13 +161,13 @@ export const Header: React.FC<HeaderProps> = ({
 
               <button
                 onClick={() => handleNavClick('cart')}
-                className="p-2 text-neutral-700 hover:text-[#D4AF37] transition-colors cursor-pointer relative"
+                className="p-2 text-emerald-100 hover:text-white transition-all duration-200 hover:scale-110 cursor-pointer relative"
                 title="Shopping Cart"
                 aria-label="Shopping Cart"
               >
                 <ShoppingBag className="w-5 h-5" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-neutral-900 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-0.5 -right-0.5 bg-white text-emerald-950 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-md">
                     {cartCount}
                   </span>
                 )}
@@ -188,14 +187,16 @@ export const Header: React.FC<HeaderProps> = ({
           />
 
           {/* Drawer Content */}
-          <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-white shadow-2xl flex flex-col z-50">
-            <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
-              <span className="font-serif-luxury text-2xl font-bold tracking-tight text-neutral-900">
-                SparklezSiege
-              </span>
+          <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-[#022c22] shadow-2xl flex flex-col z-50 text-white border-r border-emerald-900">
+            <div className="p-5 border-b border-emerald-900/80 flex items-center justify-between">
+              <img
+                src="/logo.jpg"
+                alt="SparklezSiege"
+                className="h-10 w-auto object-contain"
+              />
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 text-neutral-500 hover:text-neutral-900 focus:outline-hidden"
+                className="p-2 text-emerald-200 hover:text-white focus:outline-hidden transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -209,28 +210,28 @@ export const Header: React.FC<HeaderProps> = ({
                     <button
                       key={link.label}
                       onClick={() => handleNavClick(link.page, link.category)}
-                      className={`flex items-center justify-between py-3 px-3 text-base font-medium rounded-lg transition-colors text-left ${
+                      className={`flex items-center justify-between py-3 px-3 text-base font-medium rounded-lg transition-all duration-200 text-left ${
                         active
-                          ? 'bg-amber-50 text-[#D4AF37] font-semibold'
-                          : 'text-neutral-800 hover:bg-neutral-50'
+                          ? 'bg-emerald-900 text-white font-bold border border-white/30'
+                          : 'text-emerald-100 hover:bg-emerald-900/50 hover:text-white'
                       }`}
                     >
                       <span>{link.label}</span>
-                      <ChevronRight className="w-4 h-4 text-neutral-400" />
+                      <ChevronRight className="w-4 h-4 text-emerald-300" />
                     </button>
                   );
                 })}
               </div>
 
-              <div className="mt-8 pt-6 border-t border-neutral-100 flex flex-col space-y-3">
+              <div className="mt-8 pt-6 border-t border-emerald-900/80 flex flex-col space-y-3">
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);
                     onOpenAccount();
                   }}
-                  className="flex items-center space-x-3 text-sm font-medium text-neutral-700 py-2.5 px-3 rounded-lg hover:bg-neutral-50"
+                  className="flex items-center space-x-3 text-sm font-medium text-emerald-100 py-2.5 px-3 rounded-lg hover:bg-emerald-900/50 hover:text-white transition-colors"
                 >
-                  <User className="w-5 h-5 text-neutral-500" />
+                  <User className="w-5 h-5 text-emerald-300" />
                   <span>My Account</span>
                 </button>
                 <button
@@ -238,16 +239,16 @@ export const Header: React.FC<HeaderProps> = ({
                     setMobileMenuOpen(false);
                     onOpenWishlist();
                   }}
-                  className="flex items-center space-x-3 text-sm font-medium text-neutral-700 py-2.5 px-3 rounded-lg hover:bg-neutral-50"
+                  className="flex items-center space-x-3 text-sm font-medium text-emerald-100 py-2.5 px-3 rounded-lg hover:bg-emerald-900/50 hover:text-white transition-colors"
                 >
-                  <Heart className="w-5 h-5 text-neutral-500" />
+                  <Heart className="w-5 h-5 text-emerald-300" />
                   <span>Wishlist ({wishlistCount})</span>
                 </button>
               </div>
             </div>
 
-            <div className="p-5 border-t border-neutral-100 bg-neutral-50">
-              <p className="text-xs text-neutral-500 text-center">
+            <div className="p-5 border-t border-emerald-900/80 bg-[#011e17]">
+              <p className="text-xs text-emerald-200/80 text-center">
                 Free Worldwide Express Shipping on Orders Over $250
               </p>
             </div>

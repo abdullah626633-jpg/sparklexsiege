@@ -12,13 +12,13 @@ export const CategoriesGrid: React.FC<CategoriesGridProps> = ({ onSelectCategory
     <section className="py-16 sm:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
-          <span className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37] block mb-2">
+          <span className="text-xs font-semibold uppercase tracking-widest text-emerald-700 block mb-2">
             Curated Categories
           </span>
           <h2 className="font-serif-luxury text-3xl sm:text-4xl md:text-5xl font-bold text-neutral-900 tracking-tight">
             Explore By Category
           </h2>
-          <div className="w-12 h-0.5 bg-[#D4AF37] mx-auto mt-4" />
+          <div className="w-12 h-0.5 bg-emerald-700 mx-auto mt-4" />
         </div>
 
         {/* Responsive Grid Layout for 5 categories */}
@@ -27,7 +27,7 @@ export const CategoriesGrid: React.FC<CategoriesGridProps> = ({ onSelectCategory
             <div
               key={cat.id}
               onClick={() => onSelectCategory(cat.id)}
-              className="group relative h-80 sm:h-96 rounded-2xl overflow-hidden cursor-pointer shadow-xs hover:shadow-xl transition-all duration-500 flex flex-col justify-end p-6 border border-neutral-100"
+              className="group relative h-80 sm:h-96 rounded-2xl overflow-hidden cursor-pointer shadow-xs hover:shadow-2xl transition-all duration-500 flex flex-col justify-end p-6 border border-emerald-900/10"
             >
               {/* Category Background Image */}
               <img
@@ -38,20 +38,20 @@ export const CategoriesGrid: React.FC<CategoriesGridProps> = ({ onSelectCategory
               />
 
               {/* Gradient overlay for readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-neutral-900/20 to-transparent group-hover:from-neutral-950/90 transition-colors duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/85 via-neutral-900/20 to-transparent group-hover:from-emerald-950/95 transition-colors duration-300" />
 
               {/* Content */}
               <div className="relative z-10 text-white flex items-end justify-between w-full">
                 <div>
-                  <h3 className="font-serif-luxury text-2xl font-bold tracking-tight text-white group-hover:text-[#D4AF37] transition-colors">
+                  <h3 className="font-serif-luxury text-2xl font-bold tracking-tight text-white group-hover:text-emerald-300 transition-colors">
                     {cat.name}
                   </h3>
-                  <p className="text-xs text-neutral-300 font-light mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2">
+                  <p className="text-xs text-emerald-100/90 font-light mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2">
                     {cat.description}
                   </p>
                 </div>
 
-                <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md group-hover:bg-[#D4AF37] group-hover:text-neutral-950 text-white flex items-center justify-center transition-all duration-300 shrink-0 ml-2">
+                <div className="w-10 h-10 rounded-full bg-emerald-900/60 backdrop-blur-md group-hover:bg-white group-hover:text-emerald-950 text-white flex items-center justify-center transition-all duration-300 shrink-0 ml-2 shadow-lg group-hover:scale-110">
                   <ArrowUpRight className="w-5 h-5 transform group-hover:rotate-45 transition-transform" />
                 </div>
               </div>

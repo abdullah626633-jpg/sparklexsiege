@@ -49,7 +49,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             </span>
           )}
           {product.isNew && (
-            <span className="bg-neutral-900 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs">
+            <span className="bg-emerald-900 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs">
               New
             </span>
           )}
@@ -95,7 +95,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             <span className="text-neutral-400">({product.reviewCount})</span>
           </div>
 
-          <h3 className="font-serif-luxury text-lg font-semibold text-neutral-900 group-hover:text-[#D4AF37] transition-colors line-clamp-1">
+          <h3 className="font-serif-luxury text-lg font-semibold text-neutral-900 group-hover:text-emerald-700 transition-colors line-clamp-1">
             {product.name}
           </h3>
 
@@ -123,7 +123,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
           <button
             onClick={() => onAddToCart(product)}
-            className="bg-neutral-900 hover:bg-[#D4AF37] text-white hover:text-neutral-950 p-2.5 rounded-xl transition-colors cursor-pointer shadow-xs flex items-center justify-center"
+            className="bg-emerald-900 hover:bg-white text-white hover:text-emerald-900 border border-transparent hover:border-emerald-800 p-2.5 rounded-xl transition-all duration-300 cursor-pointer shadow-xs flex items-center justify-center transform hover:scale-105"
             title="Add to Cart"
           >
             <ShoppingBag className="w-4 h-4" />
