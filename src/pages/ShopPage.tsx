@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Product, CategoryType } from '../types';
 import { ProductCard } from '../components/ProductCard';
 import { CATEGORIES } from '../data/products';
-import { SlidersHorizontal, Search } from 'lucide-react';
+import { SlidersHorizontal, Search, Sparkles } from 'lucide-react';
 
 interface ShopPageProps {
   products: Product[];
@@ -44,12 +45,19 @@ export const ShopPage: React.FC<ShopPageProps> = ({
   }, [products, selectedCat, searchQuery, sortBy]);
 
   return (
-    <div className="py-12 bg-white min-h-screen">
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -15 }}
+      transition={{ duration: 0.5 }}
+      className="py-12 bg-white min-h-screen"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <div className="text-center max-w-2xl mx-auto mb-10">
-          <span className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37] block mb-2">
-            The Complete Collection
+          <span className="text-xs font-semibold uppercase tracking-widest text-emerald-700 mb-2 inline-flex items-center space-x-1">
+            <Sparkles className="w-3.5 h-3.5 text-[#FF9F61] animate-pulse" />
+            <span>The Complete Collection</span>
           </span>
           <h1 className="font-serif-luxury text-4xl sm:text-5xl font-bold text-neutral-900 tracking-tight">
             Shop All Jewellery
@@ -60,31 +68,33 @@ export const ShopPage: React.FC<ShopPageProps> = ({
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="bg-neutral-50 rounded-2xl p-4 sm:p-6 mb-10 border border-neutral-100 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="bg-neutral-50/80 backdrop-blur-md rounded-2xl p-4 sm:p-6 mb-10 border border-neutral-200/80 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xs">
           {/* Category Filter Chips */}
           <div className="flex items-center space-x-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
-            <button
+            <motion.button
+              whileTap={{ scale: 0.95 }}
               onClick={() => setSelectedCat('all')}
               className={`text-xs px-4 py-2 rounded-xl font-semibold transition-all whitespace-nowrap cursor-pointer ${
                 selectedCat === 'all'
-                  ? 'bg-neutral-900 text-white shadow-xs'
+                  ? 'bg-emerald-900 text-white shadow-md'
                   : 'bg-white text-neutral-700 hover:bg-neutral-200 border border-neutral-200'
               }`}
             >
               All Pieces ({products.length})
-            </button>
+            </motion.button>
             {CATEGORIES.map((cat) => (
-              <button
+              <motion.button
                 key={cat.id}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setSelectedCat(cat.id)}
                 className={`text-xs px-4 py-2 rounded-xl font-semibold transition-all whitespace-nowrap cursor-pointer ${
                   selectedCat === cat.id
-                    ? 'bg-[#D4AF37] text-neutral-950 shadow-xs'
+                    ? 'bg-emerald-900 text-[#FF9F61] shadow-md border border-emerald-700'
                     : 'bg-white text-neutral-700 hover:bg-neutral-200 border border-neutral-200'
                 }`}
               >
                 {cat.name}
-              </button>
+              </motion.button>
             ))}
           </div>
 
@@ -97,7 +107,7 @@ export const ShopPage: React.FC<ShopPageProps> = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search shop..."
-                className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-neutral-200 rounded-xl focus:outline-hidden focus:border-[#D4AF37]"
+                className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-neutral-200 rounded-xl focus:outline-hidden focus:border-emerald-700"
               />
             </div>
 
@@ -106,7 +116,7 @@ export const ShopPage: React.FC<ShopPageProps> = ({
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="text-xs bg-white border border-neutral-200 rounded-xl py-1.5 px-3 font-medium text-neutral-700 focus:outline-hidden focus:border-[#D4AF37]"
+                className="text-xs bg-white border border-neutral-200 rounded-xl py-1.5 px-3 font-medium text-neutral-700 focus:outline-hidden focus:border-emerald-700"
               >
                 <option value="featured">Sort: Featured</option>
                 <option value="price-low">Price: Low to High</option>
@@ -118,35 +128,49 @@ export const ShopPage: React.FC<ShopPageProps> = ({
         </div>
 
         {/* Product Grid */}
-        {filteredProducts.length === 0 ? (
-          <div className="text-center py-20 text-neutral-500">
-            <p className="text-base font-semibold">No products match your filter criteria.</p>
-            <button
-              onClick={() => {
-                setSelectedCat('all');
-                setSearchQuery('');
-              }}
-              className="mt-4 text-xs font-semibold text-[#D4AF37] underline cursor-pointer"
+        <AnimatePresence mode="wait">
+          {filteredProducts.length === 0 ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-center py-20 text-neutral-500"
             >
-              Reset Filters
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-6">
-            {filteredProducts.map((prod) => (
-              <ProductCard
-                key={prod.id}
-                product={prod}
-                onSelect={onSelectProduct}
-                onQuickView={onQuickView}
-                onAddToCart={onAddToCart}
-                onToggleWishlist={onToggleWishlist}
-                isWishlisted={wishlistIds.includes(prod.id)}
-              />
-            ))}
-          </div>
-        )}
+              <p className="text-base font-semibold">No products match your filter criteria.</p>
+              <button
+                onClick={() => {
+                  setSelectedCat('all');
+                  setSearchQuery('');
+                }}
+                className="mt-4 text-xs font-semibold text-emerald-800 underline cursor-pointer"
+              >
+                Reset Filters
+              </button>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-6"
+            >
+              {filteredProducts.map((prod) => (
+                <ProductCard
+                  key={prod.id}
+                  product={prod}
+                  onSelect={onSelectProduct}
+                  onQuickView={onQuickView}
+                  onAddToCart={onAddToCart}
+                  onToggleWishlist={onToggleWishlist}
+                  isWishlisted={wishlistIds.includes(prod.id)}
+                />
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </div>
+    </motion.div>
   );
 };
+

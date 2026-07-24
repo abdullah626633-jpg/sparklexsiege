@@ -38,7 +38,7 @@ export const CategoryPage: React.FC<CategoryPageProps> = ({
         <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-900/40 to-transparent" />
 
         <div className="relative z-10 text-center max-w-2xl px-4">
-          <span className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37] block mb-2">
+          <span className="text-xs font-semibold uppercase tracking-widest text-[#FF9F61] block mb-2">
             SparklezSiege Collection
           </span>
           <h1 className="font-serif-luxury text-4xl sm:text-6xl font-bold text-white tracking-tight">

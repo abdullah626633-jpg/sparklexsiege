@@ -62,7 +62,7 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search jewellery, materials, diamonds..."
-                className="w-full pl-11 pr-4 py-3 bg-neutral-50 border border-neutral-200 rounded-2xl text-sm focus:outline-hidden focus:border-[#D4AF37] focus:bg-white transition-all"
+                className="w-full pl-11 pr-4 py-3 bg-neutral-50 border border-neutral-200 rounded-2xl text-sm focus:outline-hidden focus:border-[#FF9F61] focus:bg-white transition-all"
                 autoFocus
               />
               {query && (
@@ -81,7 +81,7 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
                 <button
                   key={tag}
                   onClick={() => setQuery(tag)}
-                  className="text-xs bg-neutral-100 hover:bg-amber-50 hover:text-[#D4AF37] text-neutral-600 px-3 py-1.5 rounded-full transition-colors"
+                  className="text-xs bg-neutral-100 hover:bg-[#FF9F61]/15 hover:text-[#FF9F61] text-neutral-600 px-3 py-1.5 rounded-full transition-colors"
                 >
                   {tag}
                 </button>
@@ -93,7 +93,7 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
           <div className="flex-1 overflow-y-auto p-5">
             {!query.trim() ? (
               <div className="text-center py-12 text-neutral-400">
-                <Search className="w-12 h-12 mx-auto mb-3 opacity-30 text-[#D4AF37]" />
+                <Search className="w-12 h-12 mx-auto mb-3 opacity-30 text-[#FF9F61]" />
                 <p className="text-sm">Type above to search our luxury jewellery collection.</p>
               </div>
             ) : filtered.length === 0 ? (
@@ -124,7 +124,7 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
                       referrerPolicy="no-referrer"
                     />
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-serif-luxury text-base font-semibold text-neutral-900 group-hover:text-[#D4AF37] transition-colors truncate">
+                      <h4 className="font-serif-luxury text-base font-semibold text-neutral-900 group-hover:text-[#FF9F61] transition-colors truncate">
                         {prod.name}
                       </h4>
                       <p className="text-xs text-neutral-500 capitalize">{prod.category}</p>
@@ -132,7 +132,7 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
                         {prod.formattedPrice ? prod.formattedPrice : `$${prod.price.toLocaleString()}`}
                       </p>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-neutral-400 group-hover:text-[#D4AF37] group-hover:translate-x-1 transition-all" />
+                    <ChevronRight className="w-5 h-5 text-neutral-400 group-hover:text-[#FF9F61] group-hover:translate-x-1 transition-all" />
                   </div>
                 ))}
               </div>

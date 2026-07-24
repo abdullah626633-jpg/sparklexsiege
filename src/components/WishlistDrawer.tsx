@@ -33,7 +33,7 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
           {/* Header */}
           <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Heart className="w-5 h-5 text-[#D4AF37] fill-current" />
+              <Heart className="w-5 h-5 text-[#FF9F61] fill-current" />
               <span className="font-serif-luxury text-xl font-bold text-neutral-900">
                 My Wishlist ({wishlistProducts.length})
               </span>
@@ -50,7 +50,7 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
           <div className="flex-1 overflow-y-auto p-5">
             {wishlistProducts.length === 0 ? (
               <div className="text-center py-16 text-neutral-400">
-                <Heart className="w-12 h-12 mx-auto mb-3 opacity-30 text-[#D4AF37]" />
+                <Heart className="w-12 h-12 mx-auto mb-3 opacity-30 text-[#FF9F61]" />
                 <p className="text-base font-semibold text-neutral-800">Your wishlist is empty</p>
                 <p className="text-xs text-neutral-500 mt-1 max-w-xs mx-auto">
                   Explore our timeless jewellery collection and save your favorite pieces here.
@@ -80,7 +80,7 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
                           onSelectProduct(prod);
                           onClose();
                         }}
-                        className="font-serif-luxury text-base font-semibold text-neutral-900 hover:text-[#D4AF37] cursor-pointer truncate"
+                        className="font-serif-luxury text-base font-semibold text-neutral-900 hover:text-[#FF9F61] cursor-pointer truncate"
                       >
                         {prod.name}
                       </h4>
@@ -92,7 +92,7 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
                       <div className="mt-3 flex items-center space-x-2">
                         <button
                           onClick={() => onAddToCart(prod)}
-                          className="bg-neutral-900 hover:bg-[#D4AF37] text-white hover:text-neutral-950 text-xs font-semibold py-1.5 px-3 rounded-lg transition-colors inline-flex items-center space-x-1 cursor-pointer"
+                          className="bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 text-xs font-semibold py-1.5 px-3 rounded-lg transition-colors inline-flex items-center space-x-1 cursor-pointer"
                         >
                           <ShoppingBag className="w-3.5 h-3.5" />
                           <span>Add to Cart</span>

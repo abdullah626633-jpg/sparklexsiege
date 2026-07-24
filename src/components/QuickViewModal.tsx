@@ -94,7 +94,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                   onClick={() => setActiveImgIndex(idx)}
                   className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-all shrink-0 ${
                     activeImgIndex === idx
-                      ? 'border-[#D4AF37] ring-2 ring-[#D4AF37]/20'
+                      ? 'border-[#FF9F61] ring-2 ring-[#FF9F61]/20'
                       : 'border-transparent opacity-70 hover:opacity-100'
                   }`}
                 >
@@ -113,7 +113,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
         {/* Right Side Info */}
         <div className="w-full md:w-1/2 p-6 sm:p-8 flex flex-col justify-between overflow-y-auto">
           <div>
-            <div className="flex items-center space-x-2 text-amber-500 text-xs mb-2">
+            <div className="flex items-center space-x-2 text-[#FF9F61] text-xs mb-2">
               <Star className="w-4 h-4 fill-current" />
               <span className="font-bold text-neutral-800">{product.rating.toFixed(1)}</span>
               <span className="text-neutral-400">({product.reviewCount} reviews)</span>
@@ -166,7 +166,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                       onClick={() => setSelectedSize(sz)}
                       className={`text-xs px-3 py-1.5 rounded-lg border font-medium transition-all ${
                         selectedSize === sz
-                          ? 'border-[#D4AF37] bg-amber-50 text-[#D4AF37]'
+                          ? 'border-[#FF9F61] bg-[#FF9F61]/10 text-emerald-950 font-semibold'
                           : 'border-neutral-200 text-neutral-700 hover:border-neutral-300'
                       }`}
                     >
@@ -201,7 +201,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                             : color.toLowerCase() === 'green'
                             ? 'bg-emerald-600'
                             : color.toLowerCase() === 'golden' || color.toLowerCase() === 'gold'
-                            ? 'bg-amber-400'
+                            ? 'bg-[#FF9F61]'
                             : color.toLowerCase() === 'silver'
                             ? 'bg-slate-300'
                             : 'bg-neutral-400'
@@ -249,7 +249,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
             <div className="flex items-center space-x-3">
               <button
                 onClick={handleAdd}
-                className="flex-1 bg-neutral-900 hover:bg-[#D4AF37] text-white hover:text-neutral-950 font-semibold text-sm py-3 px-4 rounded-xl transition-colors flex items-center justify-center space-x-2 cursor-pointer shadow-xs"
+                className="flex-1 bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-semibold text-sm py-3 px-4 rounded-xl transition-colors flex items-center justify-center space-x-2 cursor-pointer shadow-xs"
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span>Add to Cart</span>
@@ -275,7 +275,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 onClose();
                 onBuyNow(product, quantity, selectedSize);
               }}
-              className="w-full bg-[#D4AF37] hover:bg-[#c49f2e] text-neutral-950 font-semibold text-sm py-3 px-4 rounded-xl transition-colors cursor-pointer shadow-xs"
+              className="w-full bg-[#FF9F61] hover:bg-[#e88d51] text-neutral-950 font-semibold text-sm py-3 px-4 rounded-xl transition-colors cursor-pointer shadow-xs"
             >
               Buy Now
             </button>
@@ -285,7 +285,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 onClose();
                 onGoToDetail(product);
               }}
-              className="w-full text-center text-xs font-semibold text-neutral-600 hover:text-[#D4AF37] pt-2 flex items-center justify-center space-x-1 cursor-pointer"
+              className="w-full text-center text-xs font-semibold text-neutral-600 hover:text-[#FF9F61] pt-2 flex items-center justify-center space-x-1 cursor-pointer"
             >
               <span>View Full Product Details</span>
               <ArrowRight className="w-3.5 h-3.5" />

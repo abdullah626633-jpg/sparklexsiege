@@ -51,7 +51,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
             <CheckCircle2 className="w-10 h-10" />
           </div>
 
-          <span className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37] block">
+          <span className="text-xs font-semibold uppercase tracking-widest text-[#FF9F61] block">
             Thank You For Your Order
           </span>
 
@@ -80,7 +80,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
           <button
             onClick={() => onNavigate('shop')}
-            className="w-full bg-neutral-900 hover:bg-[#D4AF37] text-white hover:text-neutral-950 font-bold text-sm py-3.5 rounded-2xl transition-colors cursor-pointer"
+            className="w-full bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold text-sm py-3.5 rounded-2xl transition-colors cursor-pointer"
           >
             Continue Shopping
           </button>
@@ -94,7 +94,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <button
           onClick={() => onNavigate('cart')}
-          className="inline-flex items-center space-x-2 text-xs font-bold text-neutral-600 hover:text-[#D4AF37] mb-8 cursor-pointer"
+          className="inline-flex items-center space-x-2 text-xs font-bold text-neutral-600 hover:text-[#FF9F61] mb-8 cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Return to Cart</span>
@@ -118,7 +118,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#D4AF37]"
+                      className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                       required
                     />
                   </div>
@@ -140,7 +140,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         type="text"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
-                        className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#D4AF37]"
+                        className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                         required
                       />
                     </div>
@@ -152,7 +152,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         type="text"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
-                        className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#D4AF37]"
+                        className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                         required
                       />
                     </div>
@@ -166,7 +166,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                       type="text"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
-                      className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#D4AF37]"
+                      className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                       required
                     />
                   </div>
@@ -180,7 +180,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         type="text"
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
-                        className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#D4AF37]"
+                        className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                         required
                       />
                     </div>
@@ -192,7 +192,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         type="text"
                         value={state}
                         onChange={(e) => setState(e.target.value)}
-                        className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#D4AF37]"
+                        className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                         required
                       />
                     </div>
@@ -204,7 +204,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         type="text"
                         value={zip}
                         onChange={(e) => setZip(e.target.value)}
-                        className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#D4AF37]"
+                        className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                         required
                       />
                     </div>
@@ -224,7 +224,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                     onClick={() => setPaymentMethod('card')}
                     className={`p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer flex flex-col items-center gap-1 ${
                       paymentMethod === 'card'
-                        ? 'border-[#D4AF37] bg-amber-50 text-[#D4AF37]'
+                        ? 'border-[#FF9F61] bg-[#FF9F61]/10 text-[#FF9F61]'
                         : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'
                     }`}
                   >
@@ -236,7 +236,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                     onClick={() => setPaymentMethod('apple')}
                     className={`p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer flex flex-col items-center gap-1 ${
                       paymentMethod === 'apple'
-                        ? 'border-[#D4AF37] bg-amber-50 text-[#D4AF37]'
+                        ? 'border-[#FF9F61] bg-[#FF9F61]/10 text-[#FF9F61]'
                         : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'
                     }`}
                   >
@@ -248,7 +248,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                     onClick={() => setPaymentMethod('klarna')}
                     className={`p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer flex flex-col items-center gap-1 ${
                       paymentMethod === 'klarna'
-                        ? 'border-[#D4AF37] bg-amber-50 text-[#D4AF37]'
+                        ? 'border-[#FF9F61] bg-[#FF9F61]/10 text-[#FF9F61]'
                         : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'
                     }`}
                   >
@@ -303,7 +303,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
               <button
                 type="submit"
-                className="w-full bg-[#D4AF37] hover:bg-[#c49f2e] text-neutral-950 font-bold text-base py-4 rounded-2xl shadow-lg transition-all cursor-pointer flex items-center justify-center space-x-2"
+                className="w-full bg-[#FF9F61] hover:bg-[#e88d51] text-neutral-950 font-bold text-base py-4 rounded-2xl shadow-lg transition-all cursor-pointer flex items-center justify-center space-x-2"
               >
                 <Lock className="w-5 h-5" />
                 <span>Place Order (${total.toLocaleString()})</span>

@@ -51,7 +51,7 @@ export const CartPage: React.FC<CartPageProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Title */}
         <div className="text-center max-w-xl mx-auto mb-10">
-          <span className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37] block mb-1">
+          <span className="text-xs font-semibold uppercase tracking-widest text-[#FF9F61] block mb-1">
             Shopping Bag
           </span>
           <h1 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-neutral-900">
@@ -61,7 +61,7 @@ export const CartPage: React.FC<CartPageProps> = ({
 
         {cartItems.length === 0 ? (
           <div className="text-center py-20 bg-neutral-50 rounded-3xl border border-neutral-100 max-w-xl mx-auto p-8">
-            <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-[#D4AF37] opacity-40" />
+            <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-[#FF9F61] opacity-40" />
             <h2 className="font-serif-luxury text-2xl font-bold text-neutral-900 mb-2">
               Your Shopping Bag is empty
             </h2>
@@ -70,7 +70,7 @@ export const CartPage: React.FC<CartPageProps> = ({
             </p>
             <button
               onClick={() => onNavigate('shop')}
-              className="bg-neutral-900 hover:bg-[#D4AF37] text-white hover:text-neutral-950 font-semibold text-sm py-3 px-8 rounded-full transition-colors cursor-pointer"
+              className="bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-semibold text-sm py-3 px-8 rounded-full transition-colors cursor-pointer"
             >
               Start Shopping
             </button>
@@ -169,7 +169,7 @@ export const CartPage: React.FC<CartPageProps> = ({
               <div className="pt-4 flex items-center justify-between">
                 <button
                   onClick={() => onNavigate('shop')}
-                  className="inline-flex items-center space-x-2 text-xs font-bold text-neutral-700 hover:text-[#D4AF37] transition-colors cursor-pointer"
+                  className="inline-flex items-center space-x-2 text-xs font-bold text-neutral-700 hover:text-[#FF9F61] transition-colors cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Continue Shopping</span>
@@ -197,12 +197,12 @@ export const CartPage: React.FC<CartPageProps> = ({
                         value={couponCode}
                         onChange={(e) => setCouponCode(e.target.value)}
                         placeholder="e.g. SPARKLE10"
-                        className="w-full pl-9 pr-3 py-2 bg-white border border-neutral-200 rounded-xl text-xs uppercase focus:outline-hidden focus:border-[#D4AF37]"
+                        className="w-full pl-9 pr-3 py-2 bg-white border border-neutral-200 rounded-xl text-xs uppercase focus:outline-hidden focus:border-[#FF9F61]"
                       />
                     </div>
                     <button
                       type="submit"
-                      className="bg-neutral-900 hover:bg-[#D4AF37] text-white hover:text-neutral-950 font-semibold text-xs px-4 rounded-xl transition-colors cursor-pointer"
+                      className="bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-semibold text-xs px-4 rounded-xl transition-colors cursor-pointer"
                     >
                       Apply
                     </button>
@@ -252,7 +252,7 @@ export const CartPage: React.FC<CartPageProps> = ({
 
                 <button
                   onClick={() => onNavigate('checkout')}
-                  className="w-full mt-6 bg-[#D4AF37] hover:bg-[#c49f2e] text-neutral-950 font-bold text-base py-4 rounded-2xl shadow-md transition-all cursor-pointer flex items-center justify-center space-x-2"
+                  className="w-full mt-6 bg-[#FF9F61] hover:bg-[#e88d51] text-neutral-950 font-bold text-base py-4 rounded-2xl shadow-md transition-all cursor-pointer flex items-center justify-center space-x-2"
                 >
                   <span>Proceed to Checkout</span>
                   <ArrowRight className="w-5 h-5" />

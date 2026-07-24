@@ -18,7 +18,7 @@ export const ContactPage: React.FC = () => {
     <div className="bg-white min-h-screen py-16 sm:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37] block mb-2">
+          <span className="text-xs font-semibold uppercase tracking-widest text-[#FF9F61] block mb-2">
             Atelier Assistance
           </span>
           <h1 className="font-serif-luxury text-4xl sm:text-5xl font-bold text-neutral-900 tracking-tight">
@@ -39,7 +39,7 @@ export const ContactPage: React.FC = () => {
 
               <div className="space-y-6 text-xs">
                 <div className="flex items-start space-x-4">
-                  <div className="p-3 bg-white text-[#D4AF37] rounded-2xl border border-neutral-100 shrink-0">
+                  <div className="p-3 bg-white text-[#FF9F61] rounded-2xl border border-neutral-100 shrink-0">
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
@@ -49,7 +49,7 @@ export const ContactPage: React.FC = () => {
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="p-3 bg-white text-[#D4AF37] rounded-2xl border border-neutral-100 shrink-0">
+                  <div className="p-3 bg-white text-[#FF9F61] rounded-2xl border border-neutral-100 shrink-0">
                     <Phone className="w-5 h-5" />
                   </div>
                   <div>
@@ -59,7 +59,7 @@ export const ContactPage: React.FC = () => {
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="p-3 bg-white text-[#D4AF37] rounded-2xl border border-neutral-100 shrink-0">
+                  <div className="p-3 bg-white text-[#FF9F61] rounded-2xl border border-neutral-100 shrink-0">
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div>
@@ -69,7 +69,7 @@ export const ContactPage: React.FC = () => {
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="p-3 bg-white text-[#D4AF37] rounded-2xl border border-neutral-100 shrink-0">
+                  <div className="p-3 bg-white text-[#FF9F61] rounded-2xl border border-neutral-100 shrink-0">
                     <Clock className="w-5 h-5" />
                   </div>
                   <div>
@@ -108,7 +108,7 @@ export const ContactPage: React.FC = () => {
                     setSubject('');
                     setMessage('');
                   }}
-                  className="mt-4 text-xs font-bold text-[#D4AF37] underline cursor-pointer"
+                  className="mt-4 text-xs font-bold text-[#FF9F61] underline cursor-pointer"
                 >
                   Send another message
                 </button>
@@ -129,7 +129,7 @@ export const ContactPage: React.FC = () => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g. Victoria Siege"
-                      className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#D4AF37]"
+                      className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                       required
                     />
                   </div>
@@ -143,7 +143,7 @@ export const ContactPage: React.FC = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="e.g. victoria@example.com"
-                      className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#D4AF37]"
+                      className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                       required
                     />
                   </div>
@@ -158,7 +158,7 @@ export const ContactPage: React.FC = () => {
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     placeholder="e.g. Custom Ring Sizing Inquiry"
-                    className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#D4AF37]"
+                    className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                   />
                 </div>
 
@@ -170,14 +170,14 @@ export const ContactPage: React.FC = () => {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Describe your question or styling preference..."
-                    className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs h-32 focus:outline-hidden focus:border-[#D4AF37]"
+                    className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs h-32 focus:outline-hidden focus:border-[#FF9F61]"
                     required
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-neutral-900 hover:bg-[#D4AF37] text-white hover:text-neutral-950 font-bold text-sm py-3.5 rounded-2xl transition-colors cursor-pointer shadow-xs flex items-center justify-center space-x-2"
+                  className="w-full bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold text-sm py-3.5 rounded-2xl transition-colors cursor-pointer shadow-xs flex items-center justify-center space-x-2"
                 >
                   <Send className="w-4 h-4" />
                   <span>Send Message</span>

@@ -6,6 +6,10 @@
     --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     font-family: var(--font-sans);
     color: #1a1a1a;
@@ -18,21 +22,104 @@
   }
 }
 
-/* Custom Emerald Accent Helper */
-.text-gold {
-  color: #047857;
+/* Custom Emerald & Coral-Gold (#FF9F61) Luxury Helpers */
+.text-gold, .text-secondary {
+  color: #FF9F61;
 }
 
-.bg-gold {
-  background-color: #065f46;
+.bg-gold, .bg-secondary {
+  background-color: #FF9F61;
 }
 
-.border-gold {
-  border-color: #047857;
+.border-gold, .border-secondary {
+  border-color: #FF9F61;
 }
 
-.bg-gold-light {
-  background-color: #ecfdf5;
+.bg-gold-light, .bg-secondary-light {
+  background-color: #fff6f0;
+}
+
+/* Coral-Gold (#FF9F61) & Emerald Shimmer Animation Utilities */
+@keyframes shimmerWave {
+  0% {
+    transform: translateX(-100%) rotate(25deg);
+  }
+  100% {
+    transform: translateX(200%) rotate(25deg);
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(6, 95, 70, 0.2), 0 0 30px rgba(255, 159, 97, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(6, 95, 70, 0.4), 0 0 45px rgba(255, 159, 97, 0.4);
+  }
+}
+
+@keyframes goldGradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-shimmer::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%) rotate(25deg);
+  animation: shimmerWave 4s infinite ease-in-out;
+  pointer-events: none;
+}
+
+.animate-float {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #065f46 0%, #047857 40%, #FF9F61 70%, #047857 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: goldGradientMove 6s ease infinite;
+}
+
+/* Luxury Card Hover Effect */
+.luxury-card-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.luxury-card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px -15px rgba(6, 95, 70, 0.12), 0 0 15px rgba(255, 159, 97, 0.15);
 }
 
 /* Hide scrollbar for clean UI in horizontal scroll if needed */
@@ -53,9 +140,10 @@
   background: #f8f8f8;
 }
 ::-webkit-scrollbar-thumb {
-  background: #a7f3d0;
+  background: #065f46;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #059669;
+  background: #047857;
 }
+

@@ -115,8 +115,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Toast Alert */}
         {addedToast && (
-          <div className="fixed bottom-6 right-6 z-50 bg-neutral-900 text-white py-3.5 px-5 rounded-2xl shadow-2xl flex items-center space-x-3 border border-[#D4AF37]/50 animate-bounce">
-            <Check className="w-5 h-5 text-[#D4AF37]" />
+          <div className="fixed bottom-6 right-6 z-50 bg-neutral-900 text-white py-3.5 px-5 rounded-2xl shadow-2xl flex items-center space-x-3 border border-[#FF9F61]/50 animate-bounce">
+            <Check className="w-5 h-5 text-[#FF9F61]" />
             <span className="text-xs sm:text-sm font-semibold">
               Added {quantity} × "{product.name}" to cart!
             </span>
@@ -136,7 +136,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                     onClick={() => setActiveImgIndex(idx)}
                     className={`w-20 h-20 rounded-2xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
                       activeImgIndex === idx
-                        ? 'border-[#D4AF37] ring-2 ring-[#D4AF37]/30 shadow-xs'
+                        ? 'border-[#FF9F61] ring-2 ring-[#FF9F61]/30 shadow-xs'
                         : 'border-neutral-100 opacity-70 hover:opacity-100'
                     }`}
                   >
@@ -182,14 +182,14 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
           {/* Details (Right Col: 5 cols) */}
           <div className="lg:col-span-5 flex flex-col justify-between">
             <div>
-              <div className="flex items-center space-x-2 text-amber-500 text-xs font-semibold mb-2">
+              <div className="flex items-center space-x-2 text-[#FF9F61] text-xs font-semibold mb-2">
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
                       className={`w-4 h-4 ${
                         i < Math.floor(product.rating)
-                          ? 'fill-current text-amber-400'
+                          ? 'fill-current text-[#FF9F61]'
                           : 'text-neutral-200'
                       }`}
                     />
@@ -230,8 +230,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               </p>
 
               {/* Material Badge */}
-              <div className="mt-6 p-3.5 bg-amber-50/60 rounded-2xl border border-[#D4AF37]/20 flex items-center space-x-3">
-                <Sparkles className="w-5 h-5 text-[#D4AF37] shrink-0" />
+              <div className="mt-6 p-3.5 bg-[#FF9F61]/10 rounded-2xl border border-[#FF9F61]/25 flex items-center space-x-3">
+                <Sparkles className="w-5 h-5 text-[#FF9F61] shrink-0" />
                 <div className="text-xs">
                   <span className="font-semibold text-neutral-900 block">Crafted Material</span>
                   <span className="text-neutral-600">{product.material}</span>
@@ -288,14 +288,20 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                       >
                         <span
                           className={`w-3.5 h-3.5 rounded-full border border-black/20 ${
-                            color.toLowerCase() === 'red'
+                            color.toLowerCase().includes('red') || color.toLowerCase().includes('ruby')
                               ? 'bg-rose-600'
-                              : color.toLowerCase() === 'green'
+                              : color.toLowerCase().includes('green') || color.toLowerCase().includes('emerald')
                               ? 'bg-emerald-600'
-                              : color.toLowerCase() === 'golden' || color.toLowerCase() === 'gold'
-                              ? 'bg-amber-400'
-                              : color.toLowerCase() === 'silver'
+                              : color.toLowerCase().includes('blue') || color.toLowerCase().includes('sapphire')
+                              ? 'bg-blue-600'
+                              : color.toLowerCase().includes('purple') || color.toLowerCase().includes('amethyst')
+                              ? 'bg-purple-600'
+                              : color.toLowerCase().includes('golden') || color.toLowerCase().includes('gold')
+                              ? 'bg-[#FF9F61]'
+                              : color.toLowerCase().includes('silver')
                               ? 'bg-slate-300'
+                              : color.toLowerCase().includes('black')
+                              ? 'bg-neutral-900'
                               : 'bg-neutral-400'
                           }`}
                         />
@@ -335,7 +341,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 <div className="flex items-center space-x-3">
                   <button
                     onClick={handleAddToCart}
-                    className="flex-1 bg-neutral-900 hover:bg-[#D4AF37] text-white hover:text-neutral-950 font-semibold text-base py-4 px-6 rounded-2xl transition-all cursor-pointer shadow-md flex items-center justify-center space-x-2"
+                    className="flex-1 bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-semibold text-base py-4 px-6 rounded-2xl transition-all cursor-pointer shadow-md flex items-center justify-center space-x-2"
                   >
                     <ShoppingBag className="w-5 h-5" />
                     <span>Add to Cart</span>
@@ -355,7 +361,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
                 <button
                   onClick={() => onBuyNow(product, quantity, selectedSize)}
-                  className="w-full bg-[#D4AF37] hover:bg-[#c49f2e] text-neutral-950 font-bold text-base py-4 px-6 rounded-2xl transition-all cursor-pointer shadow-md"
+                  className="w-full bg-[#FF9F61] hover:bg-[#e88d51] text-neutral-950 font-bold text-base py-4 px-6 rounded-2xl transition-all cursor-pointer shadow-md"
                 >
                   Buy Now
                 </button>
@@ -364,15 +370,15 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               {/* Value Badges */}
               <div className="mt-8 grid grid-cols-3 gap-3 pt-6 border-t border-neutral-100 text-center">
                 <div className="flex flex-col items-center p-3 bg-neutral-50 rounded-xl">
-                  <Truck className="w-5 h-5 text-[#D4AF37] mb-1" />
+                  <Truck className="w-5 h-5 text-[#FF9F61] mb-1" />
                   <span className="text-[11px] font-semibold text-neutral-800">Free Express Delivery</span>
                 </div>
                 <div className="flex flex-col items-center p-3 bg-neutral-50 rounded-xl">
-                  <RotateCcw className="w-5 h-5 text-[#D4AF37] mb-1" />
+                  <RotateCcw className="w-5 h-5 text-[#FF9F61] mb-1" />
                   <span className="text-[11px] font-semibold text-neutral-800">30-Day Returns</span>
                 </div>
                 <div className="flex flex-col items-center p-3 bg-neutral-50 rounded-xl">
-                  <ShieldCheck className="w-5 h-5 text-[#D4AF37] mb-1" />
+                  <ShieldCheck className="w-5 h-5 text-[#FF9F61] mb-1" />
                   <span className="text-[11px] font-semibold text-neutral-800">Lifetime Warranty</span>
                 </div>
               </div>
@@ -387,7 +393,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   className="w-full p-4 text-left font-semibold text-sm text-neutral-900 flex items-center justify-between bg-neutral-50/50 hover:bg-neutral-50 transition-colors"
                 >
                   <span className="flex items-center space-x-2">
-                    <Truck className="w-4 h-4 text-[#D4AF37]" />
+                    <Truck className="w-4 h-4 text-[#FF9F61]" />
                     <span>Delivery Information</span>
                   </span>
                   <ChevronDown
@@ -412,7 +418,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   className="w-full p-4 text-left font-semibold text-sm text-neutral-900 flex items-center justify-between bg-neutral-50/50 hover:bg-neutral-50 transition-colors"
                 >
                   <span className="flex items-center space-x-2">
-                    <RotateCcw className="w-4 h-4 text-[#D4AF37]" />
+                    <RotateCcw className="w-4 h-4 text-[#FF9F61]" />
                     <span>Return Policy</span>
                   </span>
                   <ChevronDown
@@ -436,7 +442,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   className="w-full p-4 text-left font-semibold text-sm text-neutral-900 flex items-center justify-between bg-neutral-50/50 hover:bg-neutral-50 transition-colors"
                 >
                   <span className="flex items-center space-x-2">
-                    <Sparkles className="w-4 h-4 text-[#D4AF37]" />
+                    <Sparkles className="w-4 h-4 text-[#FF9F61]" />
                     <span>Specifications & Certification</span>
                   </span>
                   <ChevronDown
@@ -468,7 +474,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
         <div className="mt-20 pt-12 border-t border-neutral-200">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37] block mb-1">
+              <span className="text-xs font-semibold uppercase tracking-widest text-[#FF9F61] block mb-1">
                 Verified Opinions
               </span>
               <h2 className="font-serif-luxury text-3xl font-bold text-neutral-900">
@@ -478,7 +484,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
             <button
               onClick={() => setShowReviewForm(!showReviewForm)}
-              className="mt-4 sm:mt-0 bg-neutral-900 hover:bg-[#D4AF37] text-white hover:text-neutral-950 font-semibold text-xs py-2.5 px-5 rounded-xl transition-colors cursor-pointer"
+              className="mt-4 sm:mt-0 bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-semibold text-xs py-2.5 px-5 rounded-xl transition-colors cursor-pointer"
             >
               {showReviewForm ? 'Cancel Review' : 'Write a Review'}
             </button>
@@ -490,7 +496,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               <h3 className="text-sm font-bold text-neutral-900">Share Your Experience</h3>
               <div>
                 <label className="block text-xs font-medium text-neutral-700 mb-1">Rating</label>
-                <div className="flex space-x-1 text-amber-400">
+                <div className="flex space-x-1 text-[#FF9F61]">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={star}
@@ -541,7 +547,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
               <button
                 type="submit"
-                className="bg-[#D4AF37] text-neutral-950 font-bold text-xs py-2.5 px-6 rounded-xl cursor-pointer"
+                className="bg-[#FF9F61] text-neutral-950 font-bold text-xs py-2.5 px-6 rounded-xl cursor-pointer"
               >
                 Submit Review
               </button>
@@ -554,7 +560,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               <div key={rev.id} className="p-6 bg-neutral-50 rounded-2xl border border-neutral-100 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <div className="flex text-amber-400">
+                    <div className="flex text-[#FF9F61]">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className={`w-3.5 h-3.5 ${i < rev.rating ? 'fill-current' : 'text-neutral-200'}`} />
                       ))}
@@ -581,7 +587,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
         {/* Related Products Section */}
         <div className="mt-20 pt-12 border-t border-neutral-200">
-          <span className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37] block mb-2 text-center">
+          <span className="text-xs font-semibold uppercase tracking-widest text-[#FF9F61] block mb-2 text-center">
             You May Also Admire
           </span>
           <h2 className="font-serif-luxury text-3xl font-bold text-neutral-900 text-center mb-10">

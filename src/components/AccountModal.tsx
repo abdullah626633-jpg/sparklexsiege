@@ -57,7 +57,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-hidden focus:border-[#D4AF37]"
+                    className="w-full pl-9 pr-3 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-hidden focus:border-[#FF9F61]"
                     required
                   />
                 </div>
@@ -73,7 +73,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-hidden focus:border-[#D4AF37]"
+                    className="w-full pl-9 pr-3 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-hidden focus:border-[#FF9F61]"
                     required
                   />
                 </div>
@@ -81,7 +81,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
 
               <button
                 type="submit"
-                className="w-full bg-neutral-900 hover:bg-[#D4AF37] text-white hover:text-neutral-950 font-semibold text-sm py-3 rounded-xl transition-colors cursor-pointer shadow-xs"
+                className="w-full bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-semibold text-sm py-3 rounded-xl transition-colors cursor-pointer shadow-xs"
               >
                 Sign In
               </button>
@@ -90,14 +90,14 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
         ) : (
           <div>
             <div className="flex items-center space-x-3 pb-4 border-b border-neutral-100">
-              <div className="w-12 h-12 rounded-full bg-amber-50 text-[#D4AF37] flex items-center justify-center font-bold text-lg">
+              <div className="w-12 h-12 rounded-full bg-[#FF9F61]/15 text-[#FF9F61] flex items-center justify-center font-bold text-lg">
                 VS
               </div>
               <div>
                 <h3 className="font-serif-luxury text-lg font-bold text-neutral-900">
                   Victoria Siege
                 </h3>
-                <p className="text-xs text-neutral-500">VIP Gold Member</p>
+                <p className="text-xs text-neutral-500">VIP Member</p>
               </div>
             </div>
 
@@ -107,7 +107,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
                 onClick={() => setTab('profile')}
                 className={`flex-1 py-2 text-xs font-semibold text-center border-b-2 cursor-pointer transition-colors ${
                   tab === 'profile'
-                    ? 'border-[#D4AF37] text-[#D4AF37]'
+                    ? 'border-[#FF9F61] text-[#FF9F61]'
                     : 'border-transparent text-neutral-500 hover:text-neutral-900'
                 }`}
               >
@@ -117,7 +117,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
                 onClick={() => setTab('orders')}
                 className={`flex-1 py-2 text-xs font-semibold text-center border-b-2 cursor-pointer transition-colors ${
                   tab === 'orders'
-                    ? 'border-[#D4AF37] text-[#D4AF37]'
+                    ? 'border-[#FF9F61] text-[#FF9F61]'
                     : 'border-transparent text-neutral-500 hover:text-neutral-900'
                 }`}
               >

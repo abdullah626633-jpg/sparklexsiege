@@ -12,7 +12,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37] block mb-2">
+          <span className="text-xs font-semibold uppercase tracking-widest text-[#FF9F61] block mb-2">
             Our Heritage & Artisanal Philosophy
           </span>
           <h1 className="font-serif-luxury text-4xl sm:text-5xl font-bold text-neutral-900 tracking-tight">
@@ -33,7 +33,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/70 via-transparent to-transparent" />
           <div className="absolute bottom-8 left-8 right-8 text-white">
-            <span className="text-xs uppercase tracking-widest text-[#D4AF37] font-semibold">
+            <span className="text-xs uppercase tracking-widest text-[#FF9F61] font-semibold">
               The SparklezSiege Atelier
             </span>
             <p className="font-serif-luxury text-2xl sm:text-3xl font-bold mt-1">
@@ -45,7 +45,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
         {/* Brand Pillars */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 my-16">
           <div className="p-6 bg-neutral-50 rounded-2xl border border-neutral-100 text-center">
-            <div className="w-12 h-12 bg-amber-50 text-[#D4AF37] rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-12 h-12 bg-[#FF9F61]/10 text-[#FF9F61] rounded-full flex items-center justify-center mx-auto mb-4">
               <Sparkles className="w-6 h-6" />
             </div>
             <h3 className="font-serif-luxury text-xl font-bold text-neutral-900 mb-2">18k Solid Gold</h3>
@@ -55,7 +55,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
           </div>
 
           <div className="p-6 bg-neutral-50 rounded-2xl border border-neutral-100 text-center">
-            <div className="w-12 h-12 bg-amber-50 text-[#D4AF37] rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-12 h-12 bg-[#FF9F61]/10 text-[#FF9F61] rounded-full flex items-center justify-center mx-auto mb-4">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <h3 className="font-serif-luxury text-xl font-bold text-neutral-900 mb-2">Ethical Lab Diamonds</h3>
@@ -65,7 +65,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
           </div>
 
           <div className="p-6 bg-neutral-50 rounded-2xl border border-neutral-100 text-center">
-            <div className="w-12 h-12 bg-amber-50 text-[#D4AF37] rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-12 h-12 bg-[#FF9F61]/10 text-[#FF9F61] rounded-full flex items-center justify-center mx-auto mb-4">
               <Award className="w-6 h-6" />
             </div>
             <h3 className="font-serif-luxury text-xl font-bold text-neutral-900 mb-2">Lifetime Guarantee</h3>
@@ -85,7 +85,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
           </p>
           <button
             onClick={() => onNavigate('shop')}
-            className="bg-[#D4AF37] hover:bg-[#c49f2e] text-neutral-950 font-bold text-sm py-3.5 px-8 rounded-full transition-colors cursor-pointer"
+            className="bg-[#FF9F61] hover:bg-[#e88d51] text-neutral-950 font-bold text-sm py-3.5 px-8 rounded-full transition-colors cursor-pointer"
           >
             Shop All Jewellery
           </button>

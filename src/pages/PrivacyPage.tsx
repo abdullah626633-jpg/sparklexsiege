@@ -5,7 +5,7 @@ export const PrivacyPage: React.FC = () => {
     <div className="bg-white min-h-screen py-16 sm:py-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-neutral-800 space-y-6">
         <div className="text-center mb-10">
-          <span className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37] block mb-1">
+          <span className="text-xs font-semibold uppercase tracking-widest text-[#FF9F61] block mb-1">
             Legal & Trust
           </span>
           <h1 className="font-serif-luxury text-4xl font-bold text-neutral-900">
