@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface HeroBannerProps {
   onShopNow: () => void;
@@ -31,9 +31,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onShopNow }) => {
       <div className="relative z-10 pb-8 pl-6 sm:pb-12 sm:pl-12">
         <button
           onClick={onShopNow}
-          className="inline-flex items-center space-x-3 bg-neutral-900/90 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold tracking-wider uppercase text-xs sm:text-sm px-7 py-3.5 sm:px-9 sm:py-4 rounded-full shadow-2xl hover:shadow-[#FF9F61]/20 transition-all duration-300 border border-[#FF9F61]/60 hover:border-[#FF9F61] backdrop-blur-md cursor-pointer group"
+          className="inline-flex items-center space-x-3 bg-neutral-900/90 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold tracking-wider uppercase text-xs sm:text-sm px-8 py-3.5 sm:px-10 sm:py-4 rounded-full shadow-2xl hover:shadow-[#FF9F61]/20 transition-all duration-300 border border-[#FF9F61]/60 hover:border-[#FF9F61] backdrop-blur-md cursor-pointer group"
         >
-          <Sparkles className="w-4 h-4 text-[#FF9F61] group-hover:text-neutral-950 transition-colors" />
           <span>Shop Now</span>
           <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform" />
         </button>

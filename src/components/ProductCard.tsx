@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Product } from '../types';
-import { Heart, Eye, ShoppingBag, Star, Sparkles } from 'lucide-react';
+import { Heart, Eye, ShoppingBag, Star } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
@@ -53,25 +53,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         )}
 
         {/* Badges */}
-        <div className="absolute top-2 left-2 sm:top-3 sm:left-3 flex flex-col space-y-1 z-10">
-          {product.isSale && (
+        {product.isSale && (
+          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 flex flex-col space-y-1 z-10">
             <motion.span
               whileHover={{ scale: 1.05 }}
               className="bg-rose-600 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full shadow-xs flex items-center space-x-0.5"
             >
               <span>Sale</span>
             </motion.span>
-          )}
-          {product.isNew && (
-            <motion.span
-              whileHover={{ scale: 1.05 }}
-              className="bg-emerald-900 text-emerald-100 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full shadow-xs border border-emerald-700/50 flex items-center space-x-1"
-            >
-              <Sparkles className="w-2.5 h-2.5 text-[#FF9F61]" />
-              <span>New</span>
-            </motion.span>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Top Right Wishlist Button */}
         <motion.button

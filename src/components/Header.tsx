@@ -7,8 +7,7 @@ import {
   ShoppingBag, 
   Menu, 
   X, 
-  ChevronRight,
-  Sparkles
+  ChevronRight
 } from 'lucide-react';
 import { CategoryType, PageType } from '../types';
 
@@ -75,11 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
     <>
       {/* Top Announcement Bar */}
       <div className="bg-gradient-to-r from-[#001D1E] via-[#003B3E] to-[#001D1E] text-[#FF9F61] text-[11px] sm:text-xs py-1.5 px-4 text-center border-b border-[#FF9F61]/30 font-medium tracking-wider uppercase overflow-hidden relative">
-        <div className="inline-flex items-center space-x-2">
-          <Sparkles className="w-3 h-3 text-[#FF9F61]" />
-          <span>SparklezSiege Fine Jewellery &bull; Free Express Delivery &bull; 100% Handcrafted Elegance</span>
-          <Sparkles className="w-3 h-3 text-[#FF9F61]" />
-        </div>
+        <span>SparklezSiege Fine Jewellery &bull; Free Express Delivery &bull; 100% Handcrafted Elegance</span>
       </div>
 
       <header

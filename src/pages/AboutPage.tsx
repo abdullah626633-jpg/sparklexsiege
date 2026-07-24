@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageType } from '../types';
-import { Sparkles, ShieldCheck, Heart, Award } from 'lucide-react';
+import { Gem, ShieldCheck, Heart, Award } from 'lucide-react';
 
 interface AboutPageProps {
   onNavigate: (page: PageType) => void;
@@ -46,7 +46,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 my-16">
           <div className="p-6 bg-neutral-50 rounded-2xl border border-neutral-100 text-center">
             <div className="w-12 h-12 bg-[#FF9F61]/10 text-[#FF9F61] rounded-full flex items-center justify-center mx-auto mb-4">
-              <Sparkles className="w-6 h-6" />
+              <Gem className="w-6 h-6" />
             </div>
             <h3 className="font-serif-luxury text-xl font-bold text-neutral-900 mb-2">18k Solid Gold</h3>
             <p className="text-xs text-neutral-600 leading-relaxed">

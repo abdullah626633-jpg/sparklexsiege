@@ -11,7 +11,7 @@ import {
   ShieldCheck,
   ChevronDown,
   Check,
-  Sparkles,
+  Gem,
   Share2,
 } from 'lucide-react';
 
@@ -231,7 +231,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
               {/* Material Badge */}
               <div className="mt-6 p-3.5 bg-[#FF9F61]/10 rounded-2xl border border-[#FF9F61]/25 flex items-center space-x-3">
-                <Sparkles className="w-5 h-5 text-[#FF9F61] shrink-0" />
+                <Gem className="w-5 h-5 text-[#FF9F61] shrink-0" />
                 <div className="text-xs">
                   <span className="font-semibold text-neutral-900 block">Crafted Material</span>
                   <span className="text-neutral-600">{product.material}</span>
@@ -442,7 +442,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   className="w-full p-4 text-left font-semibold text-sm text-neutral-900 flex items-center justify-between bg-neutral-50/50 hover:bg-neutral-50 transition-colors"
                 >
                   <span className="flex items-center space-x-2">
-                    <Sparkles className="w-4 h-4 text-[#FF9F61]" />
+                    <ShieldCheck className="w-4 h-4 text-[#FF9F61]" />
                     <span>Specifications & Certification</span>
                   </span>
                   <ChevronDown

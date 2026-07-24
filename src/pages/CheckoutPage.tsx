@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CartItem, PageType } from '../types';
-import { ShieldCheck, CreditCard, CheckCircle2, Lock, Sparkles, ArrowLeft } from 'lucide-react';
+import { ShieldCheck, CreditCard, CheckCircle2, Lock, ArrowLeft } from 'lucide-react';
 
 interface CheckoutPageProps {
   cartItems: CartItem[];
@@ -240,7 +240,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'
                     }`}
                   >
-                    <Sparkles className="w-5 h-5" />
+                    <Lock className="w-5 h-5" />
                     <span>Apple Pay</span>
                   </button>
                   <button

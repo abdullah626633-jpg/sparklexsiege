@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Product, CategoryType } from '../types';
 import { ProductCard } from '../components/ProductCard';
 import { CATEGORIES } from '../data/products';
-import { SlidersHorizontal, Search, Sparkles } from 'lucide-react';
+import { SlidersHorizontal, Search } from 'lucide-react';
 
 interface ShopPageProps {
   products: Product[];
@@ -55,9 +55,8 @@ export const ShopPage: React.FC<ShopPageProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <div className="text-center max-w-2xl mx-auto mb-10">
-          <span className="text-xs font-semibold uppercase tracking-widest text-emerald-700 mb-2 inline-flex items-center space-x-1">
-            <Sparkles className="w-3.5 h-3.5 text-[#FF9F61] animate-pulse" />
-            <span>The Complete Collection</span>
+          <span className="text-xs font-semibold uppercase tracking-widest text-emerald-700 mb-2 block">
+            The Complete Collection
           </span>
           <h1 className="font-serif-luxury text-4xl sm:text-5xl font-bold text-neutral-900 tracking-tight">
             Shop All Jewellery
