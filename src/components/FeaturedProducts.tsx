@@ -38,7 +38,7 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
         >
           <div>
             <span className="text-xs font-semibold uppercase tracking-widest text-emerald-700 mb-2 flex items-center space-x-1">
-              <Sparkles className="w-3.5 h-3.5 text-[#FF9F61] animate-pulse" />
+              <Sparkles className="w-3.5 h-3.5 text-[#FF9F61]" />
               <span>Signature Pieces</span>
             </span>
             <h2 className="font-serif-luxury text-3xl sm:text-4xl md:text-5xl font-bold text-neutral-900 tracking-tight">

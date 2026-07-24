@@ -115,7 +115,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Toast Alert */}
         {addedToast && (
-          <div className="fixed bottom-6 right-6 z-50 bg-neutral-900 text-white py-3.5 px-5 rounded-2xl shadow-2xl flex items-center space-x-3 border border-[#FF9F61]/50 animate-bounce">
+          <div className="fixed bottom-6 right-6 z-50 bg-neutral-900 text-white py-3.5 px-5 rounded-2xl shadow-2xl flex items-center space-x-3 border border-[#FF9F61]/50 transition-all">
             <Check className="w-5 h-5 text-[#FF9F61]" />
             <span className="text-xs sm:text-sm font-semibold">
               Added {quantity} × "{product.name}" to cart!

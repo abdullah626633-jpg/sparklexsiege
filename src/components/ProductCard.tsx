@@ -67,7 +67,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               whileHover={{ scale: 1.05 }}
               className="bg-emerald-900 text-emerald-100 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full shadow-xs border border-emerald-700/50 flex items-center space-x-1"
             >
-              <Sparkles className="w-2.5 h-2.5 text-[#FF9F61] animate-pulse" />
+              <Sparkles className="w-2.5 h-2.5 text-[#FF9F61]" />
               <span>New</span>
             </motion.span>
           )}
