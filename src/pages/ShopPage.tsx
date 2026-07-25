@@ -67,33 +67,31 @@ export const ShopPage: React.FC<ShopPageProps> = ({
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="bg-neutral-50/80 backdrop-blur-md rounded-2xl p-4 sm:p-6 mb-10 border border-neutral-200/80 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xs">
-          {/* Category Filter Chips */}
+        <div className="bg-neutral-50/90 border border-neutral-200 p-4 sm:p-5 mb-10 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xs">
+          {/* Category Filter Buttons */}
           <div className="flex items-center space-x-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
-            <motion.button
-              whileTap={{ scale: 0.95 }}
+            <button
               onClick={() => setSelectedCat('all')}
-              className={`text-xs px-4 py-2 rounded-xl font-semibold transition-all whitespace-nowrap cursor-pointer ${
+              className={`text-xs px-4 py-2.5 uppercase font-bold tracking-wider transition-all whitespace-nowrap cursor-pointer border ${
                 selectedCat === 'all'
-                  ? 'bg-emerald-900 text-white shadow-md'
-                  : 'bg-white text-neutral-700 hover:bg-neutral-200 border border-neutral-200'
+                  ? 'bg-neutral-900 text-[#FF9F61] border-neutral-900 shadow-xs'
+                  : 'bg-white text-neutral-700 hover:bg-neutral-100 border-neutral-200'
               }`}
             >
               All Pieces ({products.length})
-            </motion.button>
+            </button>
             {CATEGORIES.map((cat) => (
-              <motion.button
+              <button
                 key={cat.id}
-                whileTap={{ scale: 0.95 }}
                 onClick={() => setSelectedCat(cat.id)}
-                className={`text-xs px-4 py-2 rounded-xl font-semibold transition-all whitespace-nowrap cursor-pointer ${
+                className={`text-xs px-4 py-2.5 uppercase font-bold tracking-wider transition-all whitespace-nowrap cursor-pointer border ${
                   selectedCat === cat.id
-                    ? 'bg-emerald-900 text-[#FF9F61] shadow-md border border-emerald-700'
-                    : 'bg-white text-neutral-700 hover:bg-neutral-200 border border-neutral-200'
+                    ? 'bg-neutral-900 text-[#FF9F61] border-neutral-900 shadow-xs'
+                    : 'bg-white text-neutral-700 hover:bg-neutral-100 border-neutral-200'
                 }`}
               >
                 {cat.name}
-              </motion.button>
+              </button>
             ))}
           </div>
 

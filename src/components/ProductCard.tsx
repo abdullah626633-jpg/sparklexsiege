@@ -25,20 +25,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="group relative bg-white rounded-2xl overflow-hidden border border-neutral-100/80 shadow-xs hover:shadow-xl hover:shadow-emerald-950/10 transition-all duration-300 flex flex-col justify-between"
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+      className="group relative bg-white border border-neutral-200 hover:border-neutral-900 transition-all duration-300 flex flex-col justify-between"
     >
       {/* Top Image Container */}
       <div className="relative aspect-square bg-neutral-50 overflow-hidden cursor-pointer" onClick={() => onSelect(product)}>
-        {/* Animated Light Shimmer Beam on Hover */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 z-10 pointer-events-none" />
+        {/* Subtle hover gradient tint */}
+        <div className="absolute inset-0 bg-neutral-950/0 group-hover:bg-neutral-950/5 transition-colors duration-300 z-1 pointer-events-none" />
 
         {/* Primary Image */}
         <motion.img
           src={product.images[0]}
           alt={product.name}
-          className="w-full h-full object-cover object-center transform group-hover:scale-108 transition-transform duration-700 ease-out"
+          className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-500 ease-out"
           referrerPolicy="no-referrer"
         />
 
@@ -54,42 +54,37 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Badges */}
         {product.isSale && (
-          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 flex flex-col space-y-1 z-10">
-            <motion.span
-              whileHover={{ scale: 1.05 }}
-              className="bg-rose-600 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full shadow-xs flex items-center space-x-0.5"
-            >
-              <span>Sale</span>
-            </motion.span>
+          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10">
+            <span className="bg-rose-600 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 shadow-xs inline-block">
+              Sale
+            </span>
           </div>
         )}
 
         {/* Top Right Wishlist Button */}
-        <motion.button
-          whileTap={{ scale: 0.85 }}
-          whileHover={{ scale: 1.1 }}
+        <button
           onClick={(e) => {
             e.stopPropagation();
             onToggleWishlist(product);
           }}
-          className={`absolute top-2 right-2 p-1.5 sm:top-3 sm:right-3 sm:p-2.5 rounded-full backdrop-blur-md transition-all z-10 cursor-pointer shadow-xs ${
+          className={`absolute top-2 right-2 p-2 sm:top-3 sm:right-3 sm:p-2.5 transition-all z-10 cursor-pointer shadow-xs ${
             isWishlisted
-              ? 'bg-rose-50 text-rose-600 shadow-sm'
-              : 'bg-white/80 text-neutral-600 hover:text-rose-600 hover:bg-white'
+              ? 'bg-rose-600 text-white'
+              : 'bg-white/90 text-neutral-800 hover:bg-neutral-900 hover:text-white border border-neutral-200'
           }`}
           aria-label="Wishlist"
         >
           <Heart className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isWishlisted ? 'fill-current' : ''}`} />
-        </motion.button>
+        </button>
 
         {/* Hover Quick View Overlay Bar */}
-        <div className="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 hidden sm:flex items-center gap-2 z-10">
+        <div className="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 hidden sm:flex items-center z-10">
           <button
             onClick={(e) => {
               e.stopPropagation();
               onQuickView(product);
             }}
-            className="flex-1 bg-white/95 backdrop-blur-md hover:bg-emerald-900 hover:text-white text-neutral-900 font-medium text-xs py-2.5 px-3 rounded-xl shadow-lg flex items-center justify-center space-x-1.5 transition-all cursor-pointer"
+            className="w-full bg-neutral-900/90 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold text-xs uppercase tracking-wider py-2.5 px-3 border border-neutral-700 hover:border-[#FF9F61] shadow-lg flex items-center justify-center space-x-2 transition-colors cursor-pointer"
           >
             <Eye className="w-3.5 h-3.5" />
             <span>Quick View</span>
@@ -98,25 +93,25 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       </div>
 
       {/* Product Information */}
-      <div className="p-3 sm:p-4 flex flex-col flex-1 justify-between">
+      <div className="p-3.5 sm:p-4 flex flex-col flex-1 justify-between bg-white border-t border-neutral-100">
         <div onClick={() => onSelect(product)} className="cursor-pointer">
           <div className="flex items-center space-x-1 text-[#FF9F61] text-[11px] sm:text-xs mb-1">
             <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" />
-            <span className="font-semibold text-neutral-700">{product.rating.toFixed(1)}</span>
+            <span className="font-semibold text-neutral-800">{product.rating.toFixed(1)}</span>
             <span className="text-neutral-400">({product.reviewCount})</span>
           </div>
 
-          <h3 className="font-serif-luxury text-sm sm:text-base md:text-lg font-semibold text-neutral-900 group-hover:text-emerald-800 transition-colors line-clamp-2 leading-snug">
+          <h3 className="font-serif-luxury text-sm sm:text-base font-semibold text-neutral-900 group-hover:text-emerald-900 transition-colors line-clamp-2 leading-snug">
             {product.name}
           </h3>
 
-          <p className="text-[10px] sm:text-xs text-neutral-500 mt-0.5 sm:mt-1 line-clamp-1 font-light">
+          <p className="text-[10px] sm:text-xs text-neutral-500 mt-1 line-clamp-1 font-light tracking-wide uppercase">
             {product.material}
           </p>
         </div>
 
-        <div className="mt-3 pt-2.5 sm:mt-4 sm:pt-3 border-t border-neutral-100 flex items-center justify-between">
-          <div className="flex flex-wrap items-baseline gap-x-1">
+        <div className="mt-3 pt-3 border-t border-neutral-100 flex items-center justify-between">
+          <div className="flex flex-wrap items-baseline gap-x-1.5">
             <span className="text-sm sm:text-base font-bold text-neutral-900">
               {product.formattedPrice ? product.formattedPrice : `$${product.price.toLocaleString()}`}
             </span>
@@ -132,15 +127,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             )}
           </div>
 
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            whileHover={{ scale: 1.08 }}
+          <button
             onClick={() => onAddToCart(product)}
-            className="bg-emerald-900 hover:bg-emerald-950 text-white border border-transparent hover:border-emerald-700 p-2 sm:p-2.5 rounded-lg sm:rounded-xl transition-all duration-300 cursor-pointer shadow-xs flex items-center justify-center shrink-0"
+            className="bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 p-2.5 transition-colors cursor-pointer border border-neutral-900 hover:border-[#FF9F61] flex items-center justify-center shrink-0"
             title="Add to Cart"
           >
             <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          </motion.button>
+          </button>
         </div>
       </div>
     </motion.div>

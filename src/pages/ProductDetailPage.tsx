@@ -134,10 +134,10 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   <button
                     key={idx}
                     onClick={() => setActiveImgIndex(idx)}
-                    className={`w-20 h-20 rounded-2xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
+                    className={`w-20 h-20 overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
                       activeImgIndex === idx
-                        ? 'border-[#FF9F61] ring-2 ring-[#FF9F61]/30 shadow-xs'
-                        : 'border-neutral-100 opacity-70 hover:opacity-100'
+                        ? 'border-[#FF9F61] shadow-xs'
+                        : 'border-neutral-200 opacity-70 hover:opacity-100'
                     }`}
                   >
                     <img
@@ -152,7 +152,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             )}
 
             {/* Main Stage Image with hover zoom */}
-            <div className="flex-1 aspect-square bg-neutral-50 rounded-3xl overflow-hidden border border-neutral-100 relative group cursor-crosshair">
+            <div className="flex-1 aspect-square bg-neutral-50 overflow-hidden border border-neutral-200 relative group cursor-crosshair">
               <img
                 src={product.images[activeImgIndex] || product.images[0]}
                 alt={product.name}
@@ -161,17 +161,17 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               />
 
               {discountPercent > 0 && (
-                <span className="absolute top-4 left-4 bg-rose-600 text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-md">
+                <span className="absolute top-4 left-4 bg-rose-600 text-white text-xs font-bold px-3 py-1 uppercase tracking-wider shadow-sm">
                   Save {discountPercent}%
                 </span>
               )}
 
               <button
                 onClick={() => onToggleWishlist(product)}
-                className={`absolute top-4 right-4 p-3 rounded-full backdrop-blur-md transition-colors cursor-pointer ${
+                className={`absolute top-4 right-4 p-3 backdrop-blur-md border border-neutral-200 transition-colors cursor-pointer ${
                   isWishlisted
-                    ? 'bg-rose-50 text-rose-600 shadow-md'
-                    : 'bg-white/80 text-neutral-600 hover:text-rose-600'
+                    ? 'bg-rose-600 text-white'
+                    : 'bg-white/90 text-neutral-800 hover:bg-neutral-900 hover:text-white'
                 }`}
               >
                 <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />

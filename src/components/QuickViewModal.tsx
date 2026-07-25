@@ -76,7 +76,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
         {/* Left Side Gallery */}
         <div className="w-full md:w-1/2 bg-neutral-50 p-6 flex flex-col justify-between">
-          <div className="aspect-square w-full rounded-2xl overflow-hidden bg-white mb-4 border border-neutral-100 relative">
+          <div className="aspect-square w-full border border-neutral-200 overflow-hidden bg-white mb-4 relative">
             <img
               src={product.images[activeImgIndex] || product.images[0]}
               alt={product.name}
@@ -92,10 +92,10 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 <button
                   key={idx}
                   onClick={() => setActiveImgIndex(idx)}
-                  className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-all shrink-0 ${
+                  className={`w-16 h-16 overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
                     activeImgIndex === idx
-                      ? 'border-[#FF9F61] ring-2 ring-[#FF9F61]/20'
-                      : 'border-transparent opacity-70 hover:opacity-100'
+                      ? 'border-[#FF9F61]'
+                      : 'border-neutral-200 opacity-70 hover:opacity-100'
                   }`}
                 >
                   <img
