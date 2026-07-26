@@ -2,84 +2,84 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { CATEGORIES } from '../data/products';
 import { CategoryType } from '../types';
-import { ArrowUpRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 interface CategoriesGridProps {
   onSelectCategory: (category: CategoryType) => void;
 }
 
+const CATEGORY_TAGS: Record<string, string> = {
+  'jewellery-sets': 'HANDCRAFTED',
+  'earrings': 'ARTISAN',
+  'studs': 'MINIMALIST',
+  'bangles': 'EMBROIDERED',
+  'bracelets': 'LUXURY',
+  'pendants': 'FINE CRAFT',
+  'rings': 'TIMELESS',
+};
+
 export const CategoriesGrid: React.FC<CategoriesGridProps> = ({ onSelectCategory }) => {
   return (
-    <section className="py-16 sm:py-24 bg-white">
+    <section className="py-12 sm:py-20 bg-[#FAF5F2] border-b border-neutral-200/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-2xl mx-auto mb-12 sm:mb-16"
-        >
-          <span className="text-xs font-semibold uppercase tracking-widest text-emerald-700 block mb-2">
-            Curated Categories
+        
+        {/* Header matching exact screenshot typography */}
+        <div className="text-left mb-8 sm:mb-12">
+          <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-[#8C7368] block mb-1">
+            OUR COLLECTIONS
           </span>
-          <h2 className="font-serif-luxury text-3xl sm:text-4xl md:text-5xl font-bold text-neutral-900 tracking-tight">
-            Explore By Category
+          <h2 className="font-serif-luxury text-3xl sm:text-4xl md:text-5xl font-light text-neutral-900 tracking-wide">
+            Shop by <span className="italic font-normal font-serif">Category</span>
           </h2>
-          <motion.div
-            initial={{ width: 0 }}
-            whileInView={{ width: 48 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="h-0.5 bg-gradient-to-r from-emerald-800 via-[#FF9F61] to-emerald-800 mx-auto mt-4"
-          />
-        </motion.div>
+        </div>
 
-        {/* Responsive Square Grid Layout for categories */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3.5 sm:gap-5">
-          {CATEGORIES.map((cat, idx) => (
-            <motion.div
-              key={cat.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-30px' }}
-              transition={{ duration: 0.4, delay: idx * 0.05 }}
-              onClick={() => onSelectCategory(cat.id)}
-              className="group relative aspect-square overflow-hidden cursor-pointer bg-neutral-950 border border-neutral-800 hover:border-[#FF9F61] transition-all duration-300 flex flex-col justify-end p-3 sm:p-5 shadow-md"
-            >
-              {/* Category Background Image */}
-              <img
-                src={cat.image}
-                alt={cat.name}
-                className="absolute inset-0 w-full h-full object-cover object-center transform group-hover:scale-108 transition-transform duration-500 ease-out"
-                referrerPolicy="no-referrer"
-              />
+        {/* 2-Column Portrait Grid Layout matching screenshot */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-6">
+          {CATEGORIES.map((cat, idx) => {
+            const eyebrow = CATEGORY_TAGS[cat.id] || 'EXCLUSIVE';
+            return (
+              <motion.div
+                key={cat.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-30px' }}
+                transition={{ duration: 0.4, delay: idx * 0.05 }}
+                onClick={() => onSelectCategory(cat.id)}
+                className="group relative aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden cursor-pointer shadow-xs hover:shadow-2xl transition-all duration-300 flex flex-col justify-end p-4 sm:p-6 text-center bg-neutral-900 border border-neutral-200/40"
+              >
+                {/* Category Background Image */}
+                <img
+                  src={cat.image}
+                  alt={cat.name}
+                  className="absolute inset-0 w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-500 ease-out"
+                  referrerPolicy="no-referrer"
+                />
 
-              {/* Gradient overlay for contrast */}
-              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/90 via-neutral-950/40 to-transparent group-hover:from-neutral-950/95 transition-colors duration-300" />
+                {/* Dark Gradient Overlay for optimal contrast */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10 group-hover:from-black/90 transition-colors duration-300" />
 
-              {/* Inner Luxury Square Border Accent */}
-              <div className="absolute inset-2 border border-white/10 group-hover:border-[#FF9F61]/40 transition-colors pointer-events-none" />
+                {/* Card Content Centered Vertically / Bottom Aligned */}
+                <div className="relative z-10 flex flex-col items-center justify-end h-full text-white space-y-1.5 sm:space-y-2">
+                  <span className="text-[9px] sm:text-[11px] font-medium uppercase tracking-[0.25em] text-white/80">
+                    {eyebrow}
+                  </span>
 
-              {/* Content */}
-              <div className="relative z-10 text-white flex items-end justify-between w-full">
-                <div className="min-w-0 pr-1">
-                  <h3 className="font-serif-luxury text-sm sm:text-lg font-bold tracking-tight text-white group-hover:text-[#FF9F61] transition-colors truncate">
+                  <h3 className="font-serif-luxury text-base sm:text-xl md:text-2xl font-normal text-white leading-snug tracking-wide">
                     {cat.name}
                   </h3>
-                  <p className="text-[10px] sm:text-xs text-neutral-300 font-light mt-0.5 line-clamp-1 opacity-80 group-hover:opacity-100">
-                    {cat.description}
-                  </p>
-                </div>
 
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-neutral-900/80 group-hover:bg-[#FF9F61] group-hover:text-neutral-950 text-white flex items-center justify-center transition-colors shrink-0 ml-1 border border-white/20 group-hover:border-[#FF9F61]">
-                  <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 transform group-hover:rotate-45 transition-transform" />
+                  <div className="mt-2.5 sm:mt-3 inline-flex items-center space-x-1 px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full border border-white/60 bg-black/20 backdrop-blur-xs text-[10px] sm:text-xs font-semibold tracking-[0.18em] text-white uppercase group-hover:bg-white group-hover:text-neutral-950 transition-all duration-300">
+                    <span>EXPLORE</span>
+                    <ChevronRight className="w-3 h-3 text-white group-hover:text-neutral-950 transition-colors" />
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 };
+
 

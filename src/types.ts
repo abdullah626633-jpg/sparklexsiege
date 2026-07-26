@@ -1,4 +1,4 @@
-export type CategoryType = 'bracelets' | 'bangles' | 'necklaces' | 'rings' | 'earrings' | 'jewellery-sets';
+export type CategoryType = 'bracelets' | 'bangles' | 'pendants' | 'rings' | 'earrings' | 'jewellery-sets' | 'studs';
 
 export interface Product {
   id: string;

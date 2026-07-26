@@ -12,8 +12,8 @@ import { AccountModal } from './components/AccountModal';
 
 // Home Components
 import { HeroBanner } from './components/HeroBanner';
+import { NewArrivals } from './components/NewArrivals';
 import { CategoriesGrid } from './components/CategoriesGrid';
-import { FeaturedProducts } from './components/FeaturedProducts';
 
 // Pages
 import { ShopPage } from './pages/ShopPage';
@@ -28,7 +28,7 @@ import { TermsPage } from './pages/TermsPage';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('home');
-  const [selectedCategory, setSelectedCategory] = useState<CategoryType>('necklaces');
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType>('pendants');
   const [selectedProduct, setSelectedProduct] = useState<Product>(PRODUCTS[0]);
 
   // Cart State (stored in localStorage)
@@ -156,17 +156,16 @@ export default function App() {
         {currentPage === 'home' && (
           <div>
             <HeroBanner onShopNow={() => navigateTo('shop')} />
-            <CategoriesGrid
-              onSelectCategory={(category) => navigateTo('category', category)}
-            />
-            <FeaturedProducts
+            <NewArrivals
               products={PRODUCTS}
               onSelectProduct={(product) => navigateTo('product', undefined, product)}
               onQuickView={(product) => setQuickViewProduct(product)}
               onAddToCart={(product) => handleAddToCart(product, 1)}
               onToggleWishlist={handleToggleWishlist}
               wishlistIds={wishlistIds}
-              onViewAllShop={() => navigateTo('shop')}
+            />
+            <CategoriesGrid
+              onSelectCategory={(category) => navigateTo('category', category)}
             />
           </div>
         )}
