@@ -1,5 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import React, { useRef, useState } from 'react';
 import { Product } from '../types';
 import { Heart, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 
@@ -105,10 +104,8 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({
           {displayProducts.map((product) => {
             const isWishlisted = wishlistIds.includes(product.id);
             return (
-              <motion.div
+              <div
                 key={product.id}
-                whileHover={{ y: -3 }}
-                transition={{ duration: 0.2 }}
                 className="w-[200px] sm:w-[250px] md:w-[280px] shrink-0 snap-start group flex flex-col justify-between"
               >
                 {/* Image Container with Exact 3:4 Portrait Aspect Ratio */}
@@ -176,7 +173,7 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({
                     </span>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>

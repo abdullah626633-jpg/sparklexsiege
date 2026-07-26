@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
 import { Product, CategoryType } from '../types';
 import { ProductCard } from '../components/ProductCard';
 import { CATEGORIES } from '../data/products';
@@ -45,13 +44,7 @@ export const ShopPage: React.FC<ShopPageProps> = ({
   }, [products, selectedCat, searchQuery, sortBy]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -15 }}
-      transition={{ duration: 0.5 }}
-      className="py-12 bg-white min-h-screen"
-    >
+    <div className="py-12 bg-white min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <div className="text-center max-w-2xl mx-auto mb-10">
@@ -125,49 +118,36 @@ export const ShopPage: React.FC<ShopPageProps> = ({
         </div>
 
         {/* Product Grid */}
-        <AnimatePresence mode="wait">
-          {filteredProducts.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="text-center py-20 text-neutral-500"
+        {filteredProducts.length === 0 ? (
+          <div className="text-center py-20 text-neutral-500">
+            <p className="text-base font-semibold">No products match your filter criteria.</p>
+            <button
+              onClick={() => {
+                setSelectedCat('all');
+                setSearchQuery('');
+              }}
+              className="mt-4 text-xs font-semibold text-emerald-800 underline cursor-pointer"
             >
-              <p className="text-base font-semibold">No products match your filter criteria.</p>
-              <button
-                onClick={() => {
-                  setSelectedCat('all');
-                  setSearchQuery('');
-                }}
-                className="mt-4 text-xs font-semibold text-emerald-800 underline cursor-pointer"
-              >
-                Reset Filters
-              </button>
-            </motion.div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-6"
-            >
-              {filteredProducts.map((prod) => (
-                <ProductCard
-                  key={prod.id}
-                  product={prod}
-                  onSelect={onSelectProduct}
-                  onQuickView={onQuickView}
-                  onAddToCart={onAddToCart}
-                  onToggleWishlist={onToggleWishlist}
-                  isWishlisted={wishlistIds.includes(prod.id)}
-                />
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
+              Reset Filters
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-6">
+            {filteredProducts.map((prod) => (
+              <ProductCard
+                key={prod.id}
+                product={prod}
+                onSelect={onSelectProduct}
+                onQuickView={onQuickView}
+                onAddToCart={onAddToCart}
+                onToggleWishlist={onToggleWishlist}
+                isWishlisted={wishlistIds.includes(prod.id)}
+              />
+            ))}
+          </div>
+        )}
       </div>
-    </motion.div>
+    </div>
   );
 };
 

@@ -175,13 +175,11 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <Heart className="w-5 h-5" />
                 {wishlistCount > 0 && (
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
+                  <span
                     className="absolute -top-0.5 -right-0.5 bg-[#FF9F61] text-neutral-950 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-md"
                   >
                     {wishlistCount}
-                  </motion.span>
+                  </span>
                 )}
               </motion.button>
 
@@ -195,13 +193,11 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <ShoppingBag className="w-5 h-5" />
                 {cartCount > 0 && (
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
+                  <span
                     className="absolute -top-0.5 -right-0.5 bg-[#FF9F61] text-neutral-950 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-md"
                   >
                     {cartCount}
-                  </motion.span>
+                  </span>
                 )}
               </motion.button>
             </div>

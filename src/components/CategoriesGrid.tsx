@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'motion/react';
 import { CATEGORIES } from '../data/products';
 import { CategoryType } from '../types';
 import { ChevronRight } from 'lucide-react';
@@ -35,15 +34,11 @@ export const CategoriesGrid: React.FC<CategoriesGridProps> = ({ onSelectCategory
 
         {/* 2-Column Portrait Grid Layout matching screenshot */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-6">
-          {CATEGORIES.map((cat, idx) => {
+          {CATEGORIES.map((cat) => {
             const eyebrow = CATEGORY_TAGS[cat.id] || 'EXCLUSIVE';
             return (
-              <motion.div
+              <div
                 key={cat.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-30px' }}
-                transition={{ duration: 0.4, delay: idx * 0.05 }}
                 onClick={() => onSelectCategory(cat.id)}
                 className="group relative aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden cursor-pointer shadow-xs hover:shadow-2xl transition-all duration-300 flex flex-col justify-end p-4 sm:p-6 text-center bg-neutral-900 border border-neutral-200/40"
               >
@@ -73,7 +68,7 @@ export const CategoriesGrid: React.FC<CategoriesGridProps> = ({ onSelectCategory
                     <ChevronRight className="w-3 h-3 text-white group-hover:text-neutral-950 transition-colors" />
                   </div>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>

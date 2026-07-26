@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'motion/react';
 import { Product } from '../types';
 import { Heart, Eye, ShoppingBag, Star } from 'lucide-react';
 
@@ -21,12 +20,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   isWishlisted,
 }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
+    <div
       className="group relative bg-white border border-neutral-200 hover:border-neutral-900 transition-all duration-300 flex flex-col justify-between"
     >
       {/* Top Image Container */}
@@ -35,7 +29,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <div className="absolute inset-0 bg-neutral-950/0 group-hover:bg-neutral-950/5 transition-colors duration-300 z-1 pointer-events-none" />
 
         {/* Primary Image */}
-        <motion.img
+        <img
           src={product.images[0]}
           alt={product.name}
           className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-500 ease-out"
@@ -136,7 +130,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
