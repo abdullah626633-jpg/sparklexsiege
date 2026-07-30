@@ -371,7 +371,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               <div className="mt-8 grid grid-cols-3 gap-3 pt-6 border-t border-neutral-100 text-center">
                 <div className="flex flex-col items-center p-3 bg-neutral-50 rounded-xl">
                   <Truck className="w-5 h-5 text-[#FF9F61] mb-1" />
-                  <span className="text-[11px] font-semibold text-neutral-800">Deliver All Over Pakistan (Rs. 200)</span>
+                  <span className="text-[11px] font-semibold text-neutral-800">Deliver All Over Pakistan (Rs. 250)</span>
                 </div>
                 <div className="flex flex-col items-center p-3 bg-neutral-50 rounded-xl">
                   <RotateCcw className="w-5 h-5 text-[#FF9F61] mb-1" />
@@ -405,7 +405,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 {openAccordion === 'delivery' && (
                   <div className="p-4 text-xs text-neutral-600 bg-white space-y-2 border-t border-neutral-100">
                     <p>• We deliver all over Pakistan with standard courier services.</p>
-                    <p>• Fixed Delivery Charges: <strong>Rs. 200</strong> on all orders.</p>
+                    <p>• Fixed Delivery Charges: <strong>Rs. 250</strong> on all orders.</p>
                     <p>• Estimated Delivery Time: 3 to 5 business days with tracking.</p>
                   </div>
                 )}
@@ -430,7 +430,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 {openAccordion === 'returns' && (
                   <div className="p-4 text-xs text-neutral-600 bg-white space-y-2 border-t border-neutral-100">
                     <p>• <strong>Damaged/Defective Items:</strong> Free exchange within 7 days of delivery.</p>
-                    <p>• <strong>Standard Returns:</strong> Items can be returned within 7 days, but the customer must pay the return delivery charges (Rs. 200).</p>
+                    <p>• <strong>Standard Returns:</strong> Items can be returned within 7 days, but the customer must pay the return delivery charges (Rs. 250).</p>
                     <p>• All returned items must be unworn and in original luxury packaging with invoice.</p>
                   </div>
                 )}

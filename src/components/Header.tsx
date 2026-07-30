@@ -73,11 +73,6 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
-      {/* Top Announcement Bar */}
-      <div className="bg-gradient-to-r from-[#001D1E] via-[#003B3E] to-[#001D1E] text-[#FF9F61] text-[11px] sm:text-xs py-1.5 px-4 text-center border-b border-[#FF9F61]/30 font-medium tracking-wider uppercase overflow-hidden relative">
-        <span>Deliver All Over Pakistan &bull; Delivery Charges: Rs. 200 &bull; Cash on Delivery (COD) Only</span>
-      </div>
-
       <header
         className={`sticky top-0 z-40 w-full transition-all duration-300 ${
           isScrolled

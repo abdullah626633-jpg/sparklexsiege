@@ -31,7 +31,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
-  const shipping = subtotal === 0 ? 0 : 200;
+  const shipping = subtotal === 0 ? 0 : 250;
   const total = subtotal + shipping;
 
   const handlePlaceOrder = async (e: React.FormEvent) => {

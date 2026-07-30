@@ -27,7 +27,7 @@ export const TermsPage: React.FC = () => {
 
           <h2 className="font-serif-luxury text-lg font-bold text-neutral-900 mt-6">3. Shipping & Delivery Across Pakistan</h2>
           <p>
-            We deliver to all cities and regions across Pakistan. A flat delivery charge of <strong>Rs. 200</strong> applies to all orders. Packages are dispatched via reliable courier partners with live tracking.
+            We deliver to all cities and regions across Pakistan. A flat delivery charge of <strong>Rs. 250</strong> applies to all orders. Packages are dispatched via reliable courier partners with live tracking.
           </p>
 
           <h2 className="font-serif-luxury text-lg font-bold text-neutral-900 mt-6">4. Intellectual Property</h2>

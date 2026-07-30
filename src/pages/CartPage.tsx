@@ -25,7 +25,7 @@ export const CartPage: React.FC<CartPageProps> = ({
   );
 
   const discountAmount = Math.round((subtotal * discountPercent) / 100);
-  const shipping = subtotal === 0 ? 0 : 200;
+  const shipping = subtotal === 0 ? 0 : 250;
   const total = subtotal - discountAmount + shipping;
 
   const handleApplyCoupon = (e: React.FormEvent) => {

@@ -77,7 +77,7 @@ export const ExchangePolicyPage: React.FC = () => {
             </div>
             <h3 className="font-serif-luxury text-lg font-bold text-neutral-900">3. Return Policy & Delivery Charges</h3>
             <p className="text-xs text-neutral-600 leading-relaxed">
-              If a customer wishes to return an item for personal reasons (change of mind, size preference, etc.), <strong>the customer is required to pay for all return delivery charges (Rs. 200 courier fee)</strong>.
+              If a customer wishes to return an item for personal reasons (change of mind, size preference, etc.), <strong>the customer is required to pay for all return delivery charges (Rs. 250 courier fee)</strong>.
             </p>
           </div>
 
@@ -108,7 +108,7 @@ export const ExchangePolicyPage: React.FC = () => {
             </li>
             <li className="flex items-start space-x-3">
               <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#FF9F61] text-neutral-950 font-bold text-xs flex items-center justify-center">3</span>
-              <span><strong>Dispatch & Fees:</strong> For damaged items, replacement is dispatched free of charge. For standard returns, customer pays the Rs. 200 delivery fee for return shipping.</span>
+              <span><strong>Dispatch & Fees:</strong> For damaged items, replacement is dispatched free of charge. For standard returns, customer pays the Rs. 250 delivery fee for return shipping.</span>
             </li>
           </ol>
         </section>
