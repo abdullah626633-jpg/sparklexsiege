@@ -19,13 +19,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const [emailStatus, setEmailStatus] = useState<'sent' | 'failed' | null>(null);
 
   // Form Fields
-  const [email, setEmail] = useState('victoria.siege@sparklezsiege.com');
-  const [firstName, setFirstName] = useState('Victoria');
-  const [lastName, setLastName] = useState('Siege');
-  const [address, setAddress] = useState('Street 5, F-7/2');
-  const [city, setCity] = useState('Islamabad');
-  const [state, setState] = useState('Punjab');
-  const [zip, setZip] = useState('44000');
+  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [zip, setZip] = useState('');
 
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
@@ -161,6 +161,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      placeholder="e.g. customer@gmail.com"
                       className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                       required
                     />
@@ -183,6 +184,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         type="text"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
+                        placeholder="First Name"
                         className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                         required
                       />
@@ -195,6 +197,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         type="text"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
+                        placeholder="Last Name"
                         className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                         required
                       />
@@ -209,6 +212,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                       type="text"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
+                      placeholder="House #, Street, Block or Sector"
                       className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                       required
                     />
@@ -223,6 +227,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         type="text"
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
+                        placeholder="e.g. Lahore, Karachi, Islamabad"
                         className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                         required
                       />
@@ -235,6 +240,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         type="text"
                         value={state}
                         onChange={(e) => setState(e.target.value)}
+                        placeholder="e.g. Punjab, Sindh, KPK"
                         className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                         required
                       />
@@ -247,6 +253,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         type="text"
                         value={zip}
                         onChange={(e) => setZip(e.target.value)}
+                        placeholder="e.g. 54000"
                         className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                         required
                       />

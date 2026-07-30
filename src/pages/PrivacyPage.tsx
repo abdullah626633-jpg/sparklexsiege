@@ -32,7 +32,7 @@ export const PrivacyPage: React.FC = () => {
 
           <h2 className="font-serif-luxury text-lg font-bold text-neutral-900 mt-6">4. Contacting Us</h2>
           <p>
-            If you have questions regarding this Privacy Policy or your personal data, please email privacy@sparklezsiege.com.
+            If you have questions regarding this Privacy Policy or your personal data, please email <a href="mailto:Sparklezsiege@gmail.com" className="text-[#FF9F61] underline">Sparklezsiege@gmail.com</a>.
           </p>
         </section>
       </div>

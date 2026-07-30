@@ -28,6 +28,8 @@ export const sendOrderEmail = async (params: OrderEmailParams): Promise<{ succes
     to_email: params.customer_email,
     customer_name: params.customer_name,
     customer_email: params.customer_email,
+    company_email: 'Sparklezsiege@gmail.com',
+    store_email: 'Sparklezsiege@gmail.com',
     user_email: params.customer_email,
     reply_to: params.customer_email,
     shipping_address: `${params.address}, ${params.city}, ${params.state} ${params.zip}`,

@@ -44,7 +44,9 @@ export const ContactPage: React.FC = () => {
                   </div>
                   <div>
                     <span className="font-semibold text-neutral-900 block text-sm">Client Care Email</span>
-                    <span className="text-neutral-600">concierge@sparklezsiege.com</span>
+                    <a href="mailto:Sparklezsiege@gmail.com" className="text-neutral-600 hover:text-[#FF9F61]">
+                      Sparklezsiege@gmail.com
+                    </a>
                   </div>
                 </div>
 
@@ -70,8 +72,8 @@ export const ContactPage: React.FC = () => {
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="font-semibold text-neutral-900 block text-sm">Flagship Atelier</span>
-                    <span className="text-neutral-600">450 Rodeo Drive, Suite 200, Beverly Hills, CA 90210</span>
+                    <span className="font-semibold text-neutral-900 block text-sm">Main Office & Dispatch Hub</span>
+                    <span className="text-neutral-600">Pakistan (Delivery available all over Pakistan)</span>
                   </div>
                 </div>
 
@@ -135,7 +137,7 @@ export const ContactPage: React.FC = () => {
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="e.g. Victoria Siege"
+                      placeholder="Your Full Name"
                       className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                       required
                     />
@@ -149,7 +151,7 @@ export const ContactPage: React.FC = () => {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="e.g. victoria@example.com"
+                      placeholder="e.g. name@gmail.com"
                       className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
                       required
                     />

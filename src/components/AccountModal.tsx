@@ -9,9 +9,9 @@ interface AccountModalProps {
 export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [email, setEmail] = useState('victoria.siege@sparklezsiege.com');
-  const [password, setPassword] = useState('••••••••••••');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [tab, setTab] = useState<'profile' | 'orders'>('profile');
 
   return (
@@ -91,13 +91,13 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
           <div>
             <div className="flex items-center space-x-3 pb-4 border-b border-neutral-100">
               <div className="w-12 h-12 rounded-full bg-[#FF9F61]/15 text-[#FF9F61] flex items-center justify-center font-bold text-lg">
-                VS
+                SS
               </div>
               <div>
                 <h3 className="font-serif-luxury text-lg font-bold text-neutral-900">
-                  Victoria Siege
+                  SparklezSiege Customer
                 </h3>
-                <p className="text-xs text-neutral-500">VIP Member</p>
+                <p className="text-xs text-neutral-500">Valued Member</p>
               </div>
             </div>
 
@@ -130,12 +130,12 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
                 <div className="space-y-3 text-xs">
                   <div>
                     <span className="text-neutral-400 block">Email:</span>
-                    <span className="font-medium text-neutral-800">victoria.siege@sparklezsiege.com</span>
+                    <span className="font-medium text-neutral-800">{email || 'Sparklezsiege@gmail.com'}</span>
                   </div>
                   <div>
-                    <span className="text-neutral-400 block">Default Shipping Address:</span>
+                    <span className="text-neutral-400 block">Delivery Region:</span>
                     <span className="font-medium text-neutral-800">
-                      742 Evergreen Terrace, Beverly Hills, CA 90210
+                      Pakistan (All Cities)
                     </span>
                   </div>
                   <div>
