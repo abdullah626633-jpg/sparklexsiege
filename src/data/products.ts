@@ -1544,6 +1544,34 @@ export const PRODUCTS: Product[] = [
       'Perfect for everyday wear or special occasions',
     ],
   },
+  {
+    id: 'prod-petal-glow-two-piece-set',
+    name: 'The Petal Glow Two Piece Set',
+    slug: 'the-petal-glow-two-piece-set',
+    category: 'jewellery-sets',
+    price: 2450,
+    formattedPrice: 'Rs. 2,450',
+    featured: true,
+    isNew: true,
+    images: ['/petal-glow-two-piece-set.jpg'],
+    description: 'Delicate, elegant, and effortlessly radiant, The Petal Glow Two Piece Set is inspired by the beauty of blooming petals. Featuring a beautifully crafted necklace and matching earrings, this timeless set adds a soft, graceful sparkle to any look. Perfect for everyday elegance, festive occasions, or thoughtful gifting.',
+    material: 'Floral Artistry Plated Alloy & Radiant Stones',
+    specifications: [
+      { key: 'Set Includes', value: 'Necklace & Matching Earrings (2 Pieces)' },
+      { key: 'Design', value: 'Blooming Petal Artistry' },
+      { key: 'Category', value: 'Jewellery Sets' },
+      { key: 'Occasion', value: 'Everyday Elegance, Festive Occasions & Gifting' },
+    ],
+    rating: 5.0,
+    reviewCount: 19,
+    inStock: true,
+    details: [
+      'Inspired by the natural beauty of blooming petals',
+      'Includes a beautifully crafted necklace and matching earrings',
+      'Adds a soft, graceful sparkle to any ensemble',
+      'Ideal for everyday elegance, festive occasions, or thoughtful gifting',
+    ],
+  },
 ];
 
 export const MOCK_REVIEWS: Review[] = [
