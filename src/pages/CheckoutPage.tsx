@@ -265,34 +265,42 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 </div>
               </div>
 
-              {/* Payment Method - COD Only */}
+              {/* Payment Method */}
               <div>
                 <h2 className="font-serif-luxury text-2xl font-bold text-neutral-900 mb-4">
-                  3. Payment Method
+                  3. Select Payment Method
                 </h2>
 
-                <div className="p-5 bg-gradient-to-r from-[#002D2F] to-[#003B3E] rounded-2xl text-white border border-[#FF9F61]/30 shadow-md space-y-3">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#FF9F61] text-neutral-950 flex items-center justify-center font-bold shrink-0">
-                      <Banknote className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-sm text-white flex items-center space-x-2">
-                        <span>Cash on Delivery (COD)</span>
-                        <span className="bg-[#FF9F61]/20 text-[#FF9F61] border border-[#FF9F61]/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">
-                          Only Method Offered
+                <div className="space-y-3">
+                  {/* Selected Radio Option for Cash on Delivery */}
+                  <label className="flex items-start space-x-3 p-5 bg-neutral-900 rounded-2xl text-white border-2 border-[#FF9F61] shadow-md cursor-pointer block">
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="cod"
+                      checked
+                      readOnly
+                      className="mt-1 text-[#FF9F61] focus:ring-[#FF9F61] accent-[#FF9F61] w-4 h-4"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-sm text-white flex items-center space-x-2">
+                          <span>Cash on Delivery (COD)</span>
+                          <span className="bg-[#FF9F61]/20 text-[#FF9F61] border border-[#FF9F61]/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">
+                            Available All Over Pakistan
+                          </span>
                         </span>
-                      </h3>
-                      <p className="text-xs text-emerald-100/80 mt-0.5">
-                        Pay in cash to the rider when your package is delivered anywhere in Pakistan.
+                        <span className="font-bold text-[#FF9F61] text-xs">Rs. 250 Delivery Fee</span>
+                      </div>
+                      <p className="text-xs text-neutral-300 mt-1">
+                        Pay cash directly to the courier delivery rider upon receiving your package.
                       </p>
+                      <div className="mt-3 pt-3 border-t border-neutral-800 flex items-center justify-between text-xs text-neutral-300">
+                        <span>Delivery Fee: <strong>Rs. 250</strong></span>
+                        <span>Total Payable on Delivery: <strong className="text-[#FF9F61] text-sm font-bold">Rs. {total.toLocaleString()}</strong></span>
+                      </div>
                     </div>
-                  </div>
-
-                  <div className="pt-3 border-t border-emerald-800/60 text-[11px] text-emerald-200/90 flex items-center space-x-2">
-                    <Truck className="w-4 h-4 text-[#FF9F61] shrink-0" />
-                    <span>No upfront online payment required. Pay Rs. {total.toLocaleString()} upon receipt.</span>
-                  </div>
+                  </label>
                 </div>
               </div>
 
@@ -352,14 +360,14 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                   <span className="font-semibold text-neutral-900">Rs. {subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-neutral-600">
-                  <span>Delivery Charges (Pakistan)</span>
+                  <span>Cash on Delivery Fee</span>
                   <span className="font-semibold text-neutral-900">
                     {shipping === 0 ? 'FREE' : `Rs. ${shipping}`}
                   </span>
                 </div>
                 <div className="border-t border-neutral-200 pt-3 flex justify-between items-baseline font-bold text-neutral-900">
-                  <span className="text-sm">Total Due</span>
-                  <span className="text-2xl">Rs. {total.toLocaleString()}</span>
+                  <span className="text-sm">Total Payable on Delivery</span>
+                  <span className="text-2xl text-[#FF9F61]">Rs. {total.toLocaleString()}</span>
                 </div>
               </div>
             </div>

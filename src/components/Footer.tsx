@@ -19,6 +19,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <p className="text-xs text-emerald-200/80 mt-1">
             © {new Date().getFullYear()} SparklezSiege Jewellery. All rights reserved.
           </p>
+          <p className="text-[11px] text-emerald-300/70 mt-1.5 tracking-wider">
+            Created by <span className="font-semibold text-[#FF9F61]">greensharksagency</span>
+          </p>
         </div>
 
         {/* Quick Links */}
