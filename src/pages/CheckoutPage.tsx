@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CartItem, PageType } from '../types';
-import { ShieldCheck, CreditCard, CheckCircle2, Lock, ArrowLeft } from 'lucide-react';
+import { ShieldCheck, CheckCircle2, Lock, ArrowLeft, Loader2, MailCheck, Banknote, Truck } from 'lucide-react';
+import { sendOrderEmail } from '../services/emailService';
 
 interface CheckoutPageProps {
   cartItems: CartItem[];
@@ -14,19 +15,17 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   onNavigate,
 }) => {
   const [placedOrder, setPlacedOrder] = useState<string | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'apple' | 'klarna'>('card');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [emailStatus, setEmailStatus] = useState<'sent' | 'failed' | null>(null);
 
   // Form Fields
   const [email, setEmail] = useState('victoria.siege@sparklezsiege.com');
   const [firstName, setFirstName] = useState('Victoria');
   const [lastName, setLastName] = useState('Siege');
-  const [address, setAddress] = useState('742 Evergreen Terrace');
-  const [city, setCity] = useState('Beverly Hills');
-  const [state, setState] = useState('CA');
-  const [zip, setZip] = useState('90210');
-  const [cardNumber, setCardNumber] = useState('•••• •••• •••• 4242');
-  const [exp, setExp] = useState('12/28');
-  const [cvv, setCvv] = useState('888');
+  const [address, setAddress] = useState('Street 5, F-7/2');
+  const [city, setCity] = useState('Islamabad');
+  const [state, setState] = useState('Punjab');
+  const [zip, setZip] = useState('44000');
 
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
@@ -35,10 +34,40 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const shipping = subtotal === 0 ? 0 : 200;
   const total = subtotal + shipping;
 
-  const handlePlaceOrder = (e: React.FormEvent) => {
+  const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (cartItems.length === 0 || isSubmitting) return;
+
+    setIsSubmitting(true);
     const orderNum = `SKS-${Math.floor(100000 + Math.random() * 900000)}`;
+
+    const itemSummary = cartItems
+      .map(
+        (item) =>
+          `• ${item.product.name} (Qty: ${item.quantity}${
+            item.selectedSize ? `, Size: ${item.selectedSize}` : ''
+          }) - Rs. ${(item.product.price * item.quantity).toLocaleString()}`
+      )
+      .join('\n');
+
+    const emailResult = await sendOrderEmail({
+      order_id: orderNum,
+      customer_name: `${firstName} ${lastName}`.trim(),
+      customer_email: email,
+      address,
+      city,
+      state,
+      zip,
+      order_details: itemSummary,
+      subtotal: `Rs. ${subtotal.toLocaleString()}`,
+      shipping: shipping === 0 ? 'FREE' : `Rs. ${shipping}`,
+      total_amount: `Rs. ${total.toLocaleString()}`,
+      payment_method: 'Cash on Delivery (COD)',
+    });
+
+    setEmailStatus(emailResult.success ? 'sent' : 'failed');
     setPlacedOrder(orderNum);
+    setIsSubmitting(false);
     onClearCart();
   };
 
@@ -59,8 +88,19 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
           </h1>
 
           <p className="text-sm text-neutral-600 leading-relaxed">
-            Your order <span className="font-bold text-neutral-900">{placedOrder}</span> has been successfully placed. A confirmation email with live courier tracking details has been sent to <span className="font-semibold">{email}</span>.
+            Your Cash on Delivery order <span className="font-bold text-neutral-900">{placedOrder}</span> has been successfully placed.
           </p>
+
+          {emailStatus === 'sent' ? (
+            <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl text-xs flex items-center justify-center space-x-2">
+              <MailCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Order details sent via email notification to <strong>{email}</strong>!</span>
+            </div>
+          ) : (
+            <div className="p-3 bg-neutral-100 border border-neutral-200 text-neutral-700 rounded-2xl text-xs">
+              Order confirmation recorded for <strong>{email}</strong>.
+            </div>
+          )}
 
           <div className="p-4 bg-white rounded-2xl border border-neutral-100 text-left text-xs space-y-2">
             <div className="flex justify-between">
@@ -71,9 +111,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
               <span className="text-neutral-500">Address:</span>
               <span className="font-medium text-neutral-800">{address}, {city}, {state} {zip}</span>
             </div>
+            <div className="flex justify-between">
+              <span className="text-neutral-500">Payment Method:</span>
+              <span className="font-bold text-emerald-700">Cash on Delivery (COD)</span>
+            </div>
             <div className="flex justify-between font-bold text-neutral-900 pt-2 border-t border-neutral-100">
-              <span>Total Paid:</span>
-              <span>${total.toLocaleString()}</span>
+              <span>Amount Payable on Delivery:</span>
+              <span>Rs. {total.toLocaleString()}</span>
             </div>
           </div>
 
@@ -111,7 +155,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 <div className="space-y-4">
                   <div>
                     <label className="block text-xs font-semibold text-neutral-700 mb-1">
-                      Email Address (for order tracking)
+                      Email Address (for order tracking & confirmation)
                     </label>
                     <input
                       type="email"
@@ -127,7 +171,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
               {/* Shipping Address */}
               <div>
                 <h2 className="font-serif-luxury text-2xl font-bold text-neutral-900 mb-4">
-                  2. Shipping Address
+                  2. Delivery Address in Pakistan
                 </h2>
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
@@ -159,7 +203,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
                   <div>
                     <label className="block text-xs font-semibold text-neutral-700 mb-1">
-                      Street Address
+                      Street Address / House No. / Area
                     </label>
                     <input
                       type="text"
@@ -185,7 +229,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                     </div>
                     <div>
                       <label className="block text-xs font-semibold text-neutral-700 mb-1">
-                        State
+                        Province / State
                       </label>
                       <input
                         type="text"
@@ -197,7 +241,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                     </div>
                     <div>
                       <label className="block text-xs font-semibold text-neutral-700 mb-1">
-                        ZIP Code
+                        Postal Code
                       </label>
                       <input
                         type="text"
@@ -211,101 +255,53 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 </div>
               </div>
 
-              {/* Payment Method */}
+              {/* Payment Method - COD Only */}
               <div>
                 <h2 className="font-serif-luxury text-2xl font-bold text-neutral-900 mb-4">
                   3. Payment Method
                 </h2>
 
-                <div className="grid grid-cols-3 gap-3 mb-4">
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod('card')}
-                    className={`p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer flex flex-col items-center gap-1 ${
-                      paymentMethod === 'card'
-                        ? 'border-[#FF9F61] bg-[#FF9F61]/10 text-[#FF9F61]'
-                        : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'
-                    }`}
-                  >
-                    <CreditCard className="w-5 h-5" />
-                    <span>Credit Card</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod('apple')}
-                    className={`p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer flex flex-col items-center gap-1 ${
-                      paymentMethod === 'apple'
-                        ? 'border-[#FF9F61] bg-[#FF9F61]/10 text-[#FF9F61]'
-                        : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'
-                    }`}
-                  >
-                    <Lock className="w-5 h-5" />
-                    <span>Apple Pay</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod('klarna')}
-                    className={`p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer flex flex-col items-center gap-1 ${
-                      paymentMethod === 'klarna'
-                        ? 'border-[#FF9F61] bg-[#FF9F61]/10 text-[#FF9F61]'
-                        : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'
-                    }`}
-                  >
-                    <ShieldCheck className="w-5 h-5" />
-                    <span>Klarna 4x</span>
-                  </button>
-                </div>
-
-                {paymentMethod === 'card' && (
-                  <div className="p-4 bg-neutral-50 rounded-2xl border border-neutral-200 space-y-3">
-                    <div>
-                      <label className="block text-[11px] font-semibold text-neutral-700 mb-1">
-                        Card Number
-                      </label>
-                      <input
-                        type="text"
-                        value={cardNumber}
-                        onChange={(e) => setCardNumber(e.target.value)}
-                        className="w-full py-2 px-3 bg-white border border-neutral-200 rounded-xl text-xs"
-                        required
-                      />
+                <div className="p-5 bg-gradient-to-r from-[#002D2F] to-[#003B3E] rounded-2xl text-white border border-[#FF9F61]/30 shadow-md space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 rounded-xl bg-[#FF9F61] text-neutral-950 flex items-center justify-center font-bold shrink-0">
+                      <Banknote className="w-6 h-6" />
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-[11px] font-semibold text-neutral-700 mb-1">
-                          Expiry Date
-                        </label>
-                        <input
-                          type="text"
-                          value={exp}
-                          onChange={(e) => setExp(e.target.value)}
-                          className="w-full py-2 px-3 bg-white border border-neutral-200 rounded-xl text-xs"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[11px] font-semibold text-neutral-700 mb-1">
-                          CVV Code
-                        </label>
-                        <input
-                          type="password"
-                          value={cvv}
-                          onChange={(e) => setCvv(e.target.value)}
-                          className="w-full py-2 px-3 bg-white border border-neutral-200 rounded-xl text-xs"
-                          required
-                        />
-                      </div>
+                    <div>
+                      <h3 className="font-bold text-sm text-white flex items-center space-x-2">
+                        <span>Cash on Delivery (COD)</span>
+                        <span className="bg-[#FF9F61]/20 text-[#FF9F61] border border-[#FF9F61]/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">
+                          Only Method Offered
+                        </span>
+                      </h3>
+                      <p className="text-xs text-emerald-100/80 mt-0.5">
+                        Pay in cash to the rider when your package is delivered anywhere in Pakistan.
+                      </p>
                     </div>
                   </div>
-                )}
+
+                  <div className="pt-3 border-t border-emerald-800/60 text-[11px] text-emerald-200/90 flex items-center space-x-2">
+                    <Truck className="w-4 h-4 text-[#FF9F61] shrink-0" />
+                    <span>No upfront online payment required. Pay Rs. {total.toLocaleString()} upon receipt.</span>
+                  </div>
+                </div>
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-[#FF9F61] hover:bg-[#e88d51] text-neutral-950 font-bold text-base py-4 rounded-2xl shadow-lg transition-all cursor-pointer flex items-center justify-center space-x-2"
+                disabled={isSubmitting}
+                className="w-full bg-[#FF9F61] hover:bg-[#e88d51] text-neutral-950 font-bold text-base py-4 rounded-2xl shadow-lg transition-all cursor-pointer flex items-center justify-center space-x-2 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                <Lock className="w-5 h-5" />
-                <span>Place Order (Rs. {total.toLocaleString()})</span>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin text-neutral-950" />
+                    <span>Processing Order & Sending Email...</span>
+                  </>
+                ) : (
+                  <>
+                    <Lock className="w-5 h-5" />
+                    <span>Place Cash on Delivery Order (Rs. {total.toLocaleString()})</span>
+                  </>
+                )}
               </button>
             </form>
           </div>

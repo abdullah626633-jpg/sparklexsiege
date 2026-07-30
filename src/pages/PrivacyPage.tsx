@@ -17,17 +17,17 @@ export const PrivacyPage: React.FC = () => {
         <section className="space-y-3 text-xs leading-relaxed text-neutral-600">
           <h2 className="font-serif-luxury text-lg font-bold text-neutral-900">1. Information We Collect</h2>
           <p>
-            At SparklezSiege Jewellery, we respect your privacy and are committed to protecting your personal data. When you visit our website, make a purchase, or contact our concierge, we collect information such as your name, shipping address, email, phone number, and payment information processed securely via encrypted gateways.
+            At SparklezSiege Jewellery, we respect your privacy and are committed to protecting your personal data. When you visit our website, place a Cash on Delivery order, or contact our customer support, we collect information such as your name, delivery address, phone number, and email address solely for order delivery and customer care.
           </p>
 
           <h2 className="font-serif-luxury text-lg font-bold text-neutral-900 mt-6">2. How We Use Your Information</h2>
           <p>
-            We utilize your information solely to process orders, deliver insured courier packages, issue certificate authentications, and provide personalized customer care. We never sell, rent, or trade your personal data to third parties.
+            We utilize your information solely to process orders, deliver courier packages across Pakistan, send email notifications, and provide personalized customer care. We never sell, rent, or trade your personal data to third parties.
           </p>
 
-          <h2 className="font-serif-luxury text-lg font-bold text-neutral-900 mt-6">3. Data Security & Encryption</h2>
+          <h2 className="font-serif-luxury text-lg font-bold text-neutral-900 mt-6">3. Cash on Delivery Security</h2>
           <p>
-            All online transactions on SparklezSiege are protected by standard 256-bit Secure Socket Layer (SSL) encryption technology. Payment card information is handled in compliance with PCI-DSS standards.
+            We offer Cash on Delivery (COD) as our exclusive payment method across Pakistan. No credit card information or banking details are collected or stored on our website.
           </p>
 
           <h2 className="font-serif-luxury text-lg font-bold text-neutral-900 mt-6">4. Contacting Us</h2>
