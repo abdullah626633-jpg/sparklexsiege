@@ -9,6 +9,7 @@ import { QuickViewModal } from './components/QuickViewModal';
 import { SearchDrawer } from './components/SearchDrawer';
 import { WishlistDrawer } from './components/WishlistDrawer';
 import { AccountModal } from './components/AccountModal';
+import { WhatsAppButton } from './components/WhatsAppButton';
 
 // Home Components
 import { HeroBanner } from './components/HeroBanner';
@@ -25,6 +26,7 @@ import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsPage } from './pages/TermsPage';
+import { ExchangePolicyPage } from './pages/ExchangePolicyPage';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('home');
@@ -45,9 +47,9 @@ export default function App() {
   const [wishlistIds, setWishlistIds] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem('sparklezsiege_wishlist');
-      return saved ? JSON.parse(saved) : ['prod-1', 'prod-3'];
+      return saved ? JSON.parse(saved) : ['prod-diamond-cut-bangles-pair', 'prod-3'];
     } catch {
-      return ['prod-1', 'prod-3'];
+      return ['prod-diamond-cut-bangles-pair', 'prod-3'];
     }
   });
 
@@ -242,6 +244,9 @@ export default function App() {
 
         {/* TERMS & CONDITIONS PAGE */}
         {currentPage === 'terms' && <TermsPage />}
+
+        {/* EXCHANGE POLICY PAGE */}
+        {currentPage === 'exchange' && <ExchangePolicyPage />}
       </main>
 
       {/* Minimal Footer */}
@@ -278,6 +283,9 @@ export default function App() {
         isOpen={accountOpen}
         onClose={() => setAccountOpen(false)}
       />
+
+      {/* Floating Bottom-Left WhatsApp Button */}
+      <WhatsAppButton />
     </div>
   );
 }

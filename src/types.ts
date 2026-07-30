@@ -52,7 +52,8 @@ export type PageType =
   | 'about' 
   | 'contact' 
   | 'privacy' 
-  | 'terms';
+  | 'terms'
+  | 'exchange';
 
 export interface CategoryInfo {
   id: CategoryType;

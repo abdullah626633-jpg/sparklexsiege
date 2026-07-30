@@ -22,12 +22,12 @@ export const TermsPage: React.FC = () => {
 
           <h2 className="font-serif-luxury text-lg font-bold text-neutral-900 mt-6">2. Pricing & Product Accuracy</h2>
           <p>
-            Prices for our jewellery pieces are listed in USD ($) and are subject to change. We make every effort to display the colors, weights, carat dimensions, and gemstone cuts accurately.
+            Prices for our jewellery pieces are listed in PKR (Rs.) and are subject to change. We make every effort to display the colors, weights, dimensions, and craftsmanship accurately.
           </p>
 
-          <h2 className="font-serif-luxury text-lg font-bold text-neutral-900 mt-6">3. Shipping & Insured Delivery</h2>
+          <h2 className="font-serif-luxury text-lg font-bold text-neutral-900 mt-6">3. Shipping & Delivery Across Pakistan</h2>
           <p>
-            All shipments are sent via signature-required insured courier. SparklezSiege accepts responsibility for items until they are signed for at your designated shipping destination.
+            We deliver to all cities and regions across Pakistan. A flat delivery charge of <strong>Rs. 200</strong> applies to all orders. Packages are dispatched via reliable courier partners with live tracking.
           </p>
 
           <h2 className="font-serif-luxury text-lg font-bold text-neutral-900 mt-6">4. Intellectual Property</h2>

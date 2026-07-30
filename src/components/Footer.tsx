@@ -36,6 +36,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             Contact
           </button>
           <button
+            onClick={() => onNavigate('exchange')}
+            className="hover:text-white transition-all duration-200 hover:scale-105 cursor-pointer font-medium text-[#FF9F61]"
+          >
+            Exchange & Return Policy
+          </button>
+          <button
             onClick={() => onNavigate('privacy')}
             className="hover:text-white transition-all duration-200 hover:scale-105 cursor-pointer font-medium"
           >
@@ -52,7 +58,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         {/* Social Icons (Instagram, Facebook, TikTok, Pinterest) */}
         <div className="flex items-center space-x-5 text-emerald-200">
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/sparklezsiege?utm_source=qr"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition-all duration-200 hover:scale-125 p-1"
@@ -74,7 +80,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </svg>
           </a>
           <a
-            href="https://tiktok.com"
+            href="https://www.tiktok.com/@sparklezsiege_?_r=1&_t=ZS-98Rob2rTsqz"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition-all duration-200 hover:scale-125 p-1"

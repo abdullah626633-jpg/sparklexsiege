@@ -371,15 +371,15 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               <div className="mt-8 grid grid-cols-3 gap-3 pt-6 border-t border-neutral-100 text-center">
                 <div className="flex flex-col items-center p-3 bg-neutral-50 rounded-xl">
                   <Truck className="w-5 h-5 text-[#FF9F61] mb-1" />
-                  <span className="text-[11px] font-semibold text-neutral-800">Free Express Delivery</span>
+                  <span className="text-[11px] font-semibold text-neutral-800">Deliver All Over Pakistan (Rs. 200)</span>
                 </div>
                 <div className="flex flex-col items-center p-3 bg-neutral-50 rounded-xl">
                   <RotateCcw className="w-5 h-5 text-[#FF9F61] mb-1" />
-                  <span className="text-[11px] font-semibold text-neutral-800">30-Day Returns</span>
+                  <span className="text-[11px] font-semibold text-neutral-800">7-Day Exchange & Returns</span>
                 </div>
                 <div className="flex flex-col items-center p-3 bg-neutral-50 rounded-xl">
                   <ShieldCheck className="w-5 h-5 text-[#FF9F61] mb-1" />
-                  <span className="text-[11px] font-semibold text-neutral-800">Lifetime Warranty</span>
+                  <span className="text-[11px] font-semibold text-neutral-800">100% Handcrafted</span>
                 </div>
               </div>
             </div>
@@ -404,14 +404,14 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 </button>
                 {openAccordion === 'delivery' && (
                   <div className="p-4 text-xs text-neutral-600 bg-white space-y-2 border-t border-neutral-100">
-                    <p>• Complimentary worldwide insured courier shipping on all orders over $250.</p>
-                    <p>• Standard Delivery: 3-5 business days with live tracking.</p>
-                    <p>• Express Overnight Delivery available at checkout.</p>
+                    <p>• We deliver all over Pakistan with standard courier services.</p>
+                    <p>• Fixed Delivery Charges: <strong>Rs. 200</strong> on all orders.</p>
+                    <p>• Estimated Delivery Time: 3 to 5 business days with tracking.</p>
                   </div>
                 )}
               </div>
 
-              {/* Return Policy */}
+              {/* Return & Exchange Policy */}
               <div className="border border-neutral-200 rounded-2xl overflow-hidden">
                 <button
                   onClick={() => setOpenAccordion(openAccordion === 'returns' ? null : 'returns')}
@@ -419,7 +419,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 >
                   <span className="flex items-center space-x-2">
                     <RotateCcw className="w-4 h-4 text-[#FF9F61]" />
-                    <span>Return Policy</span>
+                    <span>Exchange & Return Policy</span>
                   </span>
                   <ChevronDown
                     className={`w-4 h-4 text-neutral-500 transition-transform ${
@@ -429,8 +429,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 </button>
                 {openAccordion === 'returns' && (
                   <div className="p-4 text-xs text-neutral-600 bg-white space-y-2 border-t border-neutral-100">
-                    <p>• We offer a 30-day money-back guarantee for all unworn jewellery in original packaging.</p>
-                    <p>• Free return shipping labels provided upon request.</p>
+                    <p>• <strong>Damaged/Defective Items:</strong> Free exchange within 7 days of delivery.</p>
+                    <p>• <strong>Standard Returns:</strong> Items can be returned within 7 days, but the customer must pay the return delivery charges (Rs. 200).</p>
+                    <p>• All returned items must be unworn and in original luxury packaging with invoice.</p>
                   </div>
                 )}
               </div>

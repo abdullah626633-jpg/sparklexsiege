@@ -75,7 +75,7 @@ export const Header: React.FC<HeaderProps> = ({
     <>
       {/* Top Announcement Bar */}
       <div className="bg-gradient-to-r from-[#001D1E] via-[#003B3E] to-[#001D1E] text-[#FF9F61] text-[11px] sm:text-xs py-1.5 px-4 text-center border-b border-[#FF9F61]/30 font-medium tracking-wider uppercase overflow-hidden relative">
-        <span>SparklezSiege Fine Jewellery &bull; Free Express Delivery &bull; 100% Handcrafted Elegance</span>
+        <span>Deliver All Over Pakistan &bull; Delivery Charges: Rs. 200 &bull; 100% Handcrafted Elegance</span>
       </div>
 
       <header
@@ -287,7 +287,7 @@ export const Header: React.FC<HeaderProps> = ({
 
               <div className="p-5 border-t border-emerald-900/80 bg-[#011e17]">
                 <p className="text-xs text-emerald-200/80 text-center font-light">
-                  Free Express Shipping on Orders Over Rs. 5,000
+                  We Deliver All Over Pakistan &bull; Delivery Charges Rs. 200
                 </p>
               </div>
             </motion.div>

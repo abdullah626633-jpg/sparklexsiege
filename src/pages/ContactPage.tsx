@@ -53,8 +53,15 @@ export const ContactPage: React.FC = () => {
                     <Phone className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="font-semibold text-neutral-900 block text-sm">Direct Phone Line</span>
-                    <span className="text-neutral-600">+1 (800) 888-9281 (Toll Free)</span>
+                    <span className="font-semibold text-neutral-900 block text-sm">Direct Phone & WhatsApp</span>
+                    <a
+                      href="https://wa.me/923039117733"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-neutral-600 hover:text-[#FF9F61] transition-colors"
+                    >
+                      0303 9117733 (+92 303 9117733)
+                    </a>
                   </div>
                 </div>
 

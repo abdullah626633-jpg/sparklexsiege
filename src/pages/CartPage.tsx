@@ -25,9 +25,8 @@ export const CartPage: React.FC<CartPageProps> = ({
   );
 
   const discountAmount = Math.round((subtotal * discountPercent) / 100);
-  const estimatedShipping = subtotal > 250 || subtotal === 0 ? 0 : 25;
-  const estimatedTax = Math.round((subtotal - discountAmount) * 0.08);
-  const total = subtotal - discountAmount + estimatedShipping + estimatedTax;
+  const shipping = subtotal === 0 ? 0 : 200;
+  const total = subtotal - discountAmount + shipping;
 
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,7 +107,7 @@ export const CartPage: React.FC<CartPageProps> = ({
                           {item.product.category} {item.selectedSize ? `• Size: ${item.selectedSize}` : ''}
                         </p>
                         <p className="text-sm font-bold text-neutral-800 mt-1">
-                          {item.product.formattedPrice ? item.product.formattedPrice : `$${item.product.price.toLocaleString()}`}
+                          {item.product.formattedPrice ? item.product.formattedPrice : `Rs. ${item.product.price.toLocaleString()}`}
                           {item.product.priceSubtitle ? ` ${item.product.priceSubtitle}` : ''}
                         </p>
                       </div>
@@ -159,7 +158,7 @@ export const CartPage: React.FC<CartPageProps> = ({
                     <div className="sm:col-span-3 text-right w-full sm:w-auto flex justify-between sm:block">
                       <span className="sm:hidden text-xs text-neutral-500 font-medium">Subtotal:</span>
                       <span className="text-base font-bold text-neutral-900">
-                        ${itemTotal.toLocaleString()}
+                        Rs. {itemTotal.toLocaleString()}
                       </span>
                     </div>
                   </div>
@@ -222,30 +221,27 @@ export const CartPage: React.FC<CartPageProps> = ({
                 <div className="space-y-3 text-xs border-t border-neutral-200/60 pt-4">
                   <div className="flex justify-between text-neutral-600">
                     <span>Subtotal</span>
-                    <span className="font-semibold text-neutral-900">${subtotal.toLocaleString()}</span>
+                    <span className="font-semibold text-neutral-900">Rs. {subtotal.toLocaleString()}</span>
                   </div>
 
                   {discountAmount > 0 && (
                     <div className="flex justify-between text-emerald-700 font-medium">
                       <span>Discount ({discountPercent}%)</span>
-                      <span>-${discountAmount.toLocaleString()}</span>
+                      <span>-Rs. {discountAmount.toLocaleString()}</span>
                     </div>
                   )}
 
                   <div className="flex justify-between text-neutral-600">
-                    <span>Estimated Shipping</span>
-                    <span>{estimatedShipping === 0 ? 'FREE' : `$${estimatedShipping}`}</span>
-                  </div>
-
-                  <div className="flex justify-between text-neutral-600">
-                    <span>Estimated Tax (8%)</span>
-                    <span>${estimatedTax.toLocaleString()}</span>
+                    <span>Delivery Charges (Pakistan)</span>
+                    <span className="font-semibold text-neutral-900">
+                      {shipping === 0 ? 'FREE' : `Rs. ${shipping}`}
+                    </span>
                   </div>
 
                   <div className="border-t border-neutral-200 pt-3 flex justify-between items-baseline">
                     <span className="text-sm font-bold text-neutral-900">Total</span>
                     <span className="text-2xl font-bold text-neutral-900">
-                      ${total.toLocaleString()}
+                      Rs. {total.toLocaleString()}
                     </span>
                   </div>
                 </div>
