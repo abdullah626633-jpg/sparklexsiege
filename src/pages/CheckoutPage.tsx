@@ -15,6 +15,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   onNavigate,
 }) => {
   const [placedOrder, setPlacedOrder] = useState<string | null>(null);
+  const [confirmedTotal, setConfirmedTotal] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailStatus, setEmailStatus] = useState<'sent' | 'failed' | null>(null);
 
@@ -40,6 +41,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
     setIsSubmitting(true);
     const orderNum = `SKS-${Math.floor(100000 + Math.random() * 900000)}`;
+    const orderTotal = total;
 
     const itemSummary = cartItems
       .map(
@@ -61,10 +63,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       order_details: itemSummary,
       subtotal: `Rs. ${subtotal.toLocaleString()}`,
       shipping: shipping === 0 ? 'FREE' : `Rs. ${shipping}`,
-      total_amount: `Rs. ${total.toLocaleString()}`,
+      total_amount: `Rs. ${orderTotal.toLocaleString()}`,
       payment_method: 'Cash on Delivery (COD)',
     });
 
+    setConfirmedTotal(orderTotal);
     setEmailStatus(emailResult.success ? 'sent' : 'failed');
     setPlacedOrder(orderNum);
     setIsSubmitting(false);
@@ -117,7 +120,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
             </div>
             <div className="flex justify-between font-bold text-neutral-900 pt-2 border-t border-neutral-100">
               <span>Amount Payable on Delivery:</span>
-              <span>Rs. {total.toLocaleString()}</span>
+              <span>Rs. {confirmedTotal.toLocaleString()}</span>
             </div>
           </div>
 

@@ -430,7 +430,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 {openAccordion === 'returns' && (
                   <div className="p-4 text-xs text-neutral-600 bg-white space-y-2 border-t border-neutral-100">
                     <p>• <strong>Damaged/Defective Items:</strong> Free exchange within 7 days of delivery.</p>
-                    <p>• <strong>Standard Returns:</strong> Items can be returned within 7 days, but the customer must pay the return delivery charges (Rs. 250).</p>
+                    <p>• <strong>Standard Returns:</strong> Items can be returned within 7 days, but the customer must pay the return delivery charges.</p>
                     <p>• All returned items must be unworn and in original luxury packaging with invoice.</p>
                   </div>
                 )}
