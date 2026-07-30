@@ -154,7 +154,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
                     </div>
                     <p className="text-neutral-500">July 10, 2026 • $1,250.00</p>
                     <p className="text-neutral-700 mt-1 font-medium">
-                      Veritas Classic Diamond Tennis Bracelet
+                      Frostfire Bracelet
                     </p>
                   </div>
                 </div>
