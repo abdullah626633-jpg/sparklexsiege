@@ -1455,7 +1455,7 @@ export const PRODUCTS: Product[] = [
     formattedPrice: 'Rs. 3,250',
     featured: true,
     isNew: true,
-    images: ['/empress-ruby-studs.jpg'],
+    images: ['/imperial-camila-studs.jpg'],
     description: 'Exquisitely crafted in a blooming camellia rose motif, The Imperial Camila Studs feature layered petals densely set with brilliant micro-pave crystals. Set against a high-lustre rhodium finish, these statement stud earrings offer royal sophistication and radiant sparkle for any special occasion.',
     material: 'Rhodium-Plated Fine Alloy & Micro-Pave Crystal Setting',
     specifications: [
