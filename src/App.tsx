@@ -30,7 +30,7 @@ import { ExchangePolicyPage } from './pages/ExchangePolicyPage';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('home');
-  const [selectedCategory, setSelectedCategory] = useState<CategoryType>('pendants');
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType>('jewellery-sets');
   const [selectedProduct, setSelectedProduct] = useState<Product>(PRODUCTS[0]);
 
   // Cart State (stored in localStorage)

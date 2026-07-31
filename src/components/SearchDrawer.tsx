@@ -29,7 +29,7 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
       )
     : [];
 
-  const suggestedTags = ['Pendants', 'Diamonds', '18k Gold', 'Rings', 'Bangles', 'Pearl'];
+  const suggestedTags = ['Jewellery Sets', 'Diamonds', '18k Gold', 'Rings', 'Bangles', 'Pearl'];
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
@@ -100,7 +100,7 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
               <div className="text-center py-12 text-neutral-500">
                 <p className="text-sm font-medium">No products found for "{query}"</p>
                 <p className="text-xs text-neutral-400 mt-1">
-                  Try searching for pendants, rings, gold, or diamonds.
+                  Try searching for rings, bangles, gold, or diamonds.
                 </p>
               </div>
             ) : (

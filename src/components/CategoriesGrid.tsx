@@ -10,10 +10,8 @@ interface CategoriesGridProps {
 const CATEGORY_TAGS: Record<string, string> = {
   'jewellery-sets': 'HANDCRAFTED',
   'earrings': 'ARTISAN',
-  'studs': 'MINIMALIST',
   'bangles': 'EMBROIDERED',
   'bracelets': 'LUXURY',
-  'pendants': 'FINE CRAFT',
   'rings': 'TIMELESS',
 };
 
