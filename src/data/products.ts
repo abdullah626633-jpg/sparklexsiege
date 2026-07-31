@@ -55,10 +55,10 @@ export const PRODUCTS: Product[] = [
     formattedPrice: 'Rs. 5,450',
     featured: true,
     isNew: true,
-    images: ['/allah-pendant-silver.jpg'],
+    images: ['/allah-pendant-variant-1.jpg'],
     colors: ['Silver'],
     colorImages: {
-      Silver: '/allah-pendant-silver.jpg',
+      Silver: '/allah-pendant-variant-1.jpg',
     },
     description: 'An exquisitely crafted Allah Pendant featuring intricate calligraphy and radiant detailing on a fine chain.',
     material: 'Premium Gold Plating & Precision Detailing',
