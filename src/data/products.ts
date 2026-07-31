@@ -783,7 +783,7 @@ export const PRODUCTS: Product[] = [
     formattedPrice: 'Rs. 3,450',
     featured: true,
     isNew: true,
-    images: ['/prismatic-petals.jpg'],
+    images: ['/starry-bloom.jpg'],
     description: 'Adorn yourself with the enchanting Prismatic Petals earrings. Crafted with 18K gold plating and intricate floral petal design, these stunning earrings feature brilliant micro-pave crystals available in multiple vibrant colors.',
     material: '18K Gold Plated Alloy',
     specifications: [
@@ -811,7 +811,7 @@ export const PRODUCTS: Product[] = [
     formattedPrice: 'Rs. 3,450',
     featured: true,
     isNew: true,
-    images: ['/vintage-aura-studs.jpg'],
+    images: ['/vintage-aura-studs-v2.jpg'],
     description: 'Complete your look with the timeless elegance of the Vintage Aura Studs. Featuring a vintage-inspired design with a brilliant finish, these beautifully crafted studs add effortless sophistication to both everyday outfits and special occasions. Lightweight, versatile, and stylish, they’re the perfect addition to any jewelry collection.',
     material: 'Vintage-Inspired Alloy & Brilliant Cubic Zirconia',
     specifications: [
@@ -1398,7 +1398,7 @@ export const PRODUCTS: Product[] = [
     formattedPrice: 'Rs. 2,450',
     featured: true,
     isNew: true,
-    images: ['/petal-glow-set.jpg'],
+    images: ['/golden-bloom.jpg'],
     description: 'Delicate, elegant, and effortlessly radiant, the Petal Glow Set is inspired by the beauty of blooming petals. Featuring a beautifully crafted necklace and matching stud earrings, this timeless set adds a soft, graceful sparkle to any look. Perfect for everyday elegance, festive occasions, or thoughtful gifting.',
     material: 'Floral Artistry Plated Alloy & Radiant Cushion Stones',
     specifications: [
@@ -1426,7 +1426,7 @@ export const PRODUCTS: Product[] = [
     formattedPrice: 'Rs. 5,450',
     featured: true,
     isNew: true,
-    images: ['/astra-sparkle-set.jpg'],
+    images: ['/sparklez-stella-2pc.jpg'],
     description: 'Capture luminous radiance with the Astra Sparkle Jewellery Set. Crafted with an intricate geometric motif, this complete set features a fine dual-tone chain pendant necklace and matching stud earrings. Each piece is densely encrusted with brilliant micro-pave crystals that create a dazzling sparkle against a gold and silver setting.',
     material: 'Dual-Tone Gold & Silver Plated Alloy with Micro-Pave Crystals',
     specifications: [
@@ -1455,7 +1455,7 @@ export const PRODUCTS: Product[] = [
     formattedPrice: 'Rs. 3,250',
     featured: true,
     isNew: true,
-    images: ['/imperial-camila-studs.jpg'],
+    images: ['/empress-ruby-studs.jpg'],
     description: 'Exquisitely crafted in a blooming camellia rose motif, The Imperial Camila Studs feature layered petals densely set with brilliant micro-pave crystals. Set against a high-lustre rhodium finish, these statement stud earrings offer royal sophistication and radiant sparkle for any special occasion.',
     material: 'Rhodium-Plated Fine Alloy & Micro-Pave Crystal Setting',
     specifications: [
