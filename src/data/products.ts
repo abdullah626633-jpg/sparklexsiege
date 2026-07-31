@@ -811,7 +811,7 @@ export const PRODUCTS: Product[] = [
     formattedPrice: 'Rs. 3,450',
     featured: true,
     isNew: true,
-    images: ['/vintage-aura-studs-v2.jpg'],
+    images: ['/vintage-aura-studs.jpg'],
     description: 'Complete your look with the timeless elegance of the Vintage Aura Studs. Featuring a vintage-inspired design with a brilliant finish, these beautifully crafted studs add effortless sophistication to both everyday outfits and special occasions. Lightweight, versatile, and stylish, they’re the perfect addition to any jewelry collection.',
     material: 'Vintage-Inspired Alloy & Brilliant Cubic Zirconia',
     specifications: [
