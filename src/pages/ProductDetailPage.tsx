@@ -518,7 +518,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                     type="text"
                     value={newAuthor}
                     onChange={(e) => setNewAuthor(e.target.value)}
-                    placeholder="e.g. Sarah M."
+                    placeholder="e.g. Ayesha K."
                     className="w-full py-2 px-3 bg-white border border-neutral-200 rounded-xl text-xs"
                     required
                   />
