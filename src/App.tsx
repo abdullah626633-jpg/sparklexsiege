@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { PageType, CategoryType, Product, CartItem } from './types';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { Product, CartItem } from './types';
 import { PRODUCTS } from './data/products';
 
 // Layout Components
@@ -28,11 +29,17 @@ import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsPage } from './pages/TermsPage';
 import { ExchangePolicyPage } from './pages/ExchangePolicyPage';
 
-export default function App() {
-  const [currentPage, setCurrentPage] = useState<PageType>('home');
-  const [selectedCategory, setSelectedCategory] = useState<CategoryType>('jewellery-sets');
-  const [selectedProduct, setSelectedProduct] = useState<Product>(PRODUCTS[0]);
+function ScrollToTop() {
+  const { pathname } = useLocation();
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
+export default function App() {
   // Cart State (stored in localStorage)
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     try {
@@ -76,14 +83,6 @@ export default function App() {
     }
   }, [wishlistIds]);
 
-  // Scroll to top on page navigate
-  const navigateTo = (page: PageType, category?: CategoryType, product?: Product) => {
-    if (category) setSelectedCategory(category);
-    if (product) setSelectedProduct(product);
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   // Cart Actions
   const handleAddToCart = (product: Product, quantity: number = 1, size?: string) => {
     setCartItems((prev) => {
@@ -101,7 +100,6 @@ export default function App() {
 
   const handleBuyNow = (product: Product, quantity: number = 1, size?: string) => {
     handleAddToCart(product, quantity, size);
-    navigateTo('checkout');
   };
 
   const handleUpdateQuantity = (productId: string, quantity: number, selectedSize?: string) => {
@@ -140,11 +138,10 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-neutral-900 font-sans selection:bg-[#FF9F61]/20">
+      <ScrollToTop />
+
       {/* Top Header */}
       <Header
-        currentPage={currentPage}
-        selectedCategory={selectedCategory}
-        onNavigate={(page, category) => navigateTo(page, category)}
         cartCount={totalCartCount}
         wishlistCount={wishlistIds.length}
         onOpenSearch={() => setSearchOpen(true)}
@@ -154,103 +151,110 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1">
-        {/* HOMEPAGE */}
-        {currentPage === 'home' && (
-          <div>
-            <HeroBanner onShopNow={() => navigateTo('shop')} />
-            <NewArrivals
-              products={PRODUCTS}
-              onSelectProduct={(product) => navigateTo('product', undefined, product)}
-              onQuickView={(product) => setQuickViewProduct(product)}
-              onAddToCart={(product) => handleAddToCart(product, 1)}
-              onToggleWishlist={handleToggleWishlist}
-              wishlistIds={wishlistIds}
-            />
-            <CategoriesGrid
-              onSelectCategory={(category) => navigateTo('category', category)}
-            />
-          </div>
-        )}
-
-        {/* SHOP ALL PRODUCTS PAGE */}
-        {currentPage === 'shop' && (
-          <ShopPage
-            products={PRODUCTS}
-            onSelectProduct={(product) => navigateTo('product', undefined, product)}
-            onQuickView={(product) => setQuickViewProduct(product)}
-            onAddToCart={(product) => handleAddToCart(product, 1)}
-            onToggleWishlist={handleToggleWishlist}
-            wishlistIds={wishlistIds}
+        <Routes>
+          {/* HOMEPAGE */}
+          <Route
+            path="/"
+            element={
+              <div>
+                <HeroBanner />
+                <NewArrivals
+                  products={PRODUCTS}
+                  onQuickView={(product) => setQuickViewProduct(product)}
+                  onAddToCart={(product) => handleAddToCart(product, 1)}
+                  onToggleWishlist={handleToggleWishlist}
+                  wishlistIds={wishlistIds}
+                />
+                <CategoriesGrid />
+              </div>
+            }
           />
-        )}
 
-        {/* CATEGORY PAGE */}
-        {currentPage === 'category' && (
-          <CategoryPage
-            category={selectedCategory}
-            products={PRODUCTS}
-            onSelectProduct={(product) => navigateTo('product', undefined, product)}
-            onQuickView={(product) => setQuickViewProduct(product)}
-            onAddToCart={(product) => handleAddToCart(product, 1)}
-            onToggleWishlist={handleToggleWishlist}
-            wishlistIds={wishlistIds}
+          {/* SHOP ALL PRODUCTS PAGE */}
+          <Route
+            path="/shop"
+            element={
+              <ShopPage
+                products={PRODUCTS}
+                onQuickView={(product) => setQuickViewProduct(product)}
+                onAddToCart={(product) => handleAddToCart(product, 1)}
+                onToggleWishlist={handleToggleWishlist}
+                wishlistIds={wishlistIds}
+              />
+            }
           />
-        )}
 
-        {/* PRODUCT DETAIL PAGE */}
-        {currentPage === 'product' && selectedProduct && (
-          <ProductDetailPage
-            product={selectedProduct}
-            allProducts={PRODUCTS}
-            onSelectProduct={(prod) => navigateTo('product', undefined, prod)}
-            onQuickView={(prod) => setQuickViewProduct(prod)}
-            onAddToCart={handleAddToCart}
-            onBuyNow={handleBuyNow}
-            onToggleWishlist={handleToggleWishlist}
-            isWishlisted={wishlistIds.includes(selectedProduct.id)}
-            wishlistIds={wishlistIds}
+          {/* CATEGORY PAGE */}
+          <Route
+            path="/category/:categoryId"
+            element={
+              <CategoryPage
+                products={PRODUCTS}
+                onQuickView={(product) => setQuickViewProduct(product)}
+                onAddToCart={(product) => handleAddToCart(product, 1)}
+                onToggleWishlist={handleToggleWishlist}
+                wishlistIds={wishlistIds}
+              />
+            }
           />
-        )}
 
-        {/* CART PAGE */}
-        {currentPage === 'cart' && (
-          <CartPage
-            cartItems={cartItems}
-            onUpdateQuantity={handleUpdateQuantity}
-            onRemoveItem={handleRemoveFromCart}
-            onNavigate={(page) => navigateTo(page)}
+          {/* PRODUCT DETAIL PAGE */}
+          <Route
+            path="/product/:slugOrId"
+            element={
+              <ProductDetailPage
+                allProducts={PRODUCTS}
+                onQuickView={(prod) => setQuickViewProduct(prod)}
+                onAddToCart={handleAddToCart}
+                onBuyNow={handleBuyNow}
+                onToggleWishlist={handleToggleWishlist}
+                wishlistIds={wishlistIds}
+              />
+            }
           />
-        )}
 
-        {/* CHECKOUT PAGE */}
-        {currentPage === 'checkout' && (
-          <CheckoutPage
-            cartItems={cartItems}
-            onClearCart={handleClearCart}
-            onNavigate={(page) => navigateTo(page)}
+          {/* CART PAGE */}
+          <Route
+            path="/cart"
+            element={
+              <CartPage
+                cartItems={cartItems}
+                onUpdateQuantity={handleUpdateQuantity}
+                onRemoveItem={handleRemoveFromCart}
+              />
+            }
           />
-        )}
 
-        {/* ABOUT US PAGE */}
-        {currentPage === 'about' && (
-          <AboutPage onNavigate={(page) => navigateTo(page)} />
-        )}
+          {/* CHECKOUT PAGE */}
+          <Route
+            path="/checkout"
+            element={
+              <CheckoutPage
+                cartItems={cartItems}
+                onClearCart={handleClearCart}
+              />
+            }
+          />
 
-        {/* CONTACT US PAGE */}
-        {currentPage === 'contact' && <ContactPage />}
+          {/* ABOUT US PAGE */}
+          <Route path="/about" element={<AboutPage />} />
 
-        {/* PRIVACY POLICY PAGE */}
-        {currentPage === 'privacy' && <PrivacyPage />}
+          {/* CONTACT US PAGE */}
+          <Route path="/contact" element={<ContactPage />} />
 
-        {/* TERMS & CONDITIONS PAGE */}
-        {currentPage === 'terms' && <TermsPage />}
+          {/* PRIVACY POLICY PAGE */}
+          <Route path="/privacy" element={<PrivacyPage />} />
 
-        {/* EXCHANGE POLICY PAGE */}
-        {currentPage === 'exchange' && <ExchangePolicyPage />}
+          {/* TERMS & CONDITIONS PAGE */}
+          <Route path="/terms" element={<TermsPage />} />
+
+          {/* EXCHANGE POLICY PAGE */}
+          <Route path="/exchange" element={<ExchangePolicyPage />} />
+        </Routes>
       </main>
 
       {/* Minimal Footer */}
-      <Footer onNavigate={(page) => navigateTo(page)} />
+      <Footer />
 
       {/* Overlays / Modals */}
       <QuickViewModal
@@ -260,14 +264,12 @@ export default function App() {
         onBuyNow={handleBuyNow}
         onToggleWishlist={handleToggleWishlist}
         isWishlisted={quickViewProduct ? wishlistIds.includes(quickViewProduct.id) : false}
-        onGoToDetail={(prod) => navigateTo('product', undefined, prod)}
       />
 
       <SearchDrawer
         isOpen={searchOpen}
         onClose={() => setSearchOpen(false)}
         products={PRODUCTS}
-        onSelectProduct={(prod) => navigateTo('product', undefined, prod)}
       />
 
       <WishlistDrawer
@@ -276,7 +278,6 @@ export default function App() {
         wishlistProducts={wishlistProducts}
         onRemoveFromWishlist={handleToggleWishlist}
         onAddToCart={(prod) => handleAddToCart(prod, 1)}
-        onSelectProduct={(prod) => navigateTo('product', undefined, prod)}
       />
 
       <AccountModal

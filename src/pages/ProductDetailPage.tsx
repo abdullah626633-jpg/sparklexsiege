@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Product, Review } from '../types';
 import { ProductCard } from '../components/ProductCard';
-import { MOCK_REVIEWS } from '../data/products';
+import { MOCK_REVIEWS, CATEGORIES } from '../data/products';
 import {
   Star,
   Heart,
@@ -14,32 +14,42 @@ import {
   Check,
   Gem,
   Share2,
+  ChevronRight,
 } from 'lucide-react';
 
 interface ProductDetailPageProps {
-  product: Product;
+  product?: Product;
   allProducts: Product[];
   onSelectProduct?: (product: Product) => void;
   onQuickView: (product: Product) => void;
   onAddToCart: (product: Product, quantity: number, size?: string) => void;
   onBuyNow: (product: Product, quantity: number, size?: string) => void;
   onToggleWishlist: (product: Product) => void;
-  isWishlisted: boolean;
+  isWishlisted?: boolean;
   wishlistIds: string[];
 }
 
 export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
-  product,
+  product: propProduct,
   allProducts,
   onSelectProduct,
   onQuickView,
   onAddToCart,
   onBuyNow,
   onToggleWishlist,
-  isWishlisted,
   wishlistIds,
 }) => {
   const navigate = useNavigate();
+  const { slugOrId } = useParams<{ slugOrId: string }>();
+
+  const product =
+    (slugOrId
+      ? allProducts.find((p) => p.slug === slugOrId || p.id === slugOrId)
+      : null) ||
+    propProduct ||
+    allProducts[0];
+
+  const isWishlisted = wishlistIds.includes(product.id);
   const [activeImgIndex, setActiveImgIndex] = useState(0);
 
   const handleBuyNow = () => {
@@ -129,6 +139,19 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             </span>
           </div>
         )}
+
+        {/* Breadcrumb Navigation */}
+        <nav className="flex items-center space-x-2 text-xs text-neutral-500 mb-6 flex-wrap">
+          <Link to="/" className="hover:text-neutral-900 transition-colors">Home</Link>
+          <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
+          <Link to="/shop" className="hover:text-neutral-900 transition-colors">Shop</Link>
+          <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
+          <Link to={`/category/${product.category}`} className="hover:text-neutral-900 capitalize transition-colors">
+            {product.category.replace(/-/g, ' ')}
+          </Link>
+          <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
+          <span className="font-semibold text-neutral-900 truncate max-w-[200px] sm:max-w-none">{product.name}</span>
+        </nav>
 
         {/* Product Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">

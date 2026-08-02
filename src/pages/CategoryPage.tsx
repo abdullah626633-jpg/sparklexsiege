@@ -1,10 +1,11 @@
 import React from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { Product, CategoryType } from '../types';
 import { CATEGORIES } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
 
 interface CategoryPageProps {
-  category: CategoryType;
+  category?: CategoryType;
   products: Product[];
   onSelectProduct?: (product: Product) => void;
   onQuickView: (product: Product) => void;
@@ -13,8 +14,14 @@ interface CategoryPageProps {
   wishlistIds: string[];
 }
 
+const CATEGORY_ALIASES: Record<string, CategoryType> = {
+  'necklaces': 'pendants',
+  'sets': 'jewellery-sets',
+  'jewellery-sets': 'jewellery-sets',
+};
+
 export const CategoryPage: React.FC<CategoryPageProps> = ({
-  category,
+  category: propCategory,
   products,
   onSelectProduct,
   onQuickView,
@@ -22,8 +29,21 @@ export const CategoryPage: React.FC<CategoryPageProps> = ({
   onToggleWishlist,
   wishlistIds,
 }) => {
-  const categoryInfo = CATEGORIES.find((c) => c.id === category) || CATEGORIES[0];
-  const categoryProducts = products.filter((p) => p.category === category);
+  const { categoryId } = useParams<{ categoryId: string }>();
+
+  const activeCatId: string = categoryId || propCategory || 'jewellery-sets';
+  const resolvedCategory: CategoryType = CATEGORY_ALIASES[activeCatId] || (activeCatId as CategoryType);
+
+  const categoryInfo = CATEGORIES.find((c) => c.id === resolvedCategory) || {
+    id: activeCatId as CategoryType,
+    name: activeCatId.charAt(0).toUpperCase() + activeCatId.slice(1).replace(/-/g, ' '),
+    description: `Explore our exquisite ${activeCatId.replace(/-/g, ' ')} collection handcrafted in 18k solid gold & certified gemstones.`,
+    image: '/jewellery-sets-category.jpg',
+  };
+
+  const categoryProducts = products.filter(
+    (p) => p.category === resolvedCategory || p.category === activeCatId
+  );
 
   return (
     <div className="bg-white min-h-screen pb-20">
