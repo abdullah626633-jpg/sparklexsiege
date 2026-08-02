@@ -1,10 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { Heart, Eye, ShoppingBag, Star } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
-  onSelect: (product: Product) => void;
+  onSelect?: (product: Product) => void;
   onQuickView: (product: Product) => void;
   onAddToCart: (product: Product) => void;
   onToggleWishlist: (product: Product) => void;
@@ -19,12 +20,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onToggleWishlist,
   isWishlisted,
 }) => {
+  const navigate = useNavigate();
+
+  const handleProductClick = () => {
+    if (onSelect) onSelect(product);
+    navigate(`/product/${product.slug || product.id}`);
+  };
+
   return (
     <div
       className="group relative bg-white border border-neutral-200 hover:border-neutral-900 transition-all duration-300 flex flex-col justify-between"
     >
       {/* Top Image Container */}
-      <div className="relative aspect-square bg-neutral-50 overflow-hidden cursor-pointer" onClick={() => onSelect(product)}>
+      <div className="relative aspect-square bg-neutral-50 overflow-hidden cursor-pointer" onClick={handleProductClick}>
         {/* Subtle hover gradient tint */}
         <div className="absolute inset-0 bg-neutral-950/0 group-hover:bg-neutral-950/5 transition-colors duration-300 z-1 pointer-events-none" />
 
@@ -88,7 +96,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       {/* Product Information */}
       <div className="p-3.5 sm:p-4 flex flex-col flex-1 justify-between bg-white border-t border-neutral-100">
-        <div onClick={() => onSelect(product)} className="cursor-pointer">
+        <div onClick={handleProductClick} className="cursor-pointer">
           <div className="flex items-center space-x-1 text-[#FF9F61] text-[11px] sm:text-xs mb-1">
             <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" />
             <span className="font-semibold text-neutral-800">{product.rating.toFixed(1)}</span>
@@ -133,4 +141,5 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     </div>
   );
 };
+
 

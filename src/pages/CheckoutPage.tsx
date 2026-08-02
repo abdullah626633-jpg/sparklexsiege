@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CartItem, PageType } from '../types';
 import { ShieldCheck, CheckCircle2, Lock, ArrowLeft, Loader2, MailCheck, Banknote, Truck } from 'lucide-react';
 import { sendOrderEmail } from '../services/emailService';
@@ -6,7 +7,7 @@ import { sendOrderEmail } from '../services/emailService';
 interface CheckoutPageProps {
   cartItems: CartItem[];
   onClearCart: () => void;
-  onNavigate: (page: PageType) => void;
+  onNavigate?: (page: PageType) => void;
 }
 
 export const CheckoutPage: React.FC<CheckoutPageProps> = ({
@@ -14,6 +15,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   onClearCart,
   onNavigate,
 }) => {
+  const navigate = useNavigate();
   const [placedOrder, setPlacedOrder] = useState<string | null>(null);
   const [confirmedTotal, setConfirmedTotal] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -125,7 +127,10 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
           </div>
 
           <button
-            onClick={() => onNavigate('shop')}
+            onClick={() => {
+              if (onNavigate) onNavigate('shop');
+              navigate('/shop');
+            }}
             className="w-full bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold text-sm py-3.5 rounded-2xl transition-colors cursor-pointer"
           >
             Continue Shopping
@@ -139,7 +144,10 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     <div className="bg-white min-h-screen py-10 sm:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <button
-          onClick={() => onNavigate('cart')}
+          onClick={() => {
+            if (onNavigate) onNavigate('cart');
+            navigate('/cart');
+          }}
           className="inline-flex items-center space-x-2 text-xs font-bold text-neutral-600 hover:text-[#FF9F61] mb-8 cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />

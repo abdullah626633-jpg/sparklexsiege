@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface HeroBannerProps {
-  onShopNow: () => void;
+  onShopNow?: () => void;
 }
 
 const slides = [
@@ -24,6 +25,7 @@ const slides = [
 ];
 
 export const HeroBanner: React.FC<HeroBannerProps> = ({ onShopNow }) => {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -41,6 +43,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onShopNow }) => {
 
   const handleNext = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  const handleButtonClick = () => {
+    if (onShopNow) onShopNow();
+    navigate('/shop');
   };
 
   return (
@@ -87,7 +94,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onShopNow }) => {
         {/* Bottom Left Content Container (Shop Button) */}
         <div className="relative z-20 w-full pb-7 px-6 sm:pb-12 sm:px-12 flex flex-col items-start text-left">
           <button
-            onClick={onShopNow}
+            onClick={handleButtonClick}
             className="inline-flex items-center justify-center space-x-2.5 bg-gradient-to-r from-[#FF9F61] to-[#f98239] hover:from-[#f98239] hover:to-[#FF9F61] text-neutral-950 font-bold tracking-widest uppercase text-xs sm:text-sm py-3.5 px-7 sm:py-4 sm:px-9 rounded-none shadow-2xl active:scale-95 transition-all duration-300 border border-[#FF9F61] cursor-pointer group"
           >
             <span>Shop Now</span>
@@ -133,6 +140,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onShopNow }) => {
     </section>
   );
 };
+
 
 
 

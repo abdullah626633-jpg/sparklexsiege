@@ -6,7 +6,7 @@ import { ProductCard } from '../components/ProductCard';
 interface CategoryPageProps {
   category: CategoryType;
   products: Product[];
-  onSelectProduct: (product: Product) => void;
+  onSelectProduct?: (product: Product) => void;
   onQuickView: (product: Product) => void;
   onAddToCart: (product: Product) => void;
   onToggleWishlist: (product: Product) => void;

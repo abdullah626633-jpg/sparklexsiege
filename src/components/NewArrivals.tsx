@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { Heart, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 
 interface NewArrivalsProps {
   products: Product[];
-  onSelectProduct: (product: Product) => void;
+  onSelectProduct?: (product: Product) => void;
   onQuickView?: (product: Product) => void;
   onAddToCart: (product: Product) => void;
   onToggleWishlist: (product: Product) => void;
@@ -19,6 +20,13 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({
   onToggleWishlist,
   wishlistIds,
 }) => {
+  const navigate = useNavigate();
+
+  const handleProductClick = (product: Product) => {
+    if (onSelectProduct) onSelectProduct(product);
+    navigate(`/product/${product.slug || product.id}`);
+  };
+
   // Filter for new arrival products or fallback to top products
   const newArrivalsList = products.filter((p) => p.isNew).slice(0, 10);
   const displayProducts = newArrivalsList.length > 0 ? newArrivalsList : products.slice(0, 8);
@@ -111,7 +119,7 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({
                 {/* Image Container with Exact 3:4 Portrait Aspect Ratio */}
                 <div
                   className="relative aspect-[3/4] bg-neutral-100 overflow-hidden cursor-pointer border border-neutral-200/80 hover:border-neutral-900 transition-colors"
-                  onClick={() => onSelectProduct(product)}
+                  onClick={() => handleProductClick(product)}
                 >
                   {/* Black NEW IN badge at top left matching reference */}
                   <div className="absolute top-0 left-0 z-10">
@@ -162,7 +170,7 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({
                 </div>
 
                 {/* Product Meta below image matching screenshot styling */}
-                <div className="mt-2.5 px-0.5 flex flex-col cursor-pointer" onClick={() => onSelectProduct(product)}>
+                <div className="mt-2.5 px-0.5 flex flex-col cursor-pointer" onClick={() => handleProductClick(product)}>
                   <h3 className="font-serif-luxury text-sm sm:text-base font-normal text-neutral-800 group-hover:text-emerald-900 transition-colors line-clamp-1 leading-snug">
                     {product.name}
                   </h3>
@@ -198,3 +206,4 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({
     </section>
   );
 };
+

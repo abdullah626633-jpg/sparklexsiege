@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Search, 
@@ -12,9 +13,6 @@ import {
 import { CategoryType, PageType } from '../types';
 
 interface HeaderProps {
-  currentPage: PageType;
-  selectedCategory?: CategoryType;
-  onNavigate: (page: PageType, category?: CategoryType) => void;
   cartCount: number;
   wishlistCount: number;
   onOpenSearch: () => void;
@@ -23,15 +21,14 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  currentPage,
-  selectedCategory,
-  onNavigate,
   cartCount,
   wishlistCount,
   onOpenSearch,
   onOpenWishlist,
   onOpenAccount,
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -43,31 +40,26 @@ export const Header: React.FC<HeaderProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks: { label: string; page: PageType; category?: CategoryType }[] = [
-    { label: 'Home', page: 'home' },
-    { label: 'Shop', page: 'shop' },
-    { label: 'Jewellery Sets', page: 'category', category: 'jewellery-sets' },
-    { label: 'Pendants', page: 'category', category: 'pendants' },
-    { label: 'Earrings', page: 'category', category: 'earrings' },
-    { label: 'Bangles', page: 'category', category: 'bangles' },
-    { label: 'Bracelets', page: 'category', category: 'bracelets' },
-    { label: 'Rings', page: 'category', category: 'rings' },
-    { label: 'Contact', page: 'contact' },
+  const navLinks: { label: string; path: string; category?: CategoryType }[] = [
+    { label: 'Home', path: '/' },
+    { label: 'Shop', path: '/shop' },
+    { label: 'Jewellery Sets', path: '/category/jewellery-sets', category: 'jewellery-sets' },
+    { label: 'Pendants', path: '/category/pendants', category: 'pendants' },
+    { label: 'Earrings', path: '/category/earrings', category: 'earrings' },
+    { label: 'Bangles', path: '/category/bangles', category: 'bangles' },
+    { label: 'Bracelets', path: '/category/bracelets', category: 'bracelets' },
+    { label: 'Rings', path: '/category/rings', category: 'rings' },
+    { label: 'Contact', path: '/contact' },
   ];
 
-  const handleNavClick = (page: PageType, category?: CategoryType) => {
-    onNavigate(page, category);
+  const handleNavClick = (path: string) => {
+    navigate(path);
     setMobileMenuOpen(false);
   };
 
-  const isLinkActive = (page: PageType, category?: CategoryType) => {
-    if (page === 'category' && category) {
-      return currentPage === 'category' && selectedCategory === category;
-    }
-    if (page === 'home') return currentPage === 'home';
-    if (page === 'shop') return currentPage === 'shop';
-    if (page === 'contact') return currentPage === 'contact';
-    return false;
+  const isLinkActive = (path: string) => {
+    if (path === '/') return location.pathname === '/';
+    return location.pathname === path;
   };
 
   return (
@@ -96,7 +88,7 @@ export const Header: React.FC<HeaderProps> = ({
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => handleNavClick('home')}
+                onClick={() => handleNavClick('/')}
                 className="group inline-flex items-center space-x-3 focus:outline-hidden cursor-pointer"
               >
                 <img
@@ -110,13 +102,13 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-7">
               {navLinks.map((link) => {
-                const active = isLinkActive(link.page, link.category);
+                const active = isLinkActive(link.path);
                 return (
                   <motion.button
                     key={link.label}
                     whileHover={{ y: -1, scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => handleNavClick(link.page, link.category)}
+                    onClick={() => handleNavClick(link.path)}
                     className={`text-sm font-medium tracking-wide transition-all duration-300 cursor-pointer relative py-1 ${
                       active
                         ? 'text-white font-bold'
@@ -180,7 +172,7 @@ export const Header: React.FC<HeaderProps> = ({
               <motion.button
                 whileHover={{ scale: 1.15 }}
                 whileTap={{ scale: 0.9 }}
-                onClick={() => handleNavClick('cart')}
+                onClick={() => handleNavClick('/cart')}
                 className="p-2 text-emerald-100 hover:text-[#FF9F61] transition-all cursor-pointer relative"
                 title="Shopping Cart"
                 aria-label="Shopping Cart"
@@ -237,11 +229,11 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="flex-1 overflow-y-auto py-4 px-5">
                 <div className="flex flex-col space-y-1">
                   {navLinks.map((link) => {
-                    const active = isLinkActive(link.page, link.category);
+                    const active = isLinkActive(link.path);
                     return (
                       <button
                         key={link.label}
-                        onClick={() => handleNavClick(link.page, link.category)}
+                        onClick={() => handleNavClick(link.path)}
                         className={`flex items-center justify-between py-3 px-3 text-base font-medium rounded-lg transition-all duration-200 text-left ${
                           active
                             ? 'bg-emerald-900 text-white font-bold border border-white/30'
@@ -281,7 +273,7 @@ export const Header: React.FC<HeaderProps> = ({
 
               <div className="p-5 border-t border-emerald-900/80 bg-[#011e17]">
                 <p className="text-xs text-emerald-200/80 text-center font-light">
-                  We Deliver All Over Pakistan &bull; Delivery Charges Rs. 200
+                  We Deliver All Over Pakistan &bull; Delivery Charges Rs. 250
                 </p>
               </div>
             </motion.div>
@@ -291,4 +283,5 @@ export const Header: React.FC<HeaderProps> = ({
     </>
   );
 };
+
 

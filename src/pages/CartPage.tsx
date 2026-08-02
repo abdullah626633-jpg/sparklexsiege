@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CartItem, PageType } from '../types';
 import { Trash2, ArrowLeft, ArrowRight, Tag, ShoppingBag, ShieldCheck } from 'lucide-react';
 
@@ -6,7 +7,7 @@ interface CartPageProps {
   cartItems: CartItem[];
   onUpdateQuantity: (productId: string, quantity: number, selectedSize?: string) => void;
   onRemoveItem: (productId: string, selectedSize?: string) => void;
-  onNavigate: (page: PageType) => void;
+  onNavigate?: (page: PageType) => void;
 }
 
 export const CartPage: React.FC<CartPageProps> = ({
@@ -15,6 +16,7 @@ export const CartPage: React.FC<CartPageProps> = ({
   onRemoveItem,
   onNavigate,
 }) => {
+  const navigate = useNavigate();
   const [couponCode, setCouponCode] = useState('');
   const [discountPercent, setDiscountPercent] = useState(0);
   const [couponMessage, setCouponMessage] = useState<{ text: string; error: boolean } | null>(null);
@@ -68,7 +70,10 @@ export const CartPage: React.FC<CartPageProps> = ({
               Explore our fine jewellery collection and add timeless gold and diamond pieces.
             </p>
             <button
-              onClick={() => onNavigate('shop')}
+              onClick={() => {
+                if (onNavigate) onNavigate('shop');
+                navigate('/shop');
+              }}
               className="bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-semibold text-sm py-3 px-8 rounded-full transition-colors cursor-pointer"
             >
               Start Shopping
@@ -167,7 +172,10 @@ export const CartPage: React.FC<CartPageProps> = ({
 
               <div className="pt-4 flex items-center justify-between">
                 <button
-                  onClick={() => onNavigate('shop')}
+                  onClick={() => {
+                    if (onNavigate) onNavigate('shop');
+                    navigate('/shop');
+                  }}
                   className="inline-flex items-center space-x-2 text-xs font-bold text-neutral-700 hover:text-[#FF9F61] transition-colors cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
@@ -247,7 +255,10 @@ export const CartPage: React.FC<CartPageProps> = ({
                 </div>
 
                 <button
-                  onClick={() => onNavigate('checkout')}
+                  onClick={() => {
+                    if (onNavigate) onNavigate('checkout');
+                    navigate('/checkout');
+                  }}
                   className="w-full mt-6 bg-[#FF9F61] hover:bg-[#e88d51] text-neutral-950 font-bold text-base py-4 rounded-2xl shadow-md transition-all cursor-pointer flex items-center justify-center space-x-2"
                 >
                   <span>Proceed to Checkout</span>

@@ -1,11 +1,19 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PageType } from '../types';
 
 interface FooterProps {
-  onNavigate: (page: PageType) => void;
+  onNavigate?: (page: PageType) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+  const navigate = useNavigate();
+
+  const handleNav = (path: string, page?: PageType) => {
+    if (onNavigate && page) onNavigate(page);
+    navigate(path);
+  };
+
   return (
     <footer className="bg-[#002D2F] text-emerald-100 border-t border-emerald-900/80 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
@@ -14,7 +22,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <img
             src="/logo.jpg"
             alt="SparklezSiege Jewellery"
-            className="h-12 sm:h-14 w-auto object-contain mb-2"
+            className="h-12 sm:h-14 w-auto object-contain mb-2 cursor-pointer"
+            onClick={() => handleNav('/')}
           />
           <p className="text-xs text-emerald-200/80 mt-1">
             © {new Date().getFullYear()} SparklezSiege Jewellery. All rights reserved.
@@ -27,31 +36,31 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         {/* Quick Links */}
         <nav className="flex flex-wrap justify-center gap-6 text-sm">
           <button
-            onClick={() => onNavigate('shop')}
+            onClick={() => handleNav('/shop', 'shop')}
             className="hover:text-white transition-all duration-200 hover:scale-105 cursor-pointer font-medium"
           >
             Shop
           </button>
           <button
-            onClick={() => onNavigate('contact')}
+            onClick={() => handleNav('/contact', 'contact')}
             className="hover:text-white transition-all duration-200 hover:scale-105 cursor-pointer font-medium"
           >
             Contact
           </button>
           <button
-            onClick={() => onNavigate('exchange')}
+            onClick={() => handleNav('/exchange', 'exchange')}
             className="hover:text-white transition-all duration-200 hover:scale-105 cursor-pointer font-medium text-[#FF9F61]"
           >
             Exchange & Return Policy
           </button>
           <button
-            onClick={() => onNavigate('privacy')}
+            onClick={() => handleNav('/privacy', 'privacy')}
             className="hover:text-white transition-all duration-200 hover:scale-105 cursor-pointer font-medium"
           >
             Privacy Policy
           </button>
           <button
-            onClick={() => onNavigate('terms')}
+            onClick={() => handleNav('/terms', 'terms')}
             className="hover:text-white transition-all duration-200 hover:scale-105 cursor-pointer font-medium"
           >
             Terms & Conditions

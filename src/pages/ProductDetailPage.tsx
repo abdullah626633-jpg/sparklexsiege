@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Product, Review } from '../types';
 import { ProductCard } from '../components/ProductCard';
 import { MOCK_REVIEWS } from '../data/products';
@@ -18,7 +19,7 @@ import {
 interface ProductDetailPageProps {
   product: Product;
   allProducts: Product[];
-  onSelectProduct: (product: Product) => void;
+  onSelectProduct?: (product: Product) => void;
   onQuickView: (product: Product) => void;
   onAddToCart: (product: Product, quantity: number, size?: string) => void;
   onBuyNow: (product: Product, quantity: number, size?: string) => void;
@@ -38,7 +39,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   isWishlisted,
   wishlistIds,
 }) => {
+  const navigate = useNavigate();
   const [activeImgIndex, setActiveImgIndex] = useState(0);
+
+  const handleBuyNow = () => {
+    onBuyNow(product, quantity, selectedSize);
+    navigate('/checkout');
+  };
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     product.sizes ? product.sizes[0] : undefined
@@ -360,7 +367,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 </div>
 
                 <button
-                  onClick={() => onBuyNow(product, quantity, selectedSize)}
+                  onClick={handleBuyNow}
                   className="w-full bg-[#FF9F61] hover:bg-[#e88d51] text-neutral-950 font-bold text-base py-4 px-6 rounded-2xl transition-all cursor-pointer shadow-md"
                 >
                   Buy Now

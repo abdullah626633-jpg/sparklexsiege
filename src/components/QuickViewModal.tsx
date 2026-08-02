@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { X, Star, ShoppingBag, Heart, Check, ArrowRight } from 'lucide-react';
 
@@ -9,7 +10,7 @@ interface QuickViewModalProps {
   onBuyNow: (product: Product, quantity: number, size?: string) => void;
   onToggleWishlist: (product: Product) => void;
   isWishlisted: boolean;
-  onGoToDetail: (product: Product) => void;
+  onGoToDetail?: (product: Product) => void;
 }
 
 export const QuickViewModal: React.FC<QuickViewModalProps> = ({
@@ -21,6 +22,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
   isWishlisted,
   onGoToDetail,
 }) => {
+  const navigate = useNavigate();
   if (!product) return null;
 
   const [activeImgIndex, setActiveImgIndex] = useState(0);
@@ -32,6 +34,18 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
     product.colors ? product.colors[0] : undefined
   );
   const [addedToast, setAddedToast] = useState(false);
+
+  const handleGoToDetail = () => {
+    onClose();
+    if (onGoToDetail) onGoToDetail(product);
+    navigate(`/product/${product.slug || product.id}`);
+  };
+
+  const handleBuyNow = () => {
+    onClose();
+    onBuyNow(product, quantity, selectedSize);
+    navigate('/checkout');
+  };
 
   const handleSelectColor = (color: string) => {
     setSelectedColor(color);
@@ -271,20 +285,14 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
             </div>
 
             <button
-              onClick={() => {
-                onClose();
-                onBuyNow(product, quantity, selectedSize);
-              }}
+              onClick={handleBuyNow}
               className="w-full bg-[#FF9F61] hover:bg-[#e88d51] text-neutral-950 font-semibold text-sm py-3 px-4 rounded-xl transition-colors cursor-pointer shadow-xs"
             >
               Buy Now
             </button>
 
             <button
-              onClick={() => {
-                onClose();
-                onGoToDetail(product);
-              }}
+              onClick={handleGoToDetail}
               className="w-full text-center text-xs font-semibold text-neutral-600 hover:text-[#FF9F61] pt-2 flex items-center justify-center space-x-1 cursor-pointer"
             >
               <span>View Full Product Details</span>
@@ -296,3 +304,4 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
     </div>
   );
 };
+

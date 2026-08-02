@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { Heart, X, ShoppingBag, Trash2 } from 'lucide-react';
 
@@ -8,7 +9,7 @@ interface WishlistDrawerProps {
   wishlistProducts: Product[];
   onRemoveFromWishlist: (product: Product) => void;
   onAddToCart: (product: Product) => void;
-  onSelectProduct: (product: Product) => void;
+  onSelectProduct?: (product: Product) => void;
 }
 
 export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
@@ -19,7 +20,14 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
   onAddToCart,
   onSelectProduct,
 }) => {
+  const navigate = useNavigate();
   if (!isOpen) return null;
+
+  const handleProductSelect = (prod: Product) => {
+    if (onSelectProduct) onSelectProduct(prod);
+    onClose();
+    navigate(`/product/${prod.slug || prod.id}`);
+  };
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
@@ -66,20 +74,14 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
                     <img
                       src={prod.images[0]}
                       alt={prod.name}
-                      onClick={() => {
-                        onSelectProduct(prod);
-                        onClose();
-                      }}
+                      onClick={() => handleProductSelect(prod)}
                       className="w-20 h-20 object-cover rounded-xl bg-white cursor-pointer"
                       referrerPolicy="no-referrer"
                     />
 
                     <div className="flex-1 min-w-0">
                       <h4
-                        onClick={() => {
-                          onSelectProduct(prod);
-                          onClose();
-                        }}
+                        onClick={() => handleProductSelect(prod)}
                         className="font-serif-luxury text-base font-semibold text-neutral-900 hover:text-[#FF9F61] cursor-pointer truncate"
                       >
                         {prod.name}
@@ -117,3 +119,4 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
     </div>
   );
 };
+

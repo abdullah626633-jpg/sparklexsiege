@@ -1,10 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CATEGORIES } from '../data/products';
 import { CategoryType } from '../types';
 import { ChevronRight } from 'lucide-react';
 
 interface CategoriesGridProps {
-  onSelectCategory: (category: CategoryType) => void;
+  onSelectCategory?: (category: CategoryType) => void;
 }
 
 const CATEGORY_TAGS: Record<string, string> = {
@@ -16,6 +17,13 @@ const CATEGORY_TAGS: Record<string, string> = {
 };
 
 export const CategoriesGrid: React.FC<CategoriesGridProps> = ({ onSelectCategory }) => {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (catId: CategoryType) => {
+    if (onSelectCategory) onSelectCategory(catId);
+    navigate(`/category/${catId}`);
+  };
+
   return (
     <section className="py-12 sm:py-20 bg-[#FAF5F2] border-b border-neutral-200/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -37,7 +45,7 @@ export const CategoriesGrid: React.FC<CategoriesGridProps> = ({ onSelectCategory
             return (
               <div
                 key={cat.id}
-                onClick={() => onSelectCategory(cat.id)}
+                onClick={() => handleCategoryClick(cat.id)}
                 className="group relative aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden cursor-pointer shadow-xs hover:shadow-2xl transition-all duration-300 flex flex-col justify-end p-4 sm:p-6 text-center bg-neutral-900 border border-neutral-200/40"
               >
                 {/* Category Background Image */}
@@ -74,5 +82,6 @@ export const CategoriesGrid: React.FC<CategoriesGridProps> = ({ onSelectCategory
     </section>
   );
 };
+
 
 

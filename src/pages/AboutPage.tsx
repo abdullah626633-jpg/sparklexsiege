@@ -1,12 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PageType } from '../types';
 import { Gem, ShieldCheck, Heart, Award } from 'lucide-react';
 
 interface AboutPageProps {
-  onNavigate: (page: PageType) => void;
+  onNavigate?: (page: PageType) => void;
 }
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
+  const navigate = useNavigate();
   return (
     <div className="bg-white min-h-screen py-16 sm:py-24">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -84,7 +86,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             Find the perfect bracelet, bangle, necklace, ring, or earring crafted to elevate your signature personal style.
           </p>
           <button
-            onClick={() => onNavigate('shop')}
+            onClick={() => {
+              if (onNavigate) onNavigate('shop');
+              navigate('/shop');
+            }}
             className="bg-[#FF9F61] hover:bg-[#e88d51] text-neutral-950 font-bold text-sm py-3.5 px-8 rounded-full transition-colors cursor-pointer"
           >
             Shop All Jewellery

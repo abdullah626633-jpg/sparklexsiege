@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Product, CategoryType } from '../types';
 import { ProductCard } from '../components/ProductCard';
 import { CATEGORIES } from '../data/products';
@@ -6,7 +7,7 @@ import { SlidersHorizontal, Search } from 'lucide-react';
 
 interface ShopPageProps {
   products: Product[];
-  onSelectProduct: (product: Product) => void;
+  onSelectProduct?: (product: Product) => void;
   onQuickView: (product: Product) => void;
   onAddToCart: (product: Product) => void;
   onToggleWishlist: (product: Product) => void;
@@ -21,19 +22,18 @@ export const ShopPage: React.FC<ShopPageProps> = ({
   onToggleWishlist,
   wishlistIds,
 }) => {
-  const [selectedCat, setSelectedCat] = useState<CategoryType | 'all'>('all');
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'featured' | 'price-low' | 'price-high' | 'rating'>('featured');
 
   const filteredProducts = useMemo(() => {
     return products
       .filter((p) => {
-        const matchesCat = selectedCat === 'all' || p.category === selectedCat;
         const matchesQuery =
           !searchQuery.trim() ||
           p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           p.material.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesCat && matchesQuery;
+        return matchesQuery;
       })
       .sort((a, b) => {
         if (sortBy === 'price-low') return a.price - b.price;
@@ -41,7 +41,7 @@ export const ShopPage: React.FC<ShopPageProps> = ({
         if (sortBy === 'rating') return b.rating - a.rating;
         return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
       });
-  }, [products, selectedCat, searchQuery, sortBy]);
+  }, [products, searchQuery, sortBy]);
 
   return (
     <div className="py-12 bg-white min-h-screen">
@@ -64,24 +64,16 @@ export const ShopPage: React.FC<ShopPageProps> = ({
           {/* Category Filter Buttons */}
           <div className="flex items-center space-x-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
             <button
-              onClick={() => setSelectedCat('all')}
-              className={`text-xs px-4 py-2.5 uppercase font-bold tracking-wider transition-all whitespace-nowrap cursor-pointer border ${
-                selectedCat === 'all'
-                  ? 'bg-neutral-900 text-[#FF9F61] border-neutral-900 shadow-xs'
-                  : 'bg-white text-neutral-700 hover:bg-neutral-100 border-neutral-200'
-              }`}
+              onClick={() => navigate('/shop')}
+              className="text-xs px-4 py-2.5 uppercase font-bold tracking-wider transition-all whitespace-nowrap cursor-pointer border bg-neutral-900 text-[#FF9F61] border-neutral-900 shadow-xs"
             >
               All Pieces ({products.length})
             </button>
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => setSelectedCat(cat.id)}
-                className={`text-xs px-4 py-2.5 uppercase font-bold tracking-wider transition-all whitespace-nowrap cursor-pointer border ${
-                  selectedCat === cat.id
-                    ? 'bg-neutral-900 text-[#FF9F61] border-neutral-900 shadow-xs'
-                    : 'bg-white text-neutral-700 hover:bg-neutral-100 border-neutral-200'
-                }`}
+                onClick={() => navigate(`/category/${cat.id}`)}
+                className="text-xs px-4 py-2.5 uppercase font-bold tracking-wider transition-all whitespace-nowrap cursor-pointer border bg-white text-neutral-700 hover:bg-neutral-100 border-neutral-200"
               >
                 {cat.name}
               </button>
@@ -122,10 +114,7 @@ export const ShopPage: React.FC<ShopPageProps> = ({
           <div className="text-center py-20 text-neutral-500">
             <p className="text-base font-semibold">No products match your filter criteria.</p>
             <button
-              onClick={() => {
-                setSelectedCat('all');
-                setSearchQuery('');
-              }}
+              onClick={() => setSearchQuery('')}
               className="mt-4 text-xs font-semibold text-emerald-800 underline cursor-pointer"
             >
               Reset Filters
@@ -150,4 +139,5 @@ export const ShopPage: React.FC<ShopPageProps> = ({
     </div>
   );
 };
+
 

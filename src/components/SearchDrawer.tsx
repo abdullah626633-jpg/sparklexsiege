@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { Search, X, ChevronRight } from 'lucide-react';
 
@@ -6,7 +7,7 @@ interface SearchDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   products: Product[];
-  onSelectProduct: (product: Product) => void;
+  onSelectProduct?: (product: Product) => void;
 }
 
 export const SearchDrawer: React.FC<SearchDrawerProps> = ({
@@ -15,6 +16,7 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
   products,
   onSelectProduct,
 }) => {
+  const navigate = useNavigate();
   if (!isOpen) return null;
 
   const [query, setQuery] = useState('');
@@ -28,6 +30,12 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
           p.description.toLowerCase().includes(query.toLowerCase())
       )
     : [];
+
+  const handleProductSelect = (prod: Product) => {
+    if (onSelectProduct) onSelectProduct(prod);
+    onClose();
+    navigate(`/product/${prod.slug || prod.id}`);
+  };
 
   const suggestedTags = ['Jewellery Sets', 'Diamonds', '18k Gold', 'Rings', 'Bangles', 'Pearl'];
 
@@ -111,10 +119,7 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
                 {filtered.map((prod) => (
                   <div
                     key={prod.id}
-                    onClick={() => {
-                      onSelectProduct(prod);
-                      onClose();
-                    }}
+                    onClick={() => handleProductSelect(prod)}
                     className="flex items-center space-x-4 p-3 rounded-2xl hover:bg-neutral-50 cursor-pointer border border-transparent hover:border-neutral-100 transition-all group"
                   >
                     <img
@@ -143,3 +148,4 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
     </div>
   );
 };
+
