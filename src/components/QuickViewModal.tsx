@@ -210,14 +210,20 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                     >
                       <span
                         className={`w-2.5 h-2.5 rounded-full border border-black/20 ${
-                          color.toLowerCase() === 'red'
+                          color.toLowerCase().includes('red') || color.toLowerCase().includes('ruby')
                             ? 'bg-rose-600'
-                            : color.toLowerCase() === 'green'
+                            : color.toLowerCase().includes('green') || color.toLowerCase().includes('emerald')
                             ? 'bg-emerald-600'
-                            : color.toLowerCase() === 'golden' || color.toLowerCase() === 'gold'
+                            : color.toLowerCase().includes('blue') || color.toLowerCase().includes('sapphire')
+                            ? 'bg-blue-600'
+                            : color.toLowerCase().includes('pink') || color.toLowerCase().includes('rose')
+                            ? 'bg-pink-400'
+                            : color.toLowerCase().includes('golden') || color.toLowerCase().includes('gold')
                             ? 'bg-[#FF9F61]'
-                            : color.toLowerCase() === 'silver'
+                            : color.toLowerCase().includes('silver')
                             ? 'bg-slate-300'
+                            : color.toLowerCase().includes('black')
+                            ? 'bg-neutral-900'
                             : 'bg-neutral-400'
                         }`}
                       />

@@ -326,6 +326,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                               ? 'bg-blue-600'
                               : color.toLowerCase().includes('purple') || color.toLowerCase().includes('amethyst')
                               ? 'bg-purple-600'
+                              : color.toLowerCase().includes('pink') || color.toLowerCase().includes('rose')
+                              ? 'bg-pink-400'
                               : color.toLowerCase().includes('golden') || color.toLowerCase().includes('gold')
                               ? 'bg-[#FF9F61]'
                               : color.toLowerCase().includes('silver')
