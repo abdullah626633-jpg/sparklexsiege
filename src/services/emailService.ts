@@ -36,6 +36,24 @@ export interface OrderEmailParams {
   payment_method: string;
 }
 
+/**
+ * Converts local or relative image paths (e.g. '/IMG_4185.png') into
+ * full absolute public URLs (e.g. 'https://domain.com/IMG_4185.png')
+ * so email clients like Gmail & Outlook render the actual product image.
+ */
+const getFullImageUrl = (imgPath?: string): string => {
+  if (!imgPath) return '';
+  if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) {
+    return imgPath;
+  }
+  const origin = typeof window !== 'undefined' && window.location?.origin
+    ? window.location.origin
+    : (env.APP_URL || '');
+  const cleanOrigin = origin.replace(/\/$/, '');
+  const cleanPath = imgPath.startsWith('/') ? imgPath : `/${imgPath}`;
+  return cleanOrigin ? `${cleanOrigin}${cleanPath}` : cleanPath;
+};
+
 const sendToSingleEmailJS = async (
   serviceId: string,
   templateId: string,
@@ -88,21 +106,23 @@ export const sendOrderEmail = async (params: OrderEmailParams): Promise<{ succes
   const firstItem = cartItems[0];
   const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-  // 1. Clean Plain-Text Order Items List
+  const firstItemFullImageUrl = getFullImageUrl(firstItem?.product.images[0]);
+
+  // 1. Clean Plain-Text Order Items List with absolute public image URLs
   const orderItemsPlainText = cartItems
     .map((item, index) => {
       const discountedPrice = getDiscountedPrice(item.product.price);
       const itemTotal = discountedPrice * item.quantity;
-      const imageUrl = item.product.images[0] || '';
+      const fullImgUrl = getFullImageUrl(item.product.images[0]);
       return `${index + 1}. ${item.product.name}
    - Category: ${item.product.category}
    - Color: ${item.selectedColor || 'Standard'} | Size: ${item.selectedSize || 'Standard'}
    - Qty: ${item.quantity} x Rs. ${discountedPrice.toLocaleString()} = Rs. ${itemTotal.toLocaleString()}
-   ${imageUrl ? `- Image: ${imageUrl}` : ''}`;
+   ${fullImgUrl ? `- Product Image: ${fullImgUrl}` : ''}`;
     })
     .join('\n\n');
 
-  // 2. HTML Table string
+  // 2. HTML Table string with absolute public image URLs in <img src="..." />
   const orderItemsHtml = `
 <table style="width:100%; border-collapse:collapse; font-family:Arial,sans-serif; font-size:13px; margin:10px 0;">
   <thead>
@@ -119,23 +139,23 @@ export const sendOrderEmail = async (params: OrderEmailParams): Promise<{ succes
       .map((item) => {
         const discountedPrice = getDiscountedPrice(item.product.price);
         const itemTotal = discountedPrice * item.quantity;
-        const imageUrl = item.product.images[0] || '';
+        const fullImgUrl = getFullImageUrl(item.product.images[0]);
         return `
         <tr>
-          <td style="padding:8px; border:1px solid #e5e7eb; text-align:center;">
-            ${imageUrl ? `<img src="${imageUrl}" alt="${item.product.name}" style="width:48px; height:48px; object-fit:cover; border-radius:4px;" />` : 'N/A'}
+          <td style="padding:8px; border:1px solid #e5e7eb; text-align:center; vertical-align:middle;">
+            ${fullImgUrl ? `<img src="${fullImgUrl}" alt="${item.product.name}" width="50" height="50" style="width:50px; height:50px; object-fit:cover; border-radius:4px; display:block; margin:0 auto;" />` : 'N/A'}
           </td>
-          <td style="padding:8px; border:1px solid #e5e7eb; font-weight:bold; color:#111827;">
+          <td style="padding:8px; border:1px solid #e5e7eb; font-weight:bold; color:#111827; vertical-align:middle;">
             ${item.product.name}
             <div style="font-size:11px; color:#6b7280; font-weight:normal;">${item.product.category}</div>
           </td>
-          <td style="padding:8px; border:1px solid #e5e7eb; color:#374151;">
+          <td style="padding:8px; border:1px solid #e5e7eb; color:#374151; vertical-align:middle;">
             Color: ${item.selectedColor || 'Standard'}<br/>Size: ${item.selectedSize || 'Standard'}
           </td>
-          <td style="padding:8px; border:1px solid #e5e7eb; text-align:center; font-weight:bold;">
+          <td style="padding:8px; border:1px solid #e5e7eb; text-align:center; font-weight:bold; vertical-align:middle;">
             ${item.quantity}
           </td>
-          <td style="padding:8px; border:1px solid #e5e7eb; text-align:right; font-weight:bold; color:#111827;">
+          <td style="padding:8px; border:1px solid #e5e7eb; text-align:right; font-weight:bold; color:#111827; vertical-align:middle;">
             Rs. ${itemTotal.toLocaleString()}
           </td>
         </tr>`;
@@ -170,8 +190,13 @@ PAYMENT & TOTALS:
 `.trim();
 
   const templateParams = {
+    // Primary item fields & image URLs (Full public URL so email clients render actual images)
     product_name: cartItems.map((i) => i.product.name).join(', ') || 'N/A',
-    product_image: firstItem?.product.images[0] || '',
+    product_image: firstItemFullImageUrl,
+    product_image_url: firstItemFullImageUrl,
+    product_image_src: firstItemFullImageUrl,
+    product_image_tag: firstItemFullImageUrl ? `<img src="${firstItemFullImageUrl}" alt="${firstItem?.product.name || 'Product'}" width="150" style="max-width:150px; height:auto; border-radius:6px; display:block;" />` : '',
+    
     category: cartItems.map((i) => i.product.category).filter((v, idx, a) => a.indexOf(v) === idx).join(', ') || 'Jewellery',
     color: cartItems.map((i) => i.selectedColor || 'Standard').join(', ') || 'Standard',
     size: cartItems.map((i) => i.selectedSize || 'Standard').join(', ') || 'Standard',
