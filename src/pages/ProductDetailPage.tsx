@@ -23,8 +23,8 @@ interface ProductDetailPageProps {
   allProducts: Product[];
   onSelectProduct?: (product: Product) => void;
   onQuickView: (product: Product) => void;
-  onAddToCart: (product: Product, quantity: number, size?: string) => void;
-  onBuyNow: (product: Product, quantity: number, size?: string) => void;
+  onAddToCart: (product: Product, quantity: number, size?: string, color?: string) => void;
+  onBuyNow: (product: Product, quantity: number, size?: string, color?: string) => void;
   onToggleWishlist: (product: Product) => void;
   isWishlisted?: boolean;
   wishlistIds: string[];
@@ -54,7 +54,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const [activeImgIndex, setActiveImgIndex] = useState(0);
 
   const handleBuyNow = () => {
-    onBuyNow(product, quantity, selectedSize);
+    onBuyNow(product, quantity, selectedSize, selectedColor);
     navigate('/checkout');
   };
   const [quantity, setQuantity] = useState(1);
@@ -96,7 +96,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
     : 0;
 
   const handleAddToCart = () => {
-    onAddToCart(product, quantity, selectedSize);
+    onAddToCart(product, quantity, selectedSize, selectedColor);
     setAddedToast(true);
     setTimeout(() => setAddedToast(false), 2500);
   };

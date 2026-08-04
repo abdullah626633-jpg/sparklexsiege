@@ -424,7 +424,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 {cartItems.map((item) => {
                   const price = getDiscountedPrice(item.product.price) * item.quantity;
                   return (
-                    <div key={`${item.product.id}-${item.selectedSize}`} className="flex items-center space-x-3 text-xs">
+                    <div key={`${item.product.id}-${item.selectedColor || ''}-${item.selectedSize || ''}`} className="flex items-center space-x-3 text-xs">
                       <img
                         src={item.product.images[0]}
                         alt={item.product.name}
@@ -433,7 +433,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                       />
                       <div className="flex-1 min-w-0">
                         <p className="font-bold text-neutral-900 truncate">{item.product.name}</p>
-                        <p className="text-neutral-500 text-[11px]">Qty: {item.quantity}</p>
+                        <p className="text-neutral-500 text-[11px]">
+                          Qty: {item.quantity}
+                          {item.selectedColor ? ` | Color: ${item.selectedColor}` : ''}
+                          {item.selectedSize ? ` | Size: ${item.selectedSize}` : ''}
+                        </p>
                       </div>
                       <span className="font-bold text-neutral-900 shrink-0">
                         Rs. {price.toLocaleString()}

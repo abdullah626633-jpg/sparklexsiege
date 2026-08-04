@@ -84,28 +84,43 @@ export default function App() {
   }, [wishlistIds]);
 
   // Cart Actions
-  const handleAddToCart = (product: Product, quantity: number = 1, size?: string) => {
+  const handleAddToCart = (product: Product, quantity: number = 1, size?: string, color?: string) => {
+    const chosenSize = size || (product.sizes ? product.sizes[0] : undefined);
+    const chosenColor = color || (product.colors ? product.colors[0] : undefined);
+
     setCartItems((prev) => {
       const existingIndex = prev.findIndex(
-        (item) => item.product.id === product.id && item.selectedSize === size
+        (item) =>
+          item.product.id === product.id &&
+          item.selectedSize === chosenSize &&
+          item.selectedColor === chosenColor
       );
       if (existingIndex > -1) {
         const updated = [...prev];
         updated[existingIndex].quantity += quantity;
         return updated;
       }
-      return [...prev, { product, quantity, selectedSize: size }];
+      return [...prev, { product, quantity, selectedSize: chosenSize, selectedColor: chosenColor }];
     });
   };
 
-  const handleBuyNow = (product: Product, quantity: number = 1, size?: string) => {
-    handleAddToCart(product, quantity, size);
+  const handleBuyNow = (product: Product, quantity: number = 1, size?: string, color?: string) => {
+    handleAddToCart(product, quantity, size, color);
   };
 
-  const handleUpdateQuantity = (productId: string, quantity: number, selectedSize?: string) => {
+  const handleUpdateQuantity = (
+    productId: string,
+    quantity: number,
+    selectedSize?: string,
+    selectedColor?: string
+  ) => {
     setCartItems((prev) =>
       prev.map((item) => {
-        if (item.product.id === productId && item.selectedSize === selectedSize) {
+        if (
+          item.product.id === productId &&
+          item.selectedSize === selectedSize &&
+          item.selectedColor === selectedColor
+        ) {
           return { ...item, quantity };
         }
         return item;
@@ -113,10 +128,19 @@ export default function App() {
     );
   };
 
-  const handleRemoveFromCart = (productId: string, selectedSize?: string) => {
+  const handleRemoveFromCart = (
+    productId: string,
+    selectedSize?: string,
+    selectedColor?: string
+  ) => {
     setCartItems((prev) =>
       prev.filter(
-        (item) => !(item.product.id === productId && item.selectedSize === selectedSize)
+        (item) =>
+          !(
+            item.product.id === productId &&
+            item.selectedSize === selectedSize &&
+            item.selectedColor === selectedColor
+          )
       )
     );
   };

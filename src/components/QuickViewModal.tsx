@@ -7,8 +7,8 @@ import { getDiscountedPrice, AZADI_DISCOUNT_PERCENT } from '../utils/price';
 interface QuickViewModalProps {
   product: Product | null;
   onClose: () => void;
-  onAddToCart: (product: Product, quantity: number, size?: string) => void;
-  onBuyNow: (product: Product, quantity: number, size?: string) => void;
+  onAddToCart: (product: Product, quantity: number, size?: string, color?: string) => void;
+  onBuyNow: (product: Product, quantity: number, size?: string, color?: string) => void;
   onToggleWishlist: (product: Product) => void;
   isWishlisted: boolean;
   onGoToDetail?: (product: Product) => void;
@@ -44,7 +44,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
   const handleBuyNow = () => {
     onClose();
-    onBuyNow(product, quantity, selectedSize);
+    onBuyNow(product, quantity, selectedSize, selectedColor);
     navigate('/checkout');
   };
 
@@ -65,7 +65,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
   };
 
   const handleAdd = () => {
-    onAddToCart(product, quantity, selectedSize);
+    onAddToCart(product, quantity, selectedSize, selectedColor);
     setAddedToast(true);
     setTimeout(() => setAddedToast(false), 2000);
   };

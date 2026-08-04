@@ -6,8 +6,8 @@ import { getDiscountedPrice } from '../utils/price';
 
 interface CartPageProps {
   cartItems: CartItem[];
-  onUpdateQuantity: (productId: string, quantity: number, selectedSize?: string) => void;
-  onRemoveItem: (productId: string, selectedSize?: string) => void;
+  onUpdateQuantity: (productId: string, quantity: number, selectedSize?: string, selectedColor?: string) => void;
+  onRemoveItem: (productId: string, selectedSize?: string, selectedColor?: string) => void;
   onNavigate?: (page: PageType) => void;
 }
 
@@ -101,7 +101,7 @@ export const CartPage: React.FC<CartPageProps> = ({
                 const itemTotal = discountedUnitPrice * item.quantity;
                 return (
                   <div
-                    key={`${item.product.id}-${item.selectedSize}`}
+                    key={`${item.product.id}-${item.selectedColor || ''}-${item.selectedSize || ''}`}
                     className="p-4 sm:p-5 bg-neutral-50/60 rounded-2xl border border-neutral-100 flex flex-col sm:grid sm:grid-cols-12 items-center gap-4 transition-all hover:bg-neutral-50"
                   >
                     {/* Item Details */}
@@ -117,7 +117,9 @@ export const CartPage: React.FC<CartPageProps> = ({
                           {item.product.name}
                         </h3>
                         <p className="text-xs text-neutral-500 capitalize mt-0.5">
-                          {item.product.category} {item.selectedSize ? `• Size: ${item.selectedSize}` : ''}
+                          {item.product.category}
+                          {item.selectedColor ? ` • Color: ${item.selectedColor}` : ''}
+                          {item.selectedSize ? ` • Size: ${item.selectedSize}` : ''}
                         </p>
                         <div className="flex items-baseline space-x-2 mt-1">
                           <span className="text-sm font-bold text-neutral-800">
@@ -141,7 +143,8 @@ export const CartPage: React.FC<CartPageProps> = ({
                             onUpdateQuantity(
                               item.product.id,
                               Math.max(1, item.quantity - 1),
-                              item.selectedSize
+                              item.selectedSize,
+                              item.selectedColor
                             )
                           }
                           className="px-2.5 py-1 text-neutral-600 hover:bg-neutral-100 text-xs font-bold cursor-pointer"
@@ -156,7 +159,8 @@ export const CartPage: React.FC<CartPageProps> = ({
                             onUpdateQuantity(
                               item.product.id,
                               item.quantity + 1,
-                              item.selectedSize
+                              item.selectedSize,
+                              item.selectedColor
                             )
                           }
                           className="px-2.5 py-1 text-neutral-600 hover:bg-neutral-100 text-xs font-bold cursor-pointer"
@@ -166,7 +170,7 @@ export const CartPage: React.FC<CartPageProps> = ({
                       </div>
 
                       <button
-                        onClick={() => onRemoveItem(item.product.id, item.selectedSize)}
+                        onClick={() => onRemoveItem(item.product.id, item.selectedSize, item.selectedColor)}
                         className="p-1.5 text-neutral-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors cursor-pointer"
                         title="Remove item"
                       >
