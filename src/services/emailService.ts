@@ -37,61 +37,61 @@ export const sendOrderEmail = async (params: OrderEmailParams): Promise<{ succes
   const firstItem = cartItems[0];
   const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-  // Generate HTML table for order_items
+  // 1. Clean Plain-Text Order Items List (Renders cleanly in standard EmailJS {{order_items}} without displaying raw HTML tags)
+  const orderItemsPlainText = cartItems
+    .map((item, index) => {
+      const discountedPrice = getDiscountedPrice(item.product.price);
+      const itemTotal = discountedPrice * item.quantity;
+      const imageUrl = item.product.images[0] || '';
+      return `${index + 1}. ${item.product.name}
+   - Category: ${item.product.category}
+   - Color: ${item.selectedColor || 'Standard'} | Size: ${item.selectedSize || 'Standard'}
+   - Qty: ${item.quantity} x Rs. ${discountedPrice.toLocaleString()} = Rs. ${itemTotal.toLocaleString()}
+   ${imageUrl ? `- Image: ${imageUrl}` : ''}`;
+    })
+    .join('\n\n');
+
+  // 2. HTML Table string (For EmailJS templates using triple braces {{{order_items_html}}} or {{{order_items}}})
   const orderItemsHtml = `
-<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 13px; margin: 12px 0;">
+<table style="width:100%; border-collapse:collapse; font-family:Arial,sans-serif; font-size:13px; margin:10px 0;">
   <thead>
-    <tr style="background-color: #f3f4f6; text-align: left; border-bottom: 2px solid #e5e7eb;">
-      <th style="padding: 10px; border: 1px solid #e5e7eb;">Image</th>
-      <th style="padding: 10px; border: 1px solid #e5e7eb;">Product Name</th>
-      <th style="padding: 10px; border: 1px solid #e5e7eb;">Color</th>
-      <th style="padding: 10px; border: 1px solid #e5e7eb;">Size</th>
-      <th style="padding: 10px; border: 1px solid #e5e7eb; text-align: center;">Qty</th>
-      <th style="padding: 10px; border: 1px solid #e5e7eb; text-align: right;">Price</th>
+    <tr style="background-color:#f3f4f6; text-align:left; border-bottom:2px solid #e5e7eb;">
+      <th style="padding:8px; border:1px solid #e5e7eb;">Image</th>
+      <th style="padding:8px; border:1px solid #e5e7eb;">Product</th>
+      <th style="padding:8px; border:1px solid #e5e7eb;">Color / Size</th>
+      <th style="padding:8px; border:1px solid #e5e7eb; text-align:center;">Qty</th>
+      <th style="padding:8px; border:1px solid #e5e7eb; text-align:right;">Price</th>
     </tr>
   </thead>
   <tbody>
-    ${cartItems.map((item) => {
-      const discountedUnitPrice = getDiscountedPrice(item.product.price);
-      const itemTotalPrice = discountedUnitPrice * item.quantity;
-      const imageUrl = item.product.images[0] || '';
-      return `
+    ${cartItems
+      .map((item) => {
+        const discountedPrice = getDiscountedPrice(item.product.price);
+        const itemTotal = discountedPrice * item.quantity;
+        const imageUrl = item.product.images[0] || '';
+        return `
         <tr>
-          <td style="padding: 10px; border: 1px solid #e5e7eb; text-align: center; vertical-align: middle;">
-            ${imageUrl ? `<img src="${imageUrl}" alt="${item.product.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; display: block; margin: 0 auto;" />` : 'N/A'}
+          <td style="padding:8px; border:1px solid #e5e7eb; text-align:center;">
+            ${imageUrl ? `<img src="${imageUrl}" alt="${item.product.name}" style="width:48px; height:48px; object-fit:cover; border-radius:4px;" />` : 'N/A'}
           </td>
-          <td style="padding: 10px; border: 1px solid #e5e7eb; vertical-align: middle; font-weight: bold; color: #111827;">
+          <td style="padding:8px; border:1px solid #e5e7eb; font-weight:bold; color:#111827;">
             ${item.product.name}
-            <div style="font-size: 11px; color: #6b7280; font-weight: normal; margin-top: 2px;">Category: ${item.product.category}</div>
+            <div style="font-size:11px; color:#6b7280; font-weight:normal;">${item.product.category}</div>
           </td>
-          <td style="padding: 10px; border: 1px solid #e5e7eb; vertical-align: middle; color: #374151;">
-            ${item.selectedColor || 'Standard'}
+          <td style="padding:8px; border:1px solid #e5e7eb; color:#374151;">
+            Color: ${item.selectedColor || 'Standard'}<br/>Size: ${item.selectedSize || 'Standard'}
           </td>
-          <td style="padding: 10px; border: 1px solid #e5e7eb; vertical-align: middle; color: #374151;">
-            ${item.selectedSize || 'Standard'}
-          </td>
-          <td style="padding: 10px; border: 1px solid #e5e7eb; vertical-align: middle; text-align: center; font-weight: bold;">
+          <td style="padding:8px; border:1px solid #e5e7eb; text-align:center; font-weight:bold;">
             ${item.quantity}
           </td>
-          <td style="padding: 10px; border: 1px solid #e5e7eb; vertical-align: middle; text-align: right; font-weight: bold; color: #111827;">
-            Rs. ${itemTotalPrice.toLocaleString()}
+          <td style="padding:8px; border:1px solid #e5e7eb; text-align:right; font-weight:bold; color:#111827;">
+            Rs. ${itemTotal.toLocaleString()}
           </td>
-        </tr>
-      `;
-    }).join('')}
+        </tr>`;
+      })
+      .join('')}
   </tbody>
-</table>
-`.trim();
-
-  // Text summary fallback
-  const orderDetailsText = cartItems
-    .map(
-      (item) =>
-        `• ${item.product.name} (Qty: ${item.quantity}${
-          item.selectedColor ? `, Color: ${item.selectedColor}` : ''
-        }${item.selectedSize ? `, Size: ${item.selectedSize}` : ''}) - Rs. ${(getDiscountedPrice(item.product.price) * item.quantity).toLocaleString()}`
-    )
-    .join('\n');
+</table>`.trim();
 
   const messageContent = `
 === NEW ORDER RECEIVED #${params.order_id} ===
@@ -109,7 +109,7 @@ DELIVERY ADDRESS:
 - Special Notes: ${params.notes || 'None'}
 
 ORDER ITEMS:
-${orderDetailsText}
+${orderItemsPlainText}
 
 PAYMENT & TOTALS:
 - Payment Method: ${params.payment_method}
@@ -119,7 +119,7 @@ PAYMENT & TOTALS:
 `.trim();
 
   const templateParams = {
-    // Exact requested variables:
+    // Individual item fields requested:
     product_name: cartItems.map((i) => i.product.name).join(', ') || 'N/A',
     product_image: firstItem?.product.images[0] || '',
     category: cartItems.map((i) => i.product.category).filter((v, idx, a) => a.indexOf(v) === idx).join(', ') || 'Jewellery',
@@ -138,9 +138,17 @@ PAYMENT & TOTALS:
     customer_note: params.notes || 'None',
     order_id: params.order_id,
     order_date: orderDateStr,
-    order_items: orderItemsHtml,
 
-    // Aliases for compatibility with other template key styles
+    // Plain text list for {{order_items}} (solves the HTML tags being printed issue in standard EmailJS templates):
+    order_items: orderItemsPlainText,
+    order_details: orderItemsPlainText,
+    items: orderItemsPlainText,
+
+    // HTML table variables (use with {{{order_items_html}}} in EmailJS):
+    order_items_html: orderItemsHtml,
+    order_details_html: orderItemsHtml,
+
+    // Standard fallback fields:
     order_number: params.order_id,
     to_name: params.customer_name,
     to_email: params.customer_email,
@@ -161,8 +169,6 @@ PAYMENT & TOTALS:
     subtotal: params.subtotal,
     shipping: params.shipping,
     total: params.total_amount,
-    items: orderDetailsText,
-    order_details: orderDetailsText,
     message: messageContent,
   };
 
