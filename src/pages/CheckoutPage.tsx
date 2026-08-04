@@ -1,7 +1,21 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CartItem, PageType } from '../types';
-import { ShieldCheck, CheckCircle2, Lock, ArrowLeft, Loader2, MailCheck, Banknote, Truck } from 'lucide-react';
+import { 
+  CheckCircle2, 
+  ArrowLeft, 
+  Loader2, 
+  MailCheck, 
+  Phone, 
+  MapPin, 
+  User, 
+  Mail, 
+  Truck, 
+  ShieldCheck,
+  ShoppingBag,
+  Sparkles,
+  MessageSquare
+} from 'lucide-react';
 import { sendOrderEmail } from '../services/emailService';
 import { getDiscountedPrice } from '../utils/price';
 
@@ -11,25 +25,51 @@ interface CheckoutPageProps {
   onNavigate?: (page: PageType) => void;
 }
 
+const COMMON_CITIES = [
+  'Lahore',
+  'Karachi',
+  'Islamabad',
+  'Rawalpindi',
+  'Faisalabad',
+  'Multan',
+  'Peshawar',
+  'Quetta',
+  'Sialkot',
+  'Gujranwala',
+  'Hyderabad',
+  'Abbottabad',
+  'Bahawalpur',
+  'Sargodha',
+  'Sukkur',
+  'Jhelum',
+  'Gujrat',
+  'Other City',
+];
+
 export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   cartItems,
   onClearCart,
   onNavigate,
 }) => {
   const navigate = useNavigate();
+
+  // Success screen state
   const [placedOrder, setPlacedOrder] = useState<string | null>(null);
   const [confirmedTotal, setConfirmedTotal] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [emailStatus, setEmailStatus] = useState<'sent' | 'failed' | null>(null);
+  const [emailSentSuccess, setEmailSentSuccess] = useState<boolean>(true);
 
-  // Form Fields
+  // Simple customer form fields
+  const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
   const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [zip, setZip] = useState('');
+  const [city, setCity] = useState('Lahore');
+  const [customCity, setCustomCity] = useState('');
+  const [notes, setNotes] = useState('');
+
+  // Simple validation error strings
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const originalSubtotal = cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
@@ -47,367 +87,395 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (cartItems.length === 0 || isSubmitting) return;
+    setErrorMsg(null);
+
+    // Basic quick validation
+    if (!fullName.trim()) {
+      setErrorMsg('Please enter your full name.');
+      return;
+    }
+    if (!phone.trim() || phone.replace(/\D/g, '').length < 10) {
+      setErrorMsg('Please enter a valid phone/WhatsApp number (e.g. 03001234567).');
+      return;
+    }
+    if (!email.trim() || !email.includes('@')) {
+      setErrorMsg('Please enter a valid email address.');
+      return;
+    }
+    if (!address.trim()) {
+      setErrorMsg('Please enter your delivery street address.');
+      return;
+    }
+    if (city === 'Other City' && !customCity.trim()) {
+      setErrorMsg('Please type your city name.');
+      return;
+    }
 
     setIsSubmitting(true);
     const orderNum = `SKS-${Math.floor(100000 + Math.random() * 900000)}`;
-    const orderTotal = total;
+    const finalCity = city === 'Other City' ? customCity.trim() : city;
 
     const itemSummary = cartItems
       .map(
         (item) =>
           `• ${item.product.name} (Qty: ${item.quantity}${
             item.selectedSize ? `, Size: ${item.selectedSize}` : ''
-          }) - Rs. ${(getDiscountedPrice(item.product.price) * item.quantity).toLocaleString()}`
+          }${item.selectedColor ? `, Color: ${item.selectedColor}` : ''}) - Rs. ${(getDiscountedPrice(item.product.price) * item.quantity).toLocaleString()}`
       )
       .join('\n');
 
-    const emailResult = await sendOrderEmail({
+    const paymentLabel = 'Cash on Delivery (COD)';
+
+    const emailRes = await sendOrderEmail({
       order_id: orderNum,
-      customer_name: `${firstName} ${lastName}`.trim(),
-      customer_email: email,
-      address,
-      city,
-      state,
-      zip,
+      customer_name: fullName.trim(),
+      customer_email: email.trim(),
+      phone_number: phone.trim(),
+      address: address.trim(),
+      city: finalCity,
+      state: 'Pakistan',
+      notes: notes.trim() || undefined,
       order_details: itemSummary,
       subtotal: `Rs. ${subtotal.toLocaleString()}`,
       shipping: shipping === 0 ? 'FREE' : `Rs. ${shipping}`,
-      total_amount: `Rs. ${orderTotal.toLocaleString()}`,
-      payment_method: 'Cash on Delivery (COD)',
+      total_amount: `Rs. ${total.toLocaleString()}`,
+      payment_method: paymentLabel,
     });
 
-    setConfirmedTotal(orderTotal);
-    setEmailStatus(emailResult.success ? 'sent' : 'failed');
+    setConfirmedTotal(total);
+    setEmailSentSuccess(emailRes.success);
     setPlacedOrder(orderNum);
     setIsSubmitting(false);
     onClearCart();
   };
 
+  // SUCCESS CONFIRMATION VIEW
   if (placedOrder) {
+    const finalCity = city === 'Other City' ? customCity : city;
+
     return (
-      <div className="bg-white min-h-screen py-16 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-        <div className="max-w-lg w-full bg-neutral-50 rounded-3xl p-8 border border-neutral-100 shadow-xl text-center space-y-5">
+      <div className="bg-neutral-50 min-h-screen py-10 px-4 flex items-center justify-center">
+        <div className="max-w-lg w-full bg-white rounded-3xl p-6 sm:p-8 border border-neutral-200 shadow-xl text-center space-y-5">
           <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
             <CheckCircle2 className="w-10 h-10" />
           </div>
 
-          <span className="text-xs font-semibold uppercase tracking-widest text-[#FF9F61] block">
-            Thank You For Your Order
-          </span>
+          <div>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#FF9F61]">
+              Order Placed Successfully
+            </span>
+            <h1 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-neutral-900 mt-1">
+              Thank You, {fullName}!
+            </h1>
+            <p className="text-xs text-neutral-500 mt-1">
+              Order #{placedOrder} has been recorded.
+            </p>
+          </div>
 
-          <h1 className="font-serif-luxury text-3xl font-bold text-neutral-900">
-            Order Confirmed!
-          </h1>
+          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-left text-xs space-y-1.5 text-emerald-900">
+            <p className="font-bold">What happens next?</p>
+            <p>Our rider will call or message you on <strong>{phone}</strong> before delivering your parcel in <strong>{finalCity}</strong>.</p>
+          </div>
 
-          <p className="text-sm text-neutral-600 leading-relaxed">
-            Your Cash on Delivery order <span className="font-bold text-neutral-900">{placedOrder}</span> has been successfully placed.
-          </p>
-
-          {emailStatus === 'sent' ? (
-            <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl text-xs flex items-center justify-center space-x-2">
-              <MailCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Order details sent via email notification to <strong>{email}</strong>!</span>
+          <div className="bg-neutral-50 rounded-2xl p-4 border border-neutral-200 text-left text-xs space-y-2">
+            <div className="flex justify-between border-b border-neutral-200 pb-2">
+              <span className="text-neutral-500">Order Total:</span>
+              <span className="font-bold text-[#FF9F61] text-sm">Rs. {confirmedTotal.toLocaleString()}</span>
             </div>
-          ) : (
-            <div className="p-3 bg-neutral-100 border border-neutral-200 text-neutral-700 rounded-2xl text-xs">
-              Order confirmation recorded for <strong>{email}</strong>.
-            </div>
-          )}
-
-          <div className="p-4 bg-white rounded-2xl border border-neutral-100 text-left text-xs space-y-2">
             <div className="flex justify-between">
-              <span className="text-neutral-500">Shipping To:</span>
-              <span className="font-medium text-neutral-800">{firstName} {lastName}</span>
+              <span className="text-neutral-500">Payment:</span>
+              <span className="font-semibold text-neutral-900">
+                Cash on Delivery (COD)
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-neutral-500">Address:</span>
-              <span className="font-medium text-neutral-800">{address}, {city}, {state} {zip}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-neutral-500">Payment Method:</span>
-              <span className="font-bold text-emerald-700">Cash on Delivery (COD)</span>
-            </div>
-            <div className="flex justify-between font-bold text-neutral-900 pt-2 border-t border-neutral-100">
-              <span>Amount Payable on Delivery:</span>
-              <span>Rs. {confirmedTotal.toLocaleString()}</span>
+              <span className="font-semibold text-neutral-900 text-right max-w-[200px] truncate">
+                {address}, {finalCity}
+              </span>
             </div>
           </div>
 
-          <button
-            onClick={() => {
-              if (onNavigate) onNavigate('shop');
-              navigate('/shop');
-            }}
-            className="w-full bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold text-sm py-3.5 rounded-2xl transition-colors cursor-pointer"
-          >
-            Continue Shopping
-          </button>
+          <div className="space-y-2 pt-2">
+            <a
+              href={`https://wa.me/923000000000?text=Hi!%20I%20placed%20Order%20%23${placedOrder}%20for%20${encodeURIComponent(fullName)}.`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs py-3 rounded-xl flex items-center justify-center space-x-2 transition-colors"
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span>Track / Ask Question on WhatsApp</span>
+            </a>
+
+            <button
+              onClick={() => {
+                if (onNavigate) onNavigate('shop');
+                navigate('/shop');
+              }}
+              className="w-full bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold text-xs py-3 rounded-xl transition-all cursor-pointer"
+            >
+              Continue Shopping
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
+  // SIMPLE CHECKOUT FORM VIEW
   return (
-    <div className="bg-white min-h-screen py-10 sm:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="bg-neutral-50 min-h-screen py-8 sm:py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        
+        {/* Top Back Link */}
         <button
           onClick={() => {
             if (onNavigate) onNavigate('cart');
             navigate('/cart');
           }}
-          className="inline-flex items-center space-x-2 text-xs font-bold text-neutral-600 hover:text-[#FF9F61] mb-8 cursor-pointer"
+          className="inline-flex items-center space-x-1.5 text-xs font-semibold text-neutral-600 hover:text-[#FF9F61] mb-4 transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Return to Cart</span>
+          <span>Back to Cart</span>
         </button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* Checkout Form (7 cols) */}
-          <div className="lg:col-span-7">
-            <form onSubmit={handlePlaceOrder} className="space-y-8">
-              {/* Contact Information */}
+        <h1 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-neutral-900 mb-2">
+          Simple Checkout
+        </h1>
+        <p className="text-xs text-neutral-500 mb-6">
+          Enter your delivery information below to complete your order instantly.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          
+          {/* Main Form Column */}
+          <div className="md:col-span-7 bg-white rounded-3xl p-5 sm:p-7 border border-neutral-200 shadow-sm space-y-5">
+            <form onSubmit={handlePlaceOrder} className="space-y-4">
+              
+              {errorMsg && (
+                <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs font-medium">
+                  {errorMsg}
+                </div>
+              )}
+
+              {/* 1. Full Name */}
               <div>
-                <h2 className="font-serif-luxury text-2xl font-bold text-neutral-900 mb-4">
-                  1. Contact Information
-                </h2>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-neutral-700 mb-1">
-                      Email Address (for order tracking & confirmation)
-                    </label>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="e.g. customer@gmail.com"
-                      className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
-                      required
-                    />
-                  </div>
+                <label className="block text-xs font-bold text-neutral-800 mb-1">
+                  Full Name <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <User className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
+                  <input
+                    type="text"
+                    required
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="Enter your full name"
+                    className="w-full py-2.5 pl-9 pr-3 bg-neutral-50 border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-none focus:border-[#FF9F61] focus:bg-white"
+                  />
                 </div>
               </div>
 
-              {/* Shipping Address */}
+              {/* 2. Phone / WhatsApp */}
               <div>
-                <h2 className="font-serif-luxury text-2xl font-bold text-neutral-900 mb-4">
-                  2. Delivery Address in Pakistan
-                </h2>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-neutral-700 mb-1">
-                        First Name
-                      </label>
-                      <input
-                        type="text"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                        placeholder="First Name"
-                        className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-neutral-700 mb-1">
-                        Last Name
-                      </label>
-                      <input
-                        type="text"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                        placeholder="Last Name"
-                        className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
-                        required
-                      />
-                    </div>
-                  </div>
+                <label className="block text-xs font-bold text-neutral-800 mb-1">
+                  Phone / WhatsApp Number <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <Phone className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
+                  <input
+                    type="tel"
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="0300 1234567"
+                    className="w-full py-2.5 pl-9 pr-3 bg-neutral-50 border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-none focus:border-[#FF9F61] focus:bg-white font-mono"
+                  />
+                </div>
+              </div>
 
+              {/* 3. Email */}
+              <div>
+                <label className="block text-xs font-bold text-neutral-800 mb-1">
+                  Email Address <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="yourname@gmail.com"
+                    className="w-full py-2.5 pl-9 pr-3 bg-neutral-50 border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-none focus:border-[#FF9F61] focus:bg-white"
+                  />
+                </div>
+              </div>
+
+              {/* 4. Delivery Address */}
+              <div>
+                <label className="block text-xs font-bold text-neutral-800 mb-1">
+                  Full Delivery Address <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <MapPin className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
+                  <input
+                    type="text"
+                    required
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    placeholder="House #, Street #, Sector / Area"
+                    className="w-full py-2.5 pl-9 pr-3 bg-neutral-50 border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-none focus:border-[#FF9F61] focus:bg-white"
+                  />
+                </div>
+              </div>
+
+              {/* 5. City */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-neutral-800 mb-1">
+                    City <span className="text-rose-500">*</span>
+                  </label>
+                  <select
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className="w-full py-2.5 px-3 bg-neutral-50 border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-none focus:border-[#FF9F61] focus:bg-white cursor-pointer"
+                  >
+                    {COMMON_CITIES.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {city === 'Other City' && (
                   <div>
-                    <label className="block text-xs font-semibold text-neutral-700 mb-1">
-                      Street Address / House No. / Area
+                    <label className="block text-xs font-bold text-neutral-800 mb-1">
+                      City Name <span className="text-rose-500">*</span>
                     </label>
                     <input
                       type="text"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      placeholder="House #, Street, Block or Sector"
-                      className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
-                      required
+                      value={customCity}
+                      onChange={(e) => setCustomCity(e.target.value)}
+                      placeholder="Type city name"
+                      className="w-full py-2.5 px-3 bg-neutral-50 border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-none focus:border-[#FF9F61] focus:bg-white"
                     />
                   </div>
-
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-neutral-700 mb-1">
-                        City
-                      </label>
-                      <input
-                        type="text"
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
-                        placeholder="e.g. Lahore, Karachi, Islamabad"
-                        className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-neutral-700 mb-1">
-                        Province / State
-                      </label>
-                      <input
-                        type="text"
-                        value={state}
-                        onChange={(e) => setState(e.target.value)}
-                        placeholder="e.g. Punjab, Sindh, KPK"
-                        className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-neutral-700 mb-1">
-                        Postal Code
-                      </label>
-                      <input
-                        type="text"
-                        value={zip}
-                        onChange={(e) => setZip(e.target.value)}
-                        placeholder="e.g. 54000"
-                        className="w-full py-2.5 px-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-hidden focus:border-[#FF9F61]"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
+                )}
               </div>
 
-              {/* Payment Method */}
+              {/* Optional Notes */}
               <div>
-                <h2 className="font-serif-luxury text-2xl font-bold text-neutral-900 mb-4">
-                  3. Select Payment Method
-                </h2>
+                <label className="block text-xs font-semibold text-neutral-600 mb-1">
+                  Special Note for Courier (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="e.g. Call before coming"
+                  className="w-full py-2 px-3 bg-neutral-50 border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-none focus:border-[#FF9F61] focus:bg-white"
+                />
+              </div>
 
-                <div className="space-y-3">
-                  {/* Selected Radio Option for Cash on Delivery */}
-                  <label className="flex items-start space-x-3 p-5 bg-neutral-900 rounded-2xl text-white border-2 border-[#FF9F61] shadow-md cursor-pointer block">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="cod"
-                      checked
-                      readOnly
-                      className="mt-1 text-[#FF9F61] focus:ring-[#FF9F61] accent-[#FF9F61] w-4 h-4"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-sm text-white flex items-center space-x-2">
-                          <span>Cash on Delivery (COD)</span>
-                          <span className="bg-[#FF9F61]/20 text-[#FF9F61] border border-[#FF9F61]/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">
-                            Available All Over Pakistan
-                          </span>
-                        </span>
-                        <span className="font-bold text-[#FF9F61] text-xs">Rs. 250 Delivery Fee</span>
-                      </div>
-                      <p className="text-xs text-neutral-300 mt-1">
-                        Pay cash directly to the courier delivery rider upon receiving your package.
-                      </p>
-                      <div className="mt-3 pt-3 border-t border-neutral-800 flex items-center justify-between text-xs text-neutral-300">
-                        <span>Delivery Fee: <strong>Rs. 250</strong></span>
-                        <span>Total Payable on Delivery: <strong className="text-[#FF9F61] text-sm font-bold">Rs. {total.toLocaleString()}</strong></span>
-                      </div>
-                    </div>
-                  </label>
+              {/* Payment Method - Cash on Delivery Only */}
+              <div className="pt-2 border-t border-neutral-100">
+                <label className="block text-xs font-bold text-neutral-800 mb-2">
+                  Payment Method
+                </label>
+
+                <div className="p-3.5 bg-neutral-900 text-white rounded-xl border border-neutral-800 flex items-center justify-between">
+                  <div className="flex items-center space-x-2.5">
+                    <Truck className="w-4 h-4 text-[#FF9F61]" />
+                    <span className="text-xs font-bold">Cash on Delivery (COD)</span>
+                  </div>
+                  <span className="text-[10px] font-extrabold uppercase bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
+                    Pay at Doorstep
+                  </span>
                 </div>
               </div>
 
+              {/* Submit Button */}
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-[#FF9F61] hover:bg-[#e88d51] text-neutral-950 font-bold text-base py-4 rounded-2xl shadow-lg transition-all cursor-pointer flex items-center justify-center space-x-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                disabled={isSubmitting || cartItems.length === 0}
+                className="w-full bg-[#FF9F61] hover:bg-[#e88d51] text-neutral-950 font-bold text-sm py-3.5 px-4 rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center space-x-2 mt-4 disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin text-neutral-950" />
-                    <span>Processing Order & Sending Email...</span>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Placing Order...</span>
                   </>
                 ) : (
-                  <>
-                    <Lock className="w-5 h-5" />
-                    <span>Place Cash on Delivery Order (Rs. {total.toLocaleString()})</span>
-                  </>
+                  <span>Place Order • Rs. {total.toLocaleString()}</span>
                 )}
               </button>
+
             </form>
           </div>
 
-          {/* Order Summary Sidebar (5 cols) */}
-          <div className="lg:col-span-5">
-            <div className="bg-neutral-50 rounded-3xl p-6 sm:p-8 border border-neutral-100 sticky top-28">
-              <h2 className="font-serif-luxury text-xl font-bold text-neutral-900 mb-4">
-                In Your Order
+          {/* Side Summary Column */}
+          <div className="md:col-span-5 space-y-4">
+            <div className="bg-white rounded-3xl p-5 border border-neutral-200 shadow-xs space-y-4">
+              <h2 className="font-serif-luxury font-bold text-neutral-900 text-base border-b border-neutral-100 pb-2">
+                Order Summary ({cartItems.reduce((acc, i) => acc + i.quantity, 0)} items)
               </h2>
 
-              <div className="space-y-3 max-h-80 overflow-y-auto pr-1 mb-6">
+              <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
                 {cartItems.map((item) => {
-                  const discountedItemTotal = getDiscountedPrice(item.product.price) * item.quantity;
+                  const price = getDiscountedPrice(item.product.price) * item.quantity;
                   return (
-                    <div
-                      key={`${item.product.id}-${item.selectedSize}`}
-                      className="flex items-center space-x-3 text-xs py-2 border-b border-neutral-200/50 last:border-0"
-                    >
+                    <div key={`${item.product.id}-${item.selectedSize}`} className="flex items-center space-x-3 text-xs">
                       <img
                         src={item.product.images[0]}
                         alt={item.product.name}
-                        className="w-14 h-14 object-cover rounded-xl bg-white border border-neutral-100 shrink-0"
+                        className="w-12 h-12 object-cover rounded-lg border border-neutral-100 shrink-0"
                         referrerPolicy="no-referrer"
                       />
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-neutral-900 truncate">{item.product.name}</p>
-                        <p className="text-neutral-500">Qty: {item.quantity}</p>
+                        <p className="font-bold text-neutral-900 truncate">{item.product.name}</p>
+                        <p className="text-neutral-500 text-[11px]">Qty: {item.quantity}</p>
                       </div>
-                      <div className="text-right">
-                        <span className="font-bold text-neutral-900 block">
-                          Rs. {discountedItemTotal.toLocaleString()}
-                        </span>
-                        <span className="text-[10px] text-neutral-400 line-through">
-                          Rs. {(item.product.price * item.quantity).toLocaleString()}
-                        </span>
-                      </div>
+                      <span className="font-bold text-neutral-900 shrink-0">
+                        Rs. {price.toLocaleString()}
+                      </span>
                     </div>
                   );
                 })}
               </div>
 
-              <div className="space-y-2 text-xs border-t border-neutral-200 pt-4">
-                <div className="flex justify-between text-neutral-600">
-                  <span>Original Price</span>
-                  <span className="font-medium text-neutral-400 line-through">Rs. {originalSubtotal.toLocaleString()}</span>
+              <div className="border-t border-neutral-100 pt-3 space-y-2 text-xs">
+                <div className="flex justify-between text-neutral-500">
+                  <span>Subtotal:</span>
+                  <span>Rs. {subtotal.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between text-[#01411C] font-bold bg-emerald-50/80 p-2 rounded-xl border border-emerald-200/60">
-                  <span className="flex items-center space-x-1">
-                    <span>🇵🇰</span>
-                    <span>Azadi Sale Savings (14% OFF)</span>
-                  </span>
+                <div className="flex justify-between text-emerald-800 font-semibold bg-emerald-50 p-1.5 rounded-lg text-[11px]">
+                  <span>14% Azadi Discount Applied</span>
                   <span>-Rs. {azadiSavings.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between text-neutral-600">
-                  <span>Discounted Subtotal</span>
-                  <span className="font-semibold text-neutral-900">Rs. {subtotal.toLocaleString()}</span>
+                <div className="flex justify-between text-neutral-500">
+                  <span>Delivery Charge:</span>
+                  <span>Rs. {shipping}</span>
                 </div>
-                <div className="flex justify-between text-neutral-600">
-                  <span>Cash on Delivery Fee</span>
-                  <span className="font-semibold text-neutral-900">
-                    {shipping === 0 ? 'FREE' : `Rs. ${shipping}`}
-                  </span>
-                </div>
-                <div className="border-t border-neutral-200 pt-3 flex justify-between items-baseline font-bold text-neutral-900">
-                  <span className="text-sm">Total Payable on Delivery</span>
-                  <span className="text-2xl text-[#FF9F61]">Rs. {total.toLocaleString()}</span>
+                <div className="flex justify-between font-bold text-neutral-900 text-sm border-t border-neutral-100 pt-2">
+                  <span>Total Payable:</span>
+                  <span className="text-[#FF9F61]">Rs. {total.toLocaleString()}</span>
                 </div>
               </div>
             </div>
+
+            <div className="bg-emerald-50/70 border border-emerald-200/60 rounded-2xl p-3.5 text-xs text-emerald-900 space-y-1">
+              <div className="flex items-center space-x-1.5 font-bold">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <span>100% Guaranteed Delivery</span>
+              </div>
+              <p className="text-[11px] text-emerald-800">
+                You will receive an instant email receipt & order details upon submitting.
+              </p>
+            </div>
           </div>
+
         </div>
+
       </div>
     </div>
   );

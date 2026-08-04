@@ -9,10 +9,14 @@ export interface OrderEmailParams {
   order_id: string;
   customer_name: string;
   customer_email: string;
+  phone_number: string;
+  alt_phone_number?: string;
   address: string;
+  landmark?: string;
   city: string;
   state: string;
-  zip: string;
+  zip?: string;
+  notes?: string;
   order_details: string;
   subtotal: string;
   shipping: string;
@@ -21,6 +25,33 @@ export interface OrderEmailParams {
 }
 
 export const sendOrderEmail = async (params: OrderEmailParams): Promise<{ success: boolean; error?: string }> => {
+  const fullAddress = `${params.address}${params.landmark ? ` (Landmark: ${params.landmark})` : ''}, ${params.city}, ${params.state}${params.zip ? ` ${params.zip}` : ''}`;
+
+  const messageContent = `
+=== NEW ORDER RECEIVED #${params.order_id} ===
+
+CUSTOMER DETAILS:
+- Name: ${params.customer_name}
+- Email: ${params.customer_email}
+- Phone / WhatsApp: ${params.phone_number}
+${params.alt_phone_number ? `- Alternate Phone: ${params.alt_phone_number}\n` : ''}
+
+DELIVERY ADDRESS:
+- Address: ${params.address}
+${params.landmark ? `- Landmark: ${params.landmark}\n` : ''}- City: ${params.city}
+- Province/State: ${params.state}
+${params.zip ? `- Postal Code: ${params.zip}\n` : ''}${params.notes ? `- Special Instructions: ${params.notes}\n` : ''}
+
+ORDER SUMMARY:
+${params.order_details}
+
+PAYMENT & TOTALS:
+- Payment Method: ${params.payment_method}
+- Subtotal: ${params.subtotal}
+- Delivery Fee: ${params.shipping}
+- Total Amount: ${params.total_amount}
+`.trim();
+
   const templateParams = {
     order_id: params.order_id,
     order_number: params.order_id,
@@ -32,11 +63,26 @@ export const sendOrderEmail = async (params: OrderEmailParams): Promise<{ succes
     store_email: 'Sparklezsiege@gmail.com',
     user_email: params.customer_email,
     reply_to: params.customer_email,
-    shipping_address: `${params.address}, ${params.city}, ${params.state} ${params.zip}`,
+    
+    // Phone numbers
+    phone_number: params.phone_number,
+    customer_phone: params.phone_number,
+    phone: params.phone_number,
+    whatsapp: params.phone_number,
+    alt_phone_number: params.alt_phone_number || 'N/A',
+    
+    // Address fields
+    shipping_address: fullAddress,
+    full_address: fullAddress,
     address: params.address,
+    landmark: params.landmark || '',
     city: params.city,
     state: params.state,
-    zip: params.zip,
+    zip: params.zip || '',
+    notes: params.notes || 'None',
+    delivery_instructions: params.notes || 'None',
+    
+    // Order details & pricing
     order_details: params.order_details,
     items: params.order_details,
     subtotal: params.subtotal,
@@ -44,7 +90,9 @@ export const sendOrderEmail = async (params: OrderEmailParams): Promise<{ succes
     total_amount: params.total_amount,
     total: params.total_amount,
     payment_method: params.payment_method,
-    message: `New Order #${params.order_id} placed by ${params.customer_name} (${params.customer_email}).\nTotal Amount: ${params.total_amount}\nItems Ordered:\n${params.order_details}\nShipping Address:\n${params.address}, ${params.city}, ${params.state} ${params.zip}`
+    
+    // Full composite message
+    message: messageContent,
   };
 
   try {
