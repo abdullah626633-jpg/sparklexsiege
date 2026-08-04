@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CartItem, PageType } from '../types';
-import { Trash2, ArrowLeft, ArrowRight, Tag, ShoppingBag, ShieldCheck } from 'lucide-react';
+import { Trash2, ArrowLeft, ArrowRight, Tag, ShoppingBag, ShieldCheck, Sparkles } from 'lucide-react';
+import { getDiscountedPrice } from '../utils/price';
 
 interface CartPageProps {
   cartItems: CartItem[];
@@ -21,11 +22,17 @@ export const CartPage: React.FC<CartPageProps> = ({
   const [discountPercent, setDiscountPercent] = useState(0);
   const [couponMessage, setCouponMessage] = useState<{ text: string; error: boolean } | null>(null);
 
-  const subtotal = cartItems.reduce(
+  const originalSubtotal = cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
 
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + getDiscountedPrice(item.product.price) * item.quantity,
+    0
+  );
+
+  const azadiSavings = originalSubtotal - subtotal;
   const discountAmount = Math.round((subtotal * discountPercent) / 100);
   const shipping = subtotal === 0 ? 0 : 250;
   const total = subtotal - discountAmount + shipping;
@@ -90,7 +97,8 @@ export const CartPage: React.FC<CartPageProps> = ({
               </div>
 
               {cartItems.map((item) => {
-                const itemTotal = item.product.price * item.quantity;
+                const discountedUnitPrice = getDiscountedPrice(item.product.price);
+                const itemTotal = discountedUnitPrice * item.quantity;
                 return (
                   <div
                     key={`${item.product.id}-${item.selectedSize}`}
@@ -111,10 +119,17 @@ export const CartPage: React.FC<CartPageProps> = ({
                         <p className="text-xs text-neutral-500 capitalize mt-0.5">
                           {item.product.category} {item.selectedSize ? `• Size: ${item.selectedSize}` : ''}
                         </p>
-                        <p className="text-sm font-bold text-neutral-800 mt-1">
-                          {item.product.formattedPrice ? item.product.formattedPrice : `Rs. ${item.product.price.toLocaleString()}`}
-                          {item.product.priceSubtitle ? ` ${item.product.priceSubtitle}` : ''}
-                        </p>
+                        <div className="flex items-baseline space-x-2 mt-1">
+                          <span className="text-sm font-bold text-neutral-800">
+                            Rs. {discountedUnitPrice.toLocaleString()}
+                          </span>
+                          <span className="text-xs text-neutral-400 line-through">
+                            Rs. {item.product.price.toLocaleString()}
+                          </span>
+                          <span className="text-[10px] font-bold text-white bg-[#01411C] px-1.5 py-0.5 rounded-xs">
+                            14% OFF
+                          </span>
+                        </div>
                       </div>
                     </div>
 
@@ -228,7 +243,20 @@ export const CartPage: React.FC<CartPageProps> = ({
                 {/* Breakdown */}
                 <div className="space-y-3 text-xs border-t border-neutral-200/60 pt-4">
                   <div className="flex justify-between text-neutral-600">
-                    <span>Subtotal</span>
+                    <span>Original Price</span>
+                    <span className="font-medium text-neutral-400 line-through">Rs. {originalSubtotal.toLocaleString()}</span>
+                  </div>
+
+                  <div className="flex justify-between text-[#01411C] font-bold bg-emerald-50/80 p-2 rounded-xl border border-emerald-200/60">
+                    <span className="flex items-center space-x-1">
+                      <span>🇵🇰</span>
+                      <span>Azadi Sale Savings (14% OFF)</span>
+                    </span>
+                    <span>-Rs. {azadiSavings.toLocaleString()}</span>
+                  </div>
+
+                  <div className="flex justify-between text-neutral-600">
+                    <span>Discounted Subtotal</span>
                     <span className="font-semibold text-neutral-900">Rs. {subtotal.toLocaleString()}</span>
                   </div>
 

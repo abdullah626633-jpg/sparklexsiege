@@ -3,6 +3,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Product, Review } from '../types';
 import { ProductCard } from '../components/ProductCard';
 import { MOCK_REVIEWS, CATEGORIES } from '../data/products';
+import { getDiscountedPrice, AZADI_DISCOUNT_PERCENT } from '../utils/price';
 import {
   Star,
   Heart,
@@ -190,11 +191,12 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 referrerPolicy="no-referrer"
               />
 
-              {discountPercent > 0 && (
-                <span className="absolute top-4 left-4 bg-rose-600 text-white text-xs font-bold px-3 py-1 uppercase tracking-wider shadow-sm">
-                  Save {discountPercent}%
+              <div className="absolute top-4 left-4 z-10 flex flex-col gap-1.5">
+                <span className="bg-[#01411C] text-white text-xs font-extrabold uppercase tracking-wider px-3.5 py-1.5 shadow-md border border-emerald-500/40 flex items-center space-x-1.5">
+                  <span>🇵🇰</span>
+                  <span>14% OFF AZADI SALE</span>
                 </span>
-              )}
+              </div>
 
               <button
                 onClick={() => onToggleWishlist(product)}
@@ -234,25 +236,21 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               </h1>
 
               {/* Pricing */}
-              <div className="flex items-baseline space-x-3 mt-4">
+              <div className="flex flex-wrap items-baseline gap-3 mt-4">
                 <span className="text-3xl font-bold text-neutral-900">
-                  {product.formattedPrice ? product.formattedPrice : `$${product.price.toLocaleString()}`}
+                  Rs. {getDiscountedPrice(product.price).toLocaleString()}
+                </span>
+                <span className="text-lg text-neutral-400 line-through font-medium">
+                  Rs. {product.price.toLocaleString()}
                 </span>
                 {product.priceSubtitle && (
                   <span className="text-base font-normal text-neutral-500">
                     {product.priceSubtitle}
                   </span>
                 )}
-                {product.compareAtPrice && (
-                  <span className="text-lg text-neutral-400 line-through">
-                    ${product.compareAtPrice.toLocaleString()}
-                  </span>
-                )}
-                {discountPercent > 0 && (
-                  <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md">
-                    {discountPercent}% OFF
-                  </span>
-                )}
+                <span className="text-xs font-bold text-white bg-[#01411C] px-3 py-1 rounded-md border border-emerald-600/40">
+                  14% OFF (AZADI SALE)
+                </span>
               </div>
 
               <p className="text-sm text-neutral-600 font-light mt-4 leading-relaxed">

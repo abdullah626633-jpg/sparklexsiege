@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { Heart, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
+import { getDiscountedPrice, AZADI_DISCOUNT_PERCENT } from '../utils/price';
 
 interface NewArrivalsProps {
   products: Product[];
@@ -121,9 +122,12 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({
                   className="relative aspect-[3/4] bg-neutral-100 overflow-hidden cursor-pointer border border-neutral-200/80 hover:border-neutral-900 transition-colors"
                   onClick={() => handleProductClick(product)}
                 >
-                  {/* Black NEW IN badge at top left matching reference */}
-                  <div className="absolute top-0 left-0 z-10">
-                    <span className="bg-black text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 inline-block">
+                  {/* Badges container */}
+                  <div className="absolute top-0 left-0 z-10 flex flex-col gap-1">
+                    <span className="bg-[#01411C] text-white text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 inline-block border border-emerald-500/30">
+                      {AZADI_DISCOUNT_PERCENT}% OFF
+                    </span>
+                    <span className="bg-black text-white text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 inline-block">
                       NEW IN
                     </span>
                   </div>
@@ -175,9 +179,12 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({
                     {product.name}
                   </h3>
 
-                  <div className="mt-1 flex items-baseline justify-between">
-                    <span className="text-xs sm:text-sm font-semibold text-[#8C7368] tracking-wider uppercase">
-                      {product.formattedPrice ? product.formattedPrice : `$${product.price.toLocaleString()}`}
+                  <div className="mt-1 flex items-baseline space-x-2">
+                    <span className="text-xs sm:text-sm font-bold text-neutral-900 tracking-wider">
+                      Rs. {getDiscountedPrice(product.price).toLocaleString()}
+                    </span>
+                    <span className="text-[10px] sm:text-xs text-neutral-400 line-through">
+                      Rs. {product.price.toLocaleString()}
                     </span>
                   </div>
                 </div>

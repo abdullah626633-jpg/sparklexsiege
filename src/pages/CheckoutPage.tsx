@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { CartItem, PageType } from '../types';
 import { ShieldCheck, CheckCircle2, Lock, ArrowLeft, Loader2, MailCheck, Banknote, Truck } from 'lucide-react';
 import { sendOrderEmail } from '../services/emailService';
+import { getDiscountedPrice } from '../utils/price';
 
 interface CheckoutPageProps {
   cartItems: CartItem[];
@@ -30,10 +31,17 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const [state, setState] = useState('');
   const [zip, setZip] = useState('');
 
-  const subtotal = cartItems.reduce(
+  const originalSubtotal = cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
+
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + getDiscountedPrice(item.product.price) * item.quantity,
+    0
+  );
+
+  const azadiSavings = originalSubtotal - subtotal;
   const shipping = subtotal === 0 ? 0 : 250;
   const total = subtotal + shipping;
 
@@ -50,7 +58,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         (item) =>
           `• ${item.product.name} (Qty: ${item.quantity}${
             item.selectedSize ? `, Size: ${item.selectedSize}` : ''
-          }) - Rs. ${(item.product.price * item.quantity).toLocaleString()}`
+          }) - Rs. ${(getDiscountedPrice(item.product.price) * item.quantity).toLocaleString()}`
       )
       .join('\n');
 
@@ -340,31 +348,50 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
               </h2>
 
               <div className="space-y-3 max-h-80 overflow-y-auto pr-1 mb-6">
-                {cartItems.map((item) => (
-                  <div
-                    key={`${item.product.id}-${item.selectedSize}`}
-                    className="flex items-center space-x-3 text-xs py-2 border-b border-neutral-200/50 last:border-0"
-                  >
-                    <img
-                      src={item.product.images[0]}
-                      alt={item.product.name}
-                      className="w-14 h-14 object-cover rounded-xl bg-white border border-neutral-100 shrink-0"
-                      referrerPolicy="no-referrer"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-neutral-900 truncate">{item.product.name}</p>
-                      <p className="text-neutral-500">Qty: {item.quantity}</p>
+                {cartItems.map((item) => {
+                  const discountedItemTotal = getDiscountedPrice(item.product.price) * item.quantity;
+                  return (
+                    <div
+                      key={`${item.product.id}-${item.selectedSize}`}
+                      className="flex items-center space-x-3 text-xs py-2 border-b border-neutral-200/50 last:border-0"
+                    >
+                      <img
+                        src={item.product.images[0]}
+                        alt={item.product.name}
+                        className="w-14 h-14 object-cover rounded-xl bg-white border border-neutral-100 shrink-0"
+                        referrerPolicy="no-referrer"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-neutral-900 truncate">{item.product.name}</p>
+                        <p className="text-neutral-500">Qty: {item.quantity}</p>
+                      </div>
+                      <div className="text-right">
+                        <span className="font-bold text-neutral-900 block">
+                          Rs. {discountedItemTotal.toLocaleString()}
+                        </span>
+                        <span className="text-[10px] text-neutral-400 line-through">
+                          Rs. {(item.product.price * item.quantity).toLocaleString()}
+                        </span>
+                      </div>
                     </div>
-                    <span className="font-bold text-neutral-900">
-                      Rs. {(item.product.price * item.quantity).toLocaleString()}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               <div className="space-y-2 text-xs border-t border-neutral-200 pt-4">
                 <div className="flex justify-between text-neutral-600">
-                  <span>Subtotal</span>
+                  <span>Original Price</span>
+                  <span className="font-medium text-neutral-400 line-through">Rs. {originalSubtotal.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-[#01411C] font-bold bg-emerald-50/80 p-2 rounded-xl border border-emerald-200/60">
+                  <span className="flex items-center space-x-1">
+                    <span>🇵🇰</span>
+                    <span>Azadi Sale Savings (14% OFF)</span>
+                  </span>
+                  <span>-Rs. {azadiSavings.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-neutral-600">
+                  <span>Discounted Subtotal</span>
                   <span className="font-semibold text-neutral-900">Rs. {subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-neutral-600">

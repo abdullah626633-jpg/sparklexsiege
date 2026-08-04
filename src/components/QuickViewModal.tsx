@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { X, Star, ShoppingBag, Heart, Check, ArrowRight } from 'lucide-react';
+import { getDiscountedPrice, AZADI_DISCOUNT_PERCENT } from '../utils/price';
 
 interface QuickViewModalProps {
   product: Product | null;
@@ -91,6 +92,9 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
         {/* Left Side Gallery */}
         <div className="w-full md:w-1/2 bg-neutral-50 p-6 flex flex-col justify-between">
           <div className="aspect-square w-full border border-neutral-200 overflow-hidden bg-white mb-4 relative">
+            <span className="absolute top-2 left-2 z-10 bg-[#01411C] text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 border border-emerald-500/30 shadow-md">
+              {AZADI_DISCOUNT_PERCENT}% OFF
+            </span>
             <img
               src={product.images[activeImgIndex] || product.images[0]}
               alt={product.name}
@@ -137,20 +141,21 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
               {product.name}
             </h2>
 
-            <div className="flex items-baseline space-x-2 mt-3">
+            <div className="flex items-baseline space-x-2.5 mt-3">
               <span className="text-2xl font-bold text-neutral-900">
-                {product.formattedPrice ? product.formattedPrice : `$${product.price.toLocaleString()}`}
+                Rs. {getDiscountedPrice(product.price).toLocaleString()}
+              </span>
+              <span className="text-sm text-neutral-400 line-through">
+                Rs. {product.price.toLocaleString()}
               </span>
               {product.priceSubtitle && (
                 <span className="text-sm font-normal text-neutral-500">
                   {product.priceSubtitle}
                 </span>
               )}
-              {product.compareAtPrice && (
-                <span className="text-sm text-neutral-400 line-through">
-                  ${product.compareAtPrice.toLocaleString()}
-                </span>
-              )}
+              <span className="text-[10px] font-bold text-white bg-[#01411C] px-2 py-0.5 rounded-xs">
+                14% OFF
+              </span>
             </div>
 
             <p className="text-xs text-neutral-500 mt-2 leading-relaxed">
