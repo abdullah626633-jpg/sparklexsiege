@@ -3,9 +3,19 @@ import { CartItem } from '../types';
 import { getDiscountedPrice } from '../utils/price';
 
 const env = (import.meta as any).env || {};
-const SERVICE_ID = env.VITE_EMAILJS_SERVICE_ID || 'service_46etuf1';
-const TEMPLATE_ID = env.VITE_EMAILJS_TEMPLATE_ID || 'template_pjga6tg';
-const PUBLIC_KEY = env.VITE_EMAILJS_PUBLIC_KEY || 'X3-kO1QScsx1CWrh8';
+
+const EMAIL_CONFIGS = [
+  {
+    serviceId: env.VITE_EMAILJS_SERVICE_ID || 'service_46etuf1',
+    templateId: env.VITE_EMAILJS_TEMPLATE_ID || 'template_pjga6tg',
+    publicKey: env.VITE_EMAILJS_PUBLIC_KEY || 'X3-kO1QScsx1CWrh8',
+  },
+  {
+    serviceId: env.VITE_EMAILJS_SERVICE_ID_2 || 'service_8p2pqx9',
+    templateId: env.VITE_EMAILJS_TEMPLATE_ID_2 || 'template_o90g9wb',
+    publicKey: env.VITE_EMAILJS_PUBLIC_KEY_2 || 'X3-kO1QScsx1CWrh8',
+  },
+];
 
 export interface OrderEmailParams {
   order_id: string;
@@ -26,6 +36,47 @@ export interface OrderEmailParams {
   payment_method: string;
 }
 
+const sendToSingleEmailJS = async (
+  serviceId: string,
+  templateId: string,
+  publicKey: string,
+  templateParams: Record<string, any>
+): Promise<{ success: boolean; error?: string }> => {
+  try {
+    const res = await emailjs.send(serviceId, templateId, templateParams, publicKey);
+    console.log(`EmailJS [${serviceId} / ${templateId}] sent successfully:`, res.status, res.text);
+    return { success: true };
+  } catch (sdkError: any) {
+    console.warn(`EmailJS [${serviceId} / ${templateId}] SDK warning, attempting REST API fallback:`, sdkError);
+    try {
+      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          service_id: serviceId,
+          template_id: templateId,
+          user_id: publicKey,
+          template_params: templateParams,
+        }),
+      });
+
+      if (response.ok) {
+        console.log(`EmailJS [${serviceId} / ${templateId}] REST API sent successfully`);
+        return { success: true };
+      } else {
+        const errText = await response.text();
+        console.error(`EmailJS [${serviceId} / ${templateId}] REST API failed:`, errText);
+        return { success: false, error: errText };
+      }
+    } catch (restError: any) {
+      console.error(`EmailJS [${serviceId} / ${templateId}] REST API error:`, restError);
+      return { success: false, error: restError?.message || 'Failed to send email' };
+    }
+  }
+};
+
 export const sendOrderEmail = async (params: OrderEmailParams): Promise<{ success: boolean; error?: string }> => {
   const fullAddress = `${params.address}${params.landmark ? ` (Landmark: ${params.landmark})` : ''}, ${params.city}, ${params.state || 'Pakistan'}${params.zip ? ` ${params.zip}` : ''}`;
   const orderDateStr = new Date().toLocaleString('en-PK', {
@@ -37,7 +88,7 @@ export const sendOrderEmail = async (params: OrderEmailParams): Promise<{ succes
   const firstItem = cartItems[0];
   const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-  // 1. Clean Plain-Text Order Items List (Renders cleanly in standard EmailJS {{order_items}} without displaying raw HTML tags)
+  // 1. Clean Plain-Text Order Items List
   const orderItemsPlainText = cartItems
     .map((item, index) => {
       const discountedPrice = getDiscountedPrice(item.product.price);
@@ -51,7 +102,7 @@ export const sendOrderEmail = async (params: OrderEmailParams): Promise<{ succes
     })
     .join('\n\n');
 
-  // 2. HTML Table string (For EmailJS templates using triple braces {{{order_items_html}}} or {{{order_items}}})
+  // 2. HTML Table string
   const orderItemsHtml = `
 <table style="width:100%; border-collapse:collapse; font-family:Arial,sans-serif; font-size:13px; margin:10px 0;">
   <thead>
@@ -119,7 +170,6 @@ PAYMENT & TOTALS:
 `.trim();
 
   const templateParams = {
-    // Individual item fields requested:
     product_name: cartItems.map((i) => i.product.name).join(', ') || 'N/A',
     product_image: firstItem?.product.images[0] || '',
     category: cartItems.map((i) => i.product.category).filter((v, idx, a) => a.indexOf(v) === idx).join(', ') || 'Jewellery',
@@ -139,16 +189,13 @@ PAYMENT & TOTALS:
     order_id: params.order_id,
     order_date: orderDateStr,
 
-    // Plain text list for {{order_items}} (solves the HTML tags being printed issue in standard EmailJS templates):
     order_items: orderItemsPlainText,
     order_details: orderItemsPlainText,
     items: orderItemsPlainText,
 
-    // HTML table variables (use with {{{order_items_html}}} in EmailJS):
     order_items_html: orderItemsHtml,
     order_details_html: orderItemsHtml,
 
-    // Standard fallback fields:
     order_number: params.order_id,
     to_name: params.customer_name,
     to_email: params.customer_email,
@@ -172,37 +219,28 @@ PAYMENT & TOTALS:
     message: messageContent,
   };
 
-  try {
-    const res = await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
-    console.log('EmailJS email sent successfully:', res.status, res.text);
-    return { success: true };
-  } catch (sdkError: any) {
-    console.warn('EmailJS SDK warning, attempting REST API fallback:', sdkError);
-    try {
-      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          service_id: SERVICE_ID,
-          template_id: TEMPLATE_ID,
-          user_id: PUBLIC_KEY,
-          template_params: templateParams,
-        }),
-      });
+  // Dispatch to both EmailJS targets simultaneously
+  const results = await Promise.allSettled(
+    EMAIL_CONFIGS.map((cfg) =>
+      sendToSingleEmailJS(cfg.serviceId, cfg.templateId, cfg.publicKey, templateParams)
+    )
+  );
 
-      if (response.ok) {
-        console.log('EmailJS email sent via REST API successfully');
-        return { success: true };
-      } else {
-        const errText = await response.text();
-        console.error('EmailJS REST API failed:', errText);
-        return { success: false, error: errText };
-      }
-    } catch (restError: any) {
-      console.error('EmailJS REST API error:', restError);
-      return { success: false, error: restError?.message || 'Failed to send email' };
-    }
+  const successes = results.filter(
+    (res) => res.status === 'fulfilled' && res.value.success
+  );
+
+  if (successes.length > 0) {
+    console.log(`Order email sent successfully to ${successes.length} EmailJS target(s).`);
+    return { success: true };
+  } else {
+    const lastError = results.find(
+      (res) => res.status === 'fulfilled' && !res.value.success
+    ) as PromiseFulfilledResult<{ success: boolean; error?: string }> | undefined;
+
+    return {
+      success: false,
+      error: lastError?.value?.error || 'Failed to dispatch email to EmailJS services.',
+    };
   }
 };
