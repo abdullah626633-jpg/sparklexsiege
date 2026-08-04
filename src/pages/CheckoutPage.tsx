@@ -135,7 +135,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       city: finalCity,
       state: 'Pakistan',
       notes: notes.trim() || undefined,
-      order_details: itemSummary,
+      cartItems: cartItems,
       subtotal: `Rs. ${subtotal.toLocaleString()}`,
       shipping: shipping === 0 ? 'FREE' : `Rs. ${shipping}`,
       total_amount: `Rs. ${total.toLocaleString()}`,
