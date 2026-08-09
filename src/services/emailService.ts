@@ -66,11 +66,20 @@ const sendToSingleEmailJS = async (
   templateParams: Record<string, any>
 ): Promise<{ success: boolean; error?: string }> => {
   try {
-    const res = await emailjs.send(serviceId, templateId, templateParams, publicKey);
-    console.log(`EmailJS [${serviceId} / ${templateId}] sent successfully:`, res.status, res.text);
+    // Register public key with EmailJS SDK v4
+    emailjs.init({ publicKey });
+
+    const res = await emailjs.send(serviceId, templateId, templateParams, {
+      publicKey: publicKey,
+    });
+    console.log(`✅ EmailJS [${serviceId} / ${templateId}] sent successfully:`, res.status, res.text);
     return { success: true };
   } catch (sdkError: any) {
-    console.warn(`EmailJS [${serviceId} / ${templateId}] SDK warning, attempting REST API fallback:`, sdkError);
+    const sdkErrText = typeof sdkError === 'object' && sdkError !== null
+      ? (sdkError.text || sdkError.message || JSON.stringify(sdkError))
+      : String(sdkError);
+    console.warn(`⚠️ EmailJS [${serviceId} / ${templateId}] SDK error:`, sdkErrText, '- Attempting REST API fallback...');
+
     try {
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
@@ -86,16 +95,16 @@ const sendToSingleEmailJS = async (
       });
 
       if (response.ok) {
-        console.log(`EmailJS [${serviceId} / ${templateId}] REST API sent successfully`);
+        console.log(`✅ EmailJS [${serviceId} / ${templateId}] REST API sent successfully`);
         return { success: true };
       } else {
         const errText = await response.text();
-        console.error(`EmailJS [${serviceId} / ${templateId}] REST API failed:`, errText);
-        return { success: false, error: errText };
+        console.error(`❌ EmailJS [${serviceId} / ${templateId}] REST API failed (${response.status}):`, errText);
+        return { success: false, error: `SDK: ${sdkErrText} | REST (${response.status}): ${errText}` };
       }
     } catch (restError: any) {
-      console.error(`EmailJS [${serviceId} / ${templateId}] REST API error:`, restError);
-      return { success: false, error: restError?.message || 'Failed to send email' };
+      console.error(`❌ EmailJS [${serviceId} / ${templateId}] REST API exception:`, restError);
+      return { success: false, error: `SDK: ${sdkErrText} | REST: ${restError?.message || 'Failed'}` };
     }
   }
 };
@@ -195,61 +204,87 @@ PAYMENT & TOTALS:
 `.trim();
 
   const templateParams = {
-    // Primary item fields & image URLs (Full public URL so email clients render actual images)
+    // 1. Recipient & customer email variations
+    email: params.customer_email,
+    to_email: params.customer_email,
+    user_email: params.customer_email,
+    customer_email: params.customer_email,
+    recipient_email: params.customer_email,
+    to: params.customer_email,
+    reply_to: params.customer_email,
+
+    // 2. Store Owner / Merchant destination email variations
+    company_email: 'Sparklezsiege@gmail.com',
+    store_email: 'Sparklezsiege@gmail.com',
+    admin_email: 'Sparklezsiege@gmail.com',
+    owner_email: 'Sparklezsiege@gmail.com',
+    merchant_email: 'Sparklezsiege@gmail.com',
+    to_store_email: 'Sparklezsiege@gmail.com',
+
+    // 3. Name variations
+    to_name: params.customer_name,
+    customer_name: params.customer_name,
+    from_name: params.customer_name,
+    name: params.customer_name,
+    user_name: params.customer_name,
+
+    // 4. Contact & Phone
+    phone: params.phone_number,
+    phone_number: params.phone_number,
+    customer_phone: params.phone_number,
+    whatsapp: params.phone_number,
+
+    // 5. Delivery Address & City
+    address: params.address,
+    shipping_address: fullAddress,
+    full_address: fullAddress,
+    city: params.city,
+    state: params.state || 'Pakistan',
+    zip: params.zip || '',
+    notes: params.notes || 'None',
+    customer_note: params.notes || 'None',
+    delivery_instructions: params.notes || 'None',
+
+    // 6. Order Identifiers & Dates
+    order_id: params.order_id,
+    order_number: params.order_id,
+    order_date: orderDateStr,
+    date: orderDateStr,
+
+    // 7. Pricing & Totals
+    subtotal: params.subtotal,
+    shipping: params.shipping,
+    delivery_charges: params.shipping,
+    total: params.total_amount,
+    total_amount: params.total_amount,
+    price: firstItem ? `Rs. ${getDiscountedPrice(firstItem.product.price).toLocaleString()}` : params.subtotal,
+    payment_method: params.payment_method,
+
+    // 8. Product details (single & list)
     product_name: cartItems.map((i) => i.product.name).join(', ') || 'N/A',
     product_image: firstItemFullImageUrl,
     product_image_url: firstItemFullImageUrl,
     product_image_src: firstItemFullImageUrl,
     product_image_tag: firstItemFullImageUrl ? `<img src="${firstItemFullImageUrl}" alt="${firstItem?.product.name || 'Product'}" width="150" style="max-width:150px; height:auto; border-radius:6px; display:block;" />` : '',
-    
     category: cartItems.map((i) => i.product.category).filter((v, idx, a) => a.indexOf(v) === idx).join(', ') || 'Jewellery',
     color: cartItems.map((i) => i.selectedColor || 'Standard').join(', ') || 'Standard',
     size: cartItems.map((i) => i.selectedSize || 'Standard').join(', ') || 'Standard',
     quantity: totalQuantity > 0 ? totalQuantity.toString() : '1',
-    price: firstItem ? `Rs. ${getDiscountedPrice(firstItem.product.price).toLocaleString()}` : params.subtotal,
-    delivery_charges: params.shipping,
-    total_amount: params.total_amount,
-    payment_method: params.payment_method,
-    customer_name: params.customer_name,
-    phone: params.phone_number,
-    email: params.customer_email,
-    address: params.address,
-    city: params.city,
-    customer_note: params.notes || 'None',
-    order_id: params.order_id,
-    order_date: orderDateStr,
 
+    // 9. Order summary lists (Plain text & HTML)
     order_items: orderItemsPlainText,
     order_details: orderItemsPlainText,
     items: orderItemsPlainText,
+    message: messageContent,
 
     order_items_html: orderItemsHtml,
     order_details_html: orderItemsHtml,
-
-    order_number: params.order_id,
-    to_name: params.customer_name,
-    to_email: params.customer_email,
-    user_email: params.customer_email,
-    reply_to: params.customer_email,
-    company_email: 'Sparklezsiege@gmail.com',
-    store_email: 'Sparklezsiege@gmail.com',
-    customer_email: params.customer_email,
-    customer_phone: params.phone_number,
-    phone_number: params.phone_number,
-    whatsapp: params.phone_number,
-    shipping_address: fullAddress,
-    full_address: fullAddress,
-    state: params.state || 'Pakistan',
-    zip: params.zip || '',
-    notes: params.notes || 'None',
-    delivery_instructions: params.notes || 'None',
-    subtotal: params.subtotal,
-    shipping: params.shipping,
-    total: params.total_amount,
-    message: messageContent,
+    items_html: orderItemsHtml,
   };
 
-  // Dispatch to both EmailJS targets simultaneously
+  console.log('Sending order email via EmailJS with params:', templateParams);
+
+  // Dispatch to all EmailJS targets
   const results = await Promise.allSettled(
     EMAIL_CONFIGS.map((cfg) =>
       sendToSingleEmailJS(cfg.serviceId, cfg.templateId, cfg.publicKey, templateParams)
@@ -264,13 +299,23 @@ PAYMENT & TOTALS:
     console.log(`Order email sent successfully to ${successes.length} EmailJS target(s).`);
     return { success: true };
   } else {
-    const lastError = results.find(
-      (res) => res.status === 'fulfilled' && !res.value.success
-    ) as PromiseFulfilledResult<{ success: boolean; error?: string }> | undefined;
+    const errorDetails = results
+      .map((res, idx) => {
+        if (res.status === 'fulfilled' && !res.value.success) {
+          return `Target ${idx + 1} [${EMAIL_CONFIGS[idx].serviceId} / ${EMAIL_CONFIGS[idx].templateId}]: ${res.value.error}`;
+        } else if (res.status === 'rejected') {
+          return `Target ${idx + 1} Rejected: ${res.reason}`;
+        }
+        return null;
+      })
+      .filter(Boolean)
+      .join(' | ');
+
+    console.error('All EmailJS targets failed:', errorDetails);
 
     return {
       success: false,
-      error: lastError?.value?.error || 'Failed to dispatch email to EmailJS services.',
+      error: errorDetails || 'Failed to dispatch email to EmailJS services.',
     };
   }
 };

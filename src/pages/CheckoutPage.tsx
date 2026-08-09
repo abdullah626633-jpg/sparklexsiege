@@ -180,6 +180,22 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
             </p>
           </div>
 
+          {emailSentSuccess ? (
+            <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 text-left text-xs text-emerald-900 flex items-center space-x-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+              <p>An order confirmation email has been dispatched to <strong>{email}</strong>.</p>
+            </div>
+          ) : (
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3 text-left text-xs text-amber-900 space-y-1">
+              <p className="font-bold flex items-center gap-1.5">
+                <span>⚠️</span> Email Notice:
+              </p>
+              <p className="text-[11px] text-amber-800">
+                Your order is confirmed! If you haven't received an automated email at <strong>{email}</strong>, please check your spam folder or send us a message on WhatsApp below with Order #{placedOrder}.
+              </p>
+            </div>
+          )}
+
           <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-left text-xs space-y-1.5 text-emerald-900">
             <p className="font-bold">What happens next?</p>
             <p>Our rider will call or message you on <strong>{phone}</strong> before delivering your parcel in <strong>{finalCity}</strong>.</p>
