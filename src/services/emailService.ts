@@ -15,6 +15,11 @@ const EMAIL_CONFIGS = [
     templateId: env.VITE_EMAILJS_TEMPLATE_ID_2 || 'template_o90g9wb',
     publicKey: env.VITE_EMAILJS_PUBLIC_KEY_2 || 'X3-kO1QScsx1CWrh8',
   },
+  {
+    serviceId: env.VITE_EMAILJS_SERVICE_ID_3 || 'service_8p2pqx9',
+    templateId: env.VITE_EMAILJS_TEMPLATE_ID_3 || 'template_8ukbrgc',
+    publicKey: env.VITE_EMAILJS_PUBLIC_KEY_3 || 'X3-kO1QScsx1CWrh8',
+  },
 ];
 
 export interface OrderEmailParams {
