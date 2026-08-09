@@ -28,6 +28,7 @@ import { ContactPage } from './pages/ContactPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsPage } from './pages/TermsPage';
 import { ExchangePolicyPage } from './pages/ExchangePolicyPage';
+import { trackAddToCart } from './utils/metaPixel';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -87,6 +88,8 @@ export default function App() {
   const handleAddToCart = (product: Product, quantity: number = 1, size?: string, color?: string) => {
     const chosenSize = size || (product.sizes ? product.sizes[0] : undefined);
     const chosenColor = color || (product.colors ? product.colors[0] : undefined);
+
+    trackAddToCart(product, quantity);
 
     setCartItems((prev) => {
       const existingIndex = prev.findIndex(

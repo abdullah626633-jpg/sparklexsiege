@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { sendOrderEmail } from '../services/emailService';
 import { getDiscountedPrice } from '../utils/price';
+import { trackInitiateCheckout, trackPurchase } from '../utils/metaPixel';
 
 interface CheckoutPageProps {
   cartItems: CartItem[];
@@ -85,6 +86,12 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const shipping = subtotal === 0 ? 0 : 250;
   const total = subtotal + shipping;
 
+  React.useEffect(() => {
+    if (cartItems.length > 0) {
+      trackInitiateCheckout(total, cartItems.length);
+    }
+  }, []);
+
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
@@ -145,6 +152,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     setConfirmedTotal(total);
     setEmailSentSuccess(emailRes.success);
     setPlacedOrder(orderNum);
+    trackPurchase(orderNum, total);
     setIsSubmitting(false);
     onClearCart();
   };

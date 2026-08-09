@@ -4,6 +4,7 @@ import { Product, Review } from '../types';
 import { ProductCard } from '../components/ProductCard';
 import { MOCK_REVIEWS, CATEGORIES } from '../data/products';
 import { getDiscountedPrice, AZADI_DISCOUNT_PERCENT } from '../utils/price';
+import { trackViewContent } from '../utils/metaPixel';
 import {
   Star,
   Heart,
@@ -52,6 +53,17 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
   const isWishlisted = wishlistIds.includes(product.id);
   const [activeImgIndex, setActiveImgIndex] = useState(0);
+
+  React.useEffect(() => {
+    if (product) {
+      trackViewContent({
+        id: product.id,
+        name: product.name,
+        price: getDiscountedPrice(product.price),
+        category: product.category,
+      });
+    }
+  }, [product?.id]);
 
   const handleBuyNow = () => {
     onBuyNow(product, quantity, selectedSize, selectedColor);
