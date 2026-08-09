@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Product, CartItem } from './types';
 import { PRODUCTS } from './data/products';
 
@@ -277,6 +277,9 @@ export default function App() {
 
           {/* EXCHANGE POLICY PAGE */}
           <Route path="/exchange" element={<ExchangePolicyPage />} />
+
+          {/* FALLBACK CATCH-ALL ROUTE */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
 
