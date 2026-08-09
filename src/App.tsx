@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { Product, CartItem } from './types';
 import { PRODUCTS } from './data/products';
 
@@ -165,6 +166,25 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-neutral-900 font-sans selection:bg-[#FF9F61]/20">
+      <Helmet defaultTitle="Sparklez Siege | Premium Artificial Jewellery Pakistan" titleTemplate="%s | Sparklez Siege">
+        <title>Sparklez Siege | Premium Artificial Jewellery & Accessories</title>
+        <meta name="description" content="Shop exquisite artificial jewellery, bangles, bridal sets, rings, pendants, and earrings at Sparklez Siege. High quality finish with cash on delivery across Pakistan." />
+        <meta name="keywords" content="Sparklez Siege, artificial jewellery Pakistan, bangles, bridal jewellery, rings, earrings, pendants, jewellery sets online" />
+
+        {/* Open Graph / Facebook / WhatsApp */}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Sparklez Siege" />
+        <meta property="og:title" content="Sparklez Siege | Premium Artificial Jewellery Pakistan" />
+        <meta property="og:description" content="Shop exquisite artificial jewellery, bangles, bridal sets, rings, pendants, and earrings at Sparklez Siege." />
+        <meta property="og:image" content="https://sparkleziege.shop/logo.jpg" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Sparklez Siege | Premium Artificial Jewellery Pakistan" />
+        <meta name="twitter:description" content="Shop exquisite artificial jewellery, bangles, bridal sets, rings, pendants, and earrings at Sparklez Siege." />
+        <meta name="twitter:image" content="https://sparkleziege.shop/logo.jpg" />
+      </Helmet>
+
       <ScrollToTop />
 
       {/* Top Header */}

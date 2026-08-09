@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { Product, Review } from '../types';
 import { ProductCard } from '../components/ProductCard';
 import { MOCK_REVIEWS, CATEGORIES } from '../data/products';
@@ -140,8 +141,67 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
     .concat(allProducts.filter((p) => p.id !== product.id && p.category !== product.category))
     .slice(0, 4);
 
+  const currentImageUrl = product.images[activeImgIndex] || product.images[0] || '';
+  const absoluteImageUrl = currentImageUrl.startsWith('http://') || currentImageUrl.startsWith('https://')
+    ? currentImageUrl
+    : `${typeof window !== 'undefined' ? window.location.origin : 'https://sparkleziege.shop'}${currentImageUrl.startsWith('/') ? currentImageUrl : `/${currentImageUrl}`}`;
+
+  const currentProductUrl = `${typeof window !== 'undefined' ? window.location.origin : 'https://sparkleziege.shop'}/product/${product.slug || product.id}`;
+  const discountedPrice = getDiscountedPrice(product.price);
+  const pageTitle = `${product.name} | Sparklez Siege`;
+  const metaDescription = product.description.length > 160 ? `${product.description.substring(0, 157)}...` : product.description;
+
+  const productSchema = {
+    '@context': 'https://schema.org/',
+    '@type': 'Product',
+    name: product.name,
+    image: [absoluteImageUrl],
+    description: product.description,
+    sku: product.id,
+    brand: {
+      '@type': 'Brand',
+      name: 'Sparklez Siege',
+    },
+    offers: {
+      '@type': 'Offer',
+      url: currentProductUrl,
+      priceCurrency: 'PKR',
+      price: discountedPrice,
+      itemCondition: 'https://schema.org/NewCondition',
+      availability: product.inStock !== false ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+    },
+  };
+
   return (
     <div className="bg-white min-h-screen py-8 sm:py-12">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={metaDescription} />
+        <meta name="keywords" content={`${product.name}, ${product.category}, Sparklez Siege, jewellery Pakistan, buy ${product.name} online, ${product.colors ? product.colors.join(', ') : ''}`} />
+        <link rel="canonical" href={currentProductUrl} />
+
+        {/* Open Graph Meta Tags */}
+        <meta property="og:type" content="product" />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={metaDescription} />
+        <meta property="og:image" content={absoluteImageUrl} />
+        <meta property="og:url" content={currentProductUrl} />
+        <meta property="og:site_name" content="Sparklez Siege" />
+        <meta property="og:price:amount" content={String(discountedPrice)} />
+        <meta property="og:price:currency" content="PKR" />
+
+        {/* Twitter Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={metaDescription} />
+        <meta name="twitter:image" content={absoluteImageUrl} />
+
+        {/* Product Structured Data (JSON-LD) */}
+        <script type="application/ld+json">
+          {JSON.stringify(productSchema)}
+        </script>
+      </Helmet>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Toast Alert */}
         {addedToast && (
