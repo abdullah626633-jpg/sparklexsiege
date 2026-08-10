@@ -49,7 +49,7 @@ export const PRODUCTS: Product[] = [
     formattedPrice: 'Rs. 2,550',
     featured: true,
     isNew: true,
-    images: ['/IMG_4185.png'],
+    images: ['/WhatsApp Image 2026-08-10 at 11.02.15 PM.jpeg'],
     description: 'Add a touch of celestial sparkle with the Star Dust Bracelet. Crafted with a premium 18K gold-plated finish and adorned with shimmering stones, this elegant bracelet is designed to complement both everyday looks and special occasions. A timeless piece that brings effortless grace and brilliance to your jewelry collection.',
     material: 'Premium 18K Gold Plated with Shimmering Celestial Stones',
     specifications: [
