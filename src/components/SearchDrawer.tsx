@@ -18,9 +18,9 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
   onSelectProduct,
 }) => {
   const navigate = useNavigate();
-  if (!isOpen) return null;
-
   const [query, setQuery] = useState('');
+
+  if (!isOpen) return null;
 
   const filtered = query.trim()
     ? products.filter(
@@ -64,25 +64,34 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
 
           {/* Search Bar Input */}
           <div className="p-5 border-b border-neutral-100">
-            <div className="relative">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (filtered.length > 0) {
+                  handleProductSelect(filtered[0]);
+                }
+              }}
+              className="relative"
+            >
               <Search className="w-5 h-5 absolute left-3.5 top-3.5 text-neutral-400" />
               <input
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search jewellery, materials, diamonds..."
-                className="w-full pl-11 pr-4 py-3 bg-neutral-50 border border-neutral-200 rounded-2xl text-sm focus:outline-hidden focus:border-[#FF9F61] focus:bg-white transition-all"
+                className="w-full pl-11 pr-16 py-3 bg-neutral-50 border border-neutral-200 rounded-2xl text-sm focus:outline-hidden focus:border-[#FF9F61] focus:bg-white transition-all"
                 autoFocus
               />
               {query && (
                 <button
+                  type="button"
                   onClick={() => setQuery('')}
-                  className="absolute right-3.5 top-3.5 text-xs text-neutral-400 hover:text-neutral-700"
+                  className="absolute right-3.5 top-3.5 text-xs text-neutral-400 hover:text-neutral-700 cursor-pointer"
                 >
                   Clear
                 </button>
               )}
-            </div>
+            </form>
 
             {/* Quick Tags */}
             <div className="mt-4 flex flex-wrap gap-2">

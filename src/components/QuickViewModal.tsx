@@ -24,17 +24,17 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
   onGoToDetail,
 }) => {
   const navigate = useNavigate();
-  if (!product) return null;
-
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
-    product.sizes ? product.sizes[0] : undefined
+    product?.sizes ? product.sizes[0] : undefined
   );
   const [selectedColor, setSelectedColor] = useState<string | undefined>(
-    product.colors ? product.colors[0] : undefined
+    product?.colors ? product.colors[0] : undefined
   );
   const [addedToast, setAddedToast] = useState(false);
+
+  if (!product) return null;
 
   const handleGoToDetail = () => {
     onClose();
