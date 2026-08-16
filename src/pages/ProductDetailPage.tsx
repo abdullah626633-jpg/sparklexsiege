@@ -67,13 +67,57 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const [addedToast, setAddedToast] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<'details' | 'specs' | 'delivery' | 'returns' | 'care' | null>('delivery');
 
-  // Reviews state
-  const [reviewsList, setReviewsList] = useState<Review[]>(MOCK_REVIEWS);
+  // Reviews state with localStorage persistence per product
+  const storageKey = `sparklez_reviews_${product.id}`;
+
+  const [reviewsList, setReviewsList] = useState<Review[]>(() => {
+    try {
+      const saved = localStorage.getItem(`sparklez_reviews_${product.id}`);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {
+      // fallback
+    }
+    return MOCK_REVIEWS;
+  });
+
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [newRating, setNewRating] = useState(5);
-  const [newTitle, setNewTitle] = useState('');
-  const [newComment, setNewComment] = useState('');
   const [newAuthor, setNewAuthor] = useState('');
+  const [newComment, setNewComment] = useState('');
+  const [reviewSubmittedToast, setReviewSubmittedToast] = useState(false);
+
+  // Sync reviews if product changes
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(`sparklez_reviews_${product.id}`);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setReviewsList(parsed);
+          return;
+        }
+      }
+    } catch {
+      // fallback
+    }
+    setReviewsList(MOCK_REVIEWS);
+  }, [product.id]);
+
+  // Dynamic review count & rating calculation based on real persisted reviews
+  const currentReviewCount = reviewsList.length > 0 ? reviewsList.length : product.reviewCount;
+  const currentAvgRating =
+    reviewsList.length > 0
+      ? Number(
+          (
+            reviewsList.reduce((acc, r) => acc + r.rating, 0) / reviewsList.length
+          ).toFixed(1)
+        )
+      : product.rating;
 
   // Sticky buy bar detection
   const mainBuyButtonRef = useRef<HTMLDivElement>(null);
@@ -146,21 +190,37 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
     e.preventDefault();
     if (!newComment.trim() || !newAuthor.trim()) return;
 
+    const todayDate = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+
     const newRev: Review = {
       id: `rev-${Date.now()}`,
-      author: newAuthor,
+      author: newAuthor.trim(),
       rating: newRating,
-      date: 'Just now',
-      title: newTitle || 'Loved this jewellery piece!',
-      comment: newComment,
+      date: todayDate,
+      comment: newComment.trim(),
       verified: true,
     };
 
-    setReviewsList([newRev, ...reviewsList]);
+    const updatedReviews = [newRev, ...reviewsList];
+    setReviewsList(updatedReviews);
+
+    // Persist immediately in localStorage so it stays permanently on the website
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(updatedReviews));
+    } catch {
+      // ignore
+    }
+
     setNewAuthor('');
-    setNewTitle('');
     setNewComment('');
+    setNewRating(5);
     setShowReviewForm(false);
+    setReviewSubmittedToast(true);
+    setTimeout(() => setReviewSubmittedToast(false), 3000);
   };
 
   const scrollToReviews = () => {
@@ -237,12 +297,21 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
         </script>
       </Helmet>
 
-      {/* Toast Alert */}
+      {/* Toast Alerts */}
       {addedToast && (
         <div className="fixed bottom-24 sm:bottom-6 right-4 sm:right-6 z-50 bg-neutral-900 text-white py-3.5 px-5 rounded-2xl shadow-2xl flex items-center space-x-3 border border-[#FF9F61]/50 transition-all animate-bounce">
           <Check className="w-5 h-5 text-[#FF9F61]" />
           <span className="text-xs sm:text-sm font-semibold">
             Added {quantity} × "{product.name}" to your cart!
+          </span>
+        </div>
+      )}
+
+      {reviewSubmittedToast && (
+        <div className="fixed bottom-24 sm:bottom-6 right-4 sm:right-6 z-50 bg-neutral-900 text-white py-3.5 px-5 rounded-2xl shadow-2xl flex items-center space-x-3 border border-[#FF9F61] transition-all animate-bounce">
+          <Check className="w-5 h-5 text-[#FF9F61]" />
+          <span className="text-xs sm:text-sm font-semibold">
+            Thank you! Your review is now live on our website.
           </span>
         </div>
       )}
@@ -339,7 +408,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   <Star
                     key={i}
                     className={`w-4 h-4 ${
-                      i < Math.floor(product.rating)
+                      i < Math.floor(currentAvgRating)
                         ? 'fill-current text-[#FF9F61]'
                         : 'text-neutral-200'
                     }`}
@@ -347,10 +416,10 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 ))}
               </div>
               <span className="font-bold text-neutral-900 group-hover:text-emerald-800 transition-colors">
-                {product.rating.toFixed(1)}
+                {currentAvgRating.toFixed(1)}
               </span>
               <span className="text-neutral-500 underline group-hover:text-neutral-800">
-                ({product.reviewCount} verified reviews)
+                ({currentReviewCount} verified {currentReviewCount === 1 ? 'review' : 'reviews'})
               </span>
               <span className="bg-emerald-50 text-emerald-800 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-200 hidden sm:inline-block">
                 ✓ Verified
@@ -758,125 +827,160 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
             <div>
               <span className="text-xs font-semibold uppercase tracking-widest text-[#FF9F61] block mb-1">
-                Verified Opinions
+                Verified Customer Feedback
               </span>
               <div className="flex items-center space-x-3">
                 <h2 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-neutral-900">
                   Customer Reviews
                 </h2>
                 <span className="bg-neutral-100 text-neutral-800 text-xs font-bold px-2.5 py-1 rounded-full">
-                  ★ {product.rating.toFixed(1)} / 5.0
+                  ★ {currentAvgRating.toFixed(1)} / 5.0
                 </span>
               </div>
               <p className="text-xs text-neutral-500 mt-1">
-                Real feedback from verified buyers across Pakistan.
+                {currentReviewCount} verified {currentReviewCount === 1 ? 'buyer has' : 'buyers have'} shared their experience across Pakistan.
               </p>
             </div>
 
             <button
               type="button"
               onClick={() => setShowReviewForm(!showReviewForm)}
-              className="self-start sm:self-auto bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold text-xs py-2.5 px-5 rounded-xl transition-colors cursor-pointer"
+              className="self-start sm:self-auto bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold text-xs py-3 px-6 rounded-xl transition-colors cursor-pointer"
             >
               {showReviewForm ? 'Cancel' : 'Write a Review'}
             </button>
           </div>
 
-          {/* Write Review Form */}
+          {/* Write Review Form - Clean & Simple: Only Name and Review required */}
           {showReviewForm && (
-            <form onSubmit={handleAddReview} className="bg-neutral-50 p-6 rounded-3xl border border-neutral-200 mb-8 max-w-2xl space-y-4">
-              <h3 className="text-sm font-bold text-neutral-900">Share Your Experience</h3>
+            <form onSubmit={handleAddReview} className="bg-neutral-50 p-6 sm:p-7 rounded-3xl border border-neutral-200 mb-8 max-w-2xl space-y-4">
               <div>
-                <label className="block text-xs font-medium text-neutral-700 mb-1">Your Rating</label>
-                <div className="flex space-x-1 text-[#FF9F61]">
+                <h3 className="text-sm font-bold text-neutral-900">Write Your Review</h3>
+                <p className="text-xs text-neutral-500 mt-0.5">
+                  Your review will be posted directly to this product page.
+                </p>
+              </div>
+
+              {/* Star Rating Selection */}
+              <div>
+                <label className="block text-xs font-semibold text-neutral-700 mb-1.5">
+                  Your Rating
+                </label>
+                <div className="flex items-center space-x-1 text-[#FF9F61]">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={star}
                       type="button"
                       onClick={() => setNewRating(star)}
-                      className="p-1 cursor-pointer focus:outline-hidden"
+                      className="p-1 cursor-pointer hover:scale-110 transition-transform focus:outline-hidden"
                       aria-label={`${star} star rating`}
                     >
-                      <Star className={`w-5 h-5 ${star <= newRating ? 'fill-current' : 'text-neutral-300'}`} />
+                      <Star className={`w-6 h-6 ${star <= newRating ? 'fill-current' : 'text-neutral-300'}`} />
                     </button>
                   ))}
+                  <span className="text-xs font-bold text-neutral-700 ml-2">
+                    {newRating === 5 ? '5.0 - Excellent' : `${newRating}.0`}
+                  </span>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-medium text-neutral-700 mb-1">Your Name</label>
-                  <input
-                    type="text"
-                    value={newAuthor}
-                    onChange={(e) => setNewAuthor(e.target.value)}
-                    placeholder="e.g. Ayesha K."
-                    className="w-full py-2 px-3 bg-white border border-neutral-200 rounded-xl text-xs"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-neutral-700 mb-1">Review Headline</label>
-                  <input
-                    type="text"
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    placeholder="e.g. Truly stunning craftsmanship!"
-                    className="w-full py-2 px-3 bg-white border border-neutral-200 rounded-xl text-xs"
-                  />
-                </div>
-              </div>
-
+              {/* Name Field */}
               <div>
-                <label className="block text-xs font-medium text-neutral-700 mb-1">Your Review</label>
-                <textarea
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Share details about the sparkle, finishing, packaging, or delivery..."
-                  className="w-full py-2 px-3 bg-white border border-neutral-200 rounded-xl text-xs h-24"
+                <label className="block text-xs font-semibold text-neutral-700 mb-1.5">
+                  Your Name <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={newAuthor}
+                  onChange={(e) => setNewAuthor(e.target.value)}
+                  placeholder="e.g. Ayesha Khan"
+                  className="w-full py-2.5 px-3.5 bg-white border border-neutral-200 rounded-xl text-xs sm:text-sm text-neutral-900 focus:outline-hidden focus:border-[#FF9F61]"
                   required
                 />
               </div>
 
-              <button
-                type="submit"
-                className="bg-[#FF9F61] text-neutral-950 font-bold text-xs py-2.5 px-6 rounded-xl cursor-pointer"
-              >
-                Submit Review
-              </button>
+              {/* Review Text Field */}
+              <div>
+                <label className="block text-xs font-semibold text-neutral-700 mb-1.5">
+                  Your Review <span className="text-rose-500">*</span>
+                </label>
+                <textarea
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Tell us what you liked about the piece, finishing, sparkle, or delivery experience..."
+                  className="w-full py-2.5 px-3.5 bg-white border border-neutral-200 rounded-xl text-xs sm:text-sm text-neutral-900 h-28 focus:outline-hidden focus:border-[#FF9F61] resize-none"
+                  required
+                />
+              </div>
+
+              <div className="flex items-center space-x-3 pt-1">
+                <button
+                  type="submit"
+                  className="bg-[#FF9F61] hover:bg-[#f08f4f] active:scale-[0.99] text-neutral-950 font-bold text-xs sm:text-sm py-3 px-7 rounded-xl transition-all cursor-pointer shadow-xs"
+                >
+                  Submit Review
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowReviewForm(false)}
+                  className="text-xs font-semibold text-neutral-500 hover:text-neutral-800 py-3 px-4 rounded-xl cursor-pointer"
+                >
+                  Cancel
+                </button>
+              </div>
             </form>
           )}
 
           {/* Reviews List */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {reviewsList.map((rev) => (
-              <div key={rev.id} className="p-5 bg-neutral-50 rounded-2xl border border-neutral-100 flex flex-col justify-between space-y-3">
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <div className="flex text-[#FF9F61]">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={`w-3.5 h-3.5 ${i < rev.rating ? 'fill-current' : 'text-neutral-200'}`} />
-                      ))}
+          {reviewsList.length === 0 ? (
+            <div className="p-8 text-center bg-neutral-50 rounded-2xl border border-neutral-200">
+              <p className="text-xs sm:text-sm text-neutral-600">No reviews yet for this product. Be the first to leave one!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {reviewsList.map((rev) => (
+                <div
+                  key={rev.id}
+                  className="p-5 bg-neutral-50 rounded-2xl border border-neutral-200/80 flex flex-col justify-between space-y-3 hover:border-neutral-300 transition-colors"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex text-[#FF9F61]">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-3.5 h-3.5 ${
+                              i < rev.rating ? 'fill-current' : 'text-neutral-200'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-[10px] text-neutral-400 font-medium">{rev.date}</span>
                     </div>
-                    <span className="text-[10px] text-neutral-400">{rev.date}</span>
+
+                    {rev.title && (
+                      <h4 className="font-serif-luxury text-sm font-bold text-neutral-900 mb-1">
+                        {rev.title}
+                      </h4>
+                    )}
+                    <p className="text-xs text-neutral-700 leading-relaxed">
+                      "{rev.comment}"
+                    </p>
                   </div>
 
-                  <h4 className="font-serif-luxury text-sm font-bold text-neutral-900 mb-1">{rev.title}</h4>
-                  <p className="text-xs text-neutral-600 leading-relaxed">{rev.comment}</p>
+                  <div className="pt-3 border-t border-neutral-200/70 flex items-center justify-between text-xs">
+                    <span className="font-bold text-neutral-900">{rev.author}</span>
+                    {rev.verified && (
+                      <span className="text-[10px] text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded-md flex items-center space-x-1">
+                        <Check className="w-3 h-3" />
+                        <span>Verified Buyer</span>
+                      </span>
+                    )}
+                  </div>
                 </div>
-
-                <div className="pt-3 border-t border-neutral-200/60 flex items-center justify-between text-xs">
-                  <span className="font-bold text-neutral-800">{rev.author}</span>
-                  {rev.verified && (
-                    <span className="text-[10px] text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded-md flex items-center space-x-1">
-                      <Check className="w-3 h-3" />
-                      <span>Verified Buyer</span>
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Related Products Section */}
