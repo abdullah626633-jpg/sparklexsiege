@@ -147,24 +147,4 @@
   background: #047857;
 }
 
-/* Azadi Sale Announcement Marquee */
-@keyframes marqueeScroll {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-marquee-continuous {
-  display: flex;
-  width: max-content;
-  animation: marqueeScroll 24s linear infinite;
-}
-
-.animate-[#01411C] {
-  background-color: #01411C;
-}
-
 

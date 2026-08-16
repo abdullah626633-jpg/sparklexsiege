@@ -1,6 +1,5 @@
 import emailjs from '@emailjs/browser';
 import { CartItem } from '../types';
-import { getDiscountedPrice } from '../utils/price';
 
 const env = (import.meta as any).env || {};
 
@@ -125,13 +124,13 @@ export const sendOrderEmail = async (params: OrderEmailParams): Promise<{ succes
   // 1. Clean Plain-Text Order Items List with absolute public image URLs
   const orderItemsPlainText = cartItems
     .map((item, index) => {
-      const discountedPrice = getDiscountedPrice(item.product.price);
-      const itemTotal = discountedPrice * item.quantity;
+      const unitPrice = item.product.price;
+      const itemTotal = unitPrice * item.quantity;
       const fullImgUrl = getFullImageUrl(item.product.images[0]);
       return `${index + 1}. ${item.product.name}
    - Category: ${item.product.category}
    - Color: ${item.selectedColor || 'Standard'} | Size: ${item.selectedSize || 'Standard'}
-   - Qty: ${item.quantity} x Rs. ${discountedPrice.toLocaleString()} = Rs. ${itemTotal.toLocaleString()}
+   - Qty: ${item.quantity} x Rs. ${unitPrice.toLocaleString()} = Rs. ${itemTotal.toLocaleString()}
    ${fullImgUrl ? `- Product Image: ${fullImgUrl}` : ''}`;
     })
     .join('\n\n');
@@ -151,8 +150,8 @@ export const sendOrderEmail = async (params: OrderEmailParams): Promise<{ succes
   <tbody>
     ${cartItems
       .map((item) => {
-        const discountedPrice = getDiscountedPrice(item.product.price);
-        const itemTotal = discountedPrice * item.quantity;
+        const unitPrice = item.product.price;
+        const itemTotal = unitPrice * item.quantity;
         const fullImgUrl = getFullImageUrl(item.product.images[0]);
         return `
         <tr>
@@ -257,7 +256,7 @@ PAYMENT & TOTALS:
     delivery_charges: params.shipping,
     total: params.total_amount,
     total_amount: params.total_amount,
-    price: firstItem ? `Rs. ${getDiscountedPrice(firstItem.product.price).toLocaleString()}` : params.subtotal,
+    price: firstItem ? `Rs. ${firstItem.product.price.toLocaleString()}` : params.subtotal,
     payment_method: params.payment_method,
 
     // 8. Product details (single & list)

@@ -11,7 +11,6 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { CategoryType, PageType } from '../types';
-import { AzadiAnnouncementBar } from './AzadiAnnouncementBar';
 
 interface HeaderProps {
   cartCount: number;
@@ -72,9 +71,6 @@ export const Header: React.FC<HeaderProps> = ({
             : 'bg-[#002D2F] border-b border-emerald-900/60 text-white'
         }`}
       >
-        {/* Sticky Azadi Sale Marquee Banner */}
-        <AzadiAnnouncementBar />
-
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3">
           <div className="flex items-center justify-between">
             {/* Mobile Menu Hamburger */}

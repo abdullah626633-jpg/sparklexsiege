@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { Heart, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
-import { getDiscountedPrice, AZADI_DISCOUNT_PERCENT } from '../utils/price';
 
 interface NewArrivalsProps {
   products: Product[];
@@ -124,9 +123,11 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({
                 >
                   {/* Badges container */}
                   <div className="absolute top-0 left-0 z-10 flex flex-col gap-1">
-                    <span className="bg-[#01411C] text-white text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 inline-block border border-emerald-500/30">
-                      {AZADI_DISCOUNT_PERCENT}% OFF
-                    </span>
+                    {product.compareAtPrice && product.compareAtPrice > product.price && (
+                      <span className="bg-rose-600 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 inline-block">
+                        {Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)}% OFF
+                      </span>
+                    )}
                     <span className="bg-black text-white text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 inline-block">
                       NEW IN
                     </span>
@@ -181,11 +182,13 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({
 
                   <div className="mt-1 flex items-baseline space-x-2">
                     <span className="text-xs sm:text-sm font-bold text-neutral-900 tracking-wider">
-                      Rs. {getDiscountedPrice(product.price).toLocaleString()}
-                    </span>
-                    <span className="text-[10px] sm:text-xs text-neutral-400 line-through">
                       Rs. {product.price.toLocaleString()}
                     </span>
+                    {product.compareAtPrice && product.compareAtPrice > product.price && (
+                      <span className="text-[10px] sm:text-xs text-neutral-400 line-through">
+                        Rs. {product.compareAtPrice.toLocaleString()}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

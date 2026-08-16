@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { Search, X, ChevronRight } from 'lucide-react';
-import { getDiscountedPrice } from '../utils/price';
 
 interface SearchDrawerProps {
   isOpen: boolean;
@@ -145,11 +144,13 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
                       <p className="text-xs text-neutral-500 capitalize">{prod.category}</p>
                       <div className="flex items-baseline space-x-2 mt-0.5">
                         <span className="text-sm font-bold text-neutral-900">
-                          Rs. {getDiscountedPrice(prod.price).toLocaleString()}
-                        </span>
-                        <span className="text-xs text-neutral-400 line-through">
                           Rs. {prod.price.toLocaleString()}
                         </span>
+                        {prod.compareAtPrice && prod.compareAtPrice > prod.price && (
+                          <span className="text-xs text-neutral-400 line-through">
+                            Rs. {prod.compareAtPrice.toLocaleString()}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <ChevronRight className="w-5 h-5 text-neutral-400 group-hover:text-[#FF9F61] group-hover:translate-x-1 transition-all" />

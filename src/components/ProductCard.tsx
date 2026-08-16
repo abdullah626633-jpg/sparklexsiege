@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { Heart, Eye, ShoppingBag, Star } from 'lucide-react';
-import { getDiscountedPrice, AZADI_DISCOUNT_PERCENT } from '../utils/price';
 
 interface ProductCardProps {
   product: Product;
@@ -27,6 +26,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     if (onSelect) onSelect(product);
     navigate(`/product/${product.slug || product.id}`);
   };
+
+  const hasDiscount = product.compareAtPrice && product.compareAtPrice > product.price;
+  const discountPercent = hasDiscount
+    ? Math.round(((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100)
+    : 0;
 
   return (
     <div
@@ -55,14 +59,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           />
         )}
 
-        {/* Badges - Green 14% OFF Azadi Sale Badge */}
+        {/* Badges */}
         <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 flex flex-col gap-1">
-          <span className="bg-[#01411C] text-white text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 shadow-md inline-block border border-emerald-500/30">
-            {AZADI_DISCOUNT_PERCENT}% OFF
-          </span>
-          {product.isSale && (
+          {hasDiscount && (
+            <span className="bg-rose-600 text-white text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 shadow-md inline-block">
+              {discountPercent}% OFF
+            </span>
+          )}
+          {product.isSale && !hasDiscount && (
             <span className="bg-rose-600 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 shadow-xs inline-block">
               Sale
+            </span>
+          )}
+          {product.isNew && (
+            <span className="bg-black text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 shadow-xs inline-block">
+              New
             </span>
           )}
         </div>
@@ -119,11 +130,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <div className="mt-3 pt-3 border-t border-neutral-100 flex items-center justify-between">
           <div className="flex flex-wrap items-baseline gap-x-1.5">
             <span className="text-sm sm:text-base font-bold text-neutral-900">
-              Rs. {getDiscountedPrice(product.price).toLocaleString()}
-            </span>
-            <span className="text-[10px] sm:text-xs text-neutral-400 line-through">
               Rs. {product.price.toLocaleString()}
             </span>
+            {hasDiscount && (
+              <span className="text-[10px] sm:text-xs text-neutral-400 line-through">
+                Rs. {product.compareAtPrice!.toLocaleString()}
+              </span>
+            )}
             {product.priceSubtitle && (
               <span className="text-[10px] sm:text-xs font-normal text-neutral-500">
                 {product.priceSubtitle}
@@ -143,5 +156,3 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     </div>
   );
 };
-
-

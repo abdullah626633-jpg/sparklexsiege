@@ -3,7 +3,7 @@ import React from 'react';
 export const WhatsAppButton: React.FC = () => {
   const whatsappNumber = '923039117733';
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    'Hello SparklezSiege! I am interested in your luxury jewellery collection.'
+    'Hello Sparklez Siege! I have an inquiry about your jewellery collection.'
   )}`;
 
   return (
@@ -11,14 +11,14 @@ export const WhatsAppButton: React.FC = () => {
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-5 right-5 z-50 flex items-center cursor-pointer group"
+      className="fixed bottom-18 sm:bottom-6 right-4 sm:right-6 z-45 flex items-center cursor-pointer group"
       aria-label="Chat on WhatsApp"
     >
       {/* Main WhatsApp Badge */}
-      <div className="flex items-center space-x-2.5 bg-[#25D366] hover:bg-[#20ba5a] text-white px-3.5 py-3 sm:px-4 sm:py-3.5 rounded-full shadow-2xl transition-colors duration-200 border border-white/20">
+      <div className="flex items-center space-x-2 bg-[#25D366] hover:bg-[#20ba5a] text-white p-3 sm:px-4 sm:py-3 rounded-full shadow-2xl transition-all duration-200 border border-white/20 hover:scale-105">
         {/* Official WhatsApp SVG Icon */}
         <svg
-          className="w-6 h-6 fill-current shrink-0"
+          className="w-5 h-5 sm:w-5 sm:h-5 fill-current shrink-0"
           viewBox="0 0 24 24"
           aria-hidden="true"
         >

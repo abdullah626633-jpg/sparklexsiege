@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Product, Review } from '../types';
 import { ProductCard } from '../components/ProductCard';
-import { MOCK_REVIEWS, CATEGORIES } from '../data/products';
-import { getDiscountedPrice, AZADI_DISCOUNT_PERCENT } from '../utils/price';
+import { MOCK_REVIEWS } from '../data/products';
 import { trackViewContent } from '../utils/metaPixel';
 import {
   Star,
@@ -16,8 +15,11 @@ import {
   ChevronDown,
   Check,
   Gem,
-  Share2,
   ChevronRight,
+  Zap,
+  Clock,
+  Sparkles,
+  Award,
 } from 'lucide-react';
 
 interface ProductDetailPageProps {
@@ -54,22 +56,6 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
   const isWishlisted = wishlistIds.includes(product.id);
   const [activeImgIndex, setActiveImgIndex] = useState(0);
-
-  React.useEffect(() => {
-    if (product) {
-      trackViewContent({
-        id: product.id,
-        name: product.name,
-        price: getDiscountedPrice(product.price),
-        category: product.category,
-      });
-    }
-  }, [product?.id]);
-
-  const handleBuyNow = () => {
-    onBuyNow(product, quantity, selectedSize, selectedColor);
-    navigate('/checkout');
-  };
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     product.sizes ? product.sizes[0] : undefined
@@ -77,6 +63,49 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const [selectedColor, setSelectedColor] = useState<string | undefined>(
     product.colors ? product.colors[0] : undefined
   );
+
+  const [addedToast, setAddedToast] = useState(false);
+  const [openAccordion, setOpenAccordion] = useState<'details' | 'specs' | 'delivery' | 'returns' | 'care' | null>('delivery');
+
+  // Reviews state
+  const [reviewsList, setReviewsList] = useState<Review[]>(MOCK_REVIEWS);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [newRating, setNewRating] = useState(5);
+  const [newTitle, setNewTitle] = useState('');
+  const [newComment, setNewComment] = useState('');
+  const [newAuthor, setNewAuthor] = useState('');
+
+  // Sticky buy bar detection
+  const mainBuyButtonRef = useRef<HTMLDivElement>(null);
+  const [showStickyBar, setShowStickyBar] = useState(false);
+
+  useEffect(() => {
+    if (product) {
+      trackViewContent({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        category: product.category,
+      });
+    }
+  }, [product?.id]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (mainBuyButtonRef.current) {
+        const rect = mainBuyButtonRef.current.getBoundingClientRect();
+        // If the bottom of the main CTA button is scrolled above the viewport or out of view
+        if (rect.bottom < 0) {
+          setShowStickyBar(true);
+        } else {
+          setShowStickyBar(false);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleSelectColor = (color: string) => {
     setSelectedColor(color);
@@ -93,20 +122,19 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
       }
     }
   };
-  const [addedToast, setAddedToast] = useState(false);
-  const [openAccordion, setOpenAccordion] = useState<'delivery' | 'returns' | 'specs' | null>('delivery');
 
-  // Reviews state
-  const [reviewsList, setReviewsList] = useState<Review[]>(MOCK_REVIEWS);
-  const [showReviewForm, setShowReviewForm] = useState(false);
-  const [newRating, setNewRating] = useState(5);
-  const [newTitle, setNewTitle] = useState('');
-  const [newComment, setNewComment] = useState('');
-  const [newAuthor, setNewAuthor] = useState('');
-
-  const discountPercent = product.compareAtPrice
-    ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
+  const hasGenuineDiscount = !!(product.compareAtPrice && product.compareAtPrice > product.price);
+  const savingsAmount = hasGenuineDiscount ? (product.compareAtPrice! - product.price) : 0;
+  const discountPercent = hasGenuineDiscount
+    ? Math.round((savingsAmount / product.compareAtPrice!) * 100)
     : 0;
+
+  const currentTotalPrice = product.price * quantity;
+
+  const handleBuyNow = () => {
+    onBuyNow(product, quantity, selectedSize, selectedColor);
+    navigate('/checkout');
+  };
 
   const handleAddToCart = () => {
     onAddToCart(product, quantity, selectedSize, selectedColor);
@@ -135,7 +163,14 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
     setShowReviewForm(false);
   };
 
-  // Related products (same category or featured excluding current)
+  const scrollToReviews = () => {
+    const el = document.getElementById('reviews-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Related products
   const relatedProducts = allProducts
     .filter((p) => p.id !== product.id && p.category === product.category)
     .concat(allProducts.filter((p) => p.id !== product.id && p.category !== product.category))
@@ -147,7 +182,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
     : `${typeof window !== 'undefined' ? window.location.origin : 'https://sparkleziege.shop'}${currentImageUrl.startsWith('/') ? currentImageUrl : `/${currentImageUrl}`}`;
 
   const currentProductUrl = `${typeof window !== 'undefined' ? window.location.origin : 'https://sparkleziege.shop'}/product/${product.slug || product.id}`;
-  const discountedPrice = getDiscountedPrice(product.price);
+  const effectivePrice = product.price;
   const pageTitle = `${product.name} | Sparklez Siege`;
   const metaDescription = product.description.length > 160 ? `${product.description.substring(0, 157)}...` : product.description;
 
@@ -166,14 +201,14 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
       '@type': 'Offer',
       url: currentProductUrl,
       priceCurrency: 'PKR',
-      price: discountedPrice,
+      price: effectivePrice,
       itemCondition: 'https://schema.org/NewCondition',
       availability: product.inStock !== false ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
     },
   };
 
   return (
-    <div className="bg-white min-h-screen py-8 sm:py-12">
+    <div className="bg-white min-h-screen pb-16 sm:pb-20">
       <Helmet>
         <title>{pageTitle}</title>
         <meta name="description" content={metaDescription} />
@@ -187,7 +222,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
         <meta property="og:image" content={absoluteImageUrl} />
         <meta property="og:url" content={currentProductUrl} />
         <meta property="og:site_name" content="Sparklez Siege" />
-        <meta property="og:price:amount" content={String(discountedPrice)} />
+        <meta property="og:price:amount" content={String(effectivePrice)} />
         <meta property="og:price:currency" content="PKR" />
 
         {/* Twitter Card Meta Tags */}
@@ -202,19 +237,19 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
         </script>
       </Helmet>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Toast Alert */}
-        {addedToast && (
-          <div className="fixed bottom-6 right-6 z-50 bg-neutral-900 text-white py-3.5 px-5 rounded-2xl shadow-2xl flex items-center space-x-3 border border-[#FF9F61]/50 transition-all">
-            <Check className="w-5 h-5 text-[#FF9F61]" />
-            <span className="text-xs sm:text-sm font-semibold">
-              Added {quantity} × "{product.name}" to cart!
-            </span>
-          </div>
-        )}
+      {/* Toast Alert */}
+      {addedToast && (
+        <div className="fixed bottom-24 sm:bottom-6 right-4 sm:right-6 z-50 bg-neutral-900 text-white py-3.5 px-5 rounded-2xl shadow-2xl flex items-center space-x-3 border border-[#FF9F61]/50 transition-all animate-bounce">
+          <Check className="w-5 h-5 text-[#FF9F61]" />
+          <span className="text-xs sm:text-sm font-semibold">
+            Added {quantity} × "{product.name}" to your cart!
+          </span>
+        </div>
+      )}
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
         {/* Breadcrumb Navigation */}
-        <nav className="flex items-center space-x-2 text-xs text-neutral-500 mb-6 flex-wrap">
+        <nav className="flex items-center space-x-2 text-xs text-neutral-500 mb-5 flex-wrap">
           <Link to="/" className="hover:text-neutral-900 transition-colors">Home</Link>
           <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
           <Link to="/shop" className="hover:text-neutral-900 transition-colors">Shop</Link>
@@ -223,21 +258,21 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             {product.category.replace(/-/g, ' ')}
           </Link>
           <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-          <span className="font-semibold text-neutral-900 truncate max-w-[200px] sm:max-w-none">{product.name}</span>
+          <span className="font-semibold text-neutral-900 truncate max-w-[180px] sm:max-w-none">{product.name}</span>
         </nav>
 
         {/* Product Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Gallery (Left Col: 7 cols) */}
-          <div className="lg:col-span-7 flex flex-col-reverse md:flex-row gap-4">
+          <div className="lg:col-span-7 flex flex-col-reverse md:flex-row gap-3 sm:gap-4">
             {/* Thumbnail Strip */}
             {product.images.length > 1 && (
-              <div className="flex md:flex-col space-x-3 md:space-x-0 md:space-y-3 overflow-x-auto md:overflow-y-auto shrink-0 pb-2 md:pb-0">
+              <div className="flex md:flex-col space-x-2.5 md:space-x-0 md:space-y-3 overflow-x-auto md:overflow-y-auto shrink-0 pb-1 md:pb-0">
                 {product.images.map((img, idx) => (
                   <button
                     key={idx}
                     onClick={() => setActiveImgIndex(idx)}
-                    className={`w-20 h-20 overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
+                    className={`w-18 h-18 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
                       activeImgIndex === idx
                         ? 'border-[#FF9F61] shadow-xs'
                         : 'border-neutral-200 opacity-70 hover:opacity-100'
@@ -255,109 +290,163 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             )}
 
             {/* Main Stage Image with hover zoom */}
-            <div className="flex-1 aspect-square bg-neutral-50 overflow-hidden border border-neutral-200 relative group cursor-crosshair">
+            <div className="flex-1 aspect-square bg-neutral-50 rounded-2xl overflow-hidden border border-neutral-200 relative group cursor-crosshair">
               <img
                 src={product.images[activeImgIndex] || product.images[0]}
                 alt={product.name}
-                className="w-full h-full object-cover object-center transform group-hover:scale-125 transition-transform duration-700 ease-out"
+                className="w-full h-full object-cover object-center transform group-hover:scale-110 transition-transform duration-500 ease-out"
                 referrerPolicy="no-referrer"
               />
 
-              <div className="absolute top-4 left-4 z-10 flex flex-col gap-1.5">
-                <span className="bg-[#01411C] text-white text-xs font-extrabold uppercase tracking-wider px-3.5 py-1.5 shadow-md border border-emerald-500/40 flex items-center space-x-1.5">
-                  <span>🇵🇰</span>
-                  <span>14% OFF AZADI SALE</span>
-                </span>
+              {/* Discount / Sale Badges */}
+              <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
+                {hasGenuineDiscount && (
+                  <span className="bg-rose-600 text-white text-[10px] sm:text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-md shadow-md">
+                    SAVE {discountPercent}%
+                  </span>
+                )}
+                {product.isNew && (
+                  <span className="bg-neutral-900 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md shadow-xs">
+                    New Arrival
+                  </span>
+                )}
               </div>
 
+              {/* Wishlist Button */}
               <button
                 onClick={() => onToggleWishlist(product)}
-                className={`absolute top-4 right-4 p-3 backdrop-blur-md border border-neutral-200 transition-colors cursor-pointer ${
+                className={`absolute top-3 right-3 p-3 rounded-full backdrop-blur-md border border-neutral-200 transition-colors cursor-pointer shadow-md ${
                   isWishlisted
-                    ? 'bg-rose-600 text-white'
-                    : 'bg-white/90 text-neutral-800 hover:bg-neutral-900 hover:text-white'
+                    ? 'bg-rose-600 text-white border-rose-600'
+                    : 'bg-white/95 text-neutral-800 hover:bg-neutral-900 hover:text-white'
                 }`}
+                aria-label="Toggle Wishlist"
               >
-                <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
+                <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${isWishlisted ? 'fill-current' : ''}`} />
               </button>
             </div>
           </div>
 
-          {/* Details (Right Col: 5 cols) */}
-          <div className="lg:col-span-5 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center space-x-2 text-[#FF9F61] text-xs font-semibold mb-2">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`w-4 h-4 ${
-                        i < Math.floor(product.rating)
-                          ? 'fill-current text-[#FF9F61]'
-                          : 'text-neutral-200'
-                      }`}
-                    />
-                  ))}
-                </div>
-                <span className="text-neutral-800 ml-1">{product.rating.toFixed(1)}</span>
-                <span className="text-neutral-400">({product.reviewCount} reviews)</span>
+          {/* Product Information (Right Col: 5 cols) */}
+          <div className="lg:col-span-5 flex flex-col space-y-5">
+            {/* 1. Rating & Social Proof */}
+            <div
+              onClick={scrollToReviews}
+              className="inline-flex items-center space-x-2 text-xs cursor-pointer group"
+            >
+              <div className="flex text-[#FF9F61]">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`w-4 h-4 ${
+                      i < Math.floor(product.rating)
+                        ? 'fill-current text-[#FF9F61]'
+                        : 'text-neutral-200'
+                    }`}
+                  />
+                ))}
               </div>
+              <span className="font-bold text-neutral-900 group-hover:text-emerald-800 transition-colors">
+                {product.rating.toFixed(1)}
+              </span>
+              <span className="text-neutral-500 underline group-hover:text-neutral-800">
+                ({product.reviewCount} verified reviews)
+              </span>
+              <span className="bg-emerald-50 text-emerald-800 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-200 hidden sm:inline-block">
+                ✓ Verified
+              </span>
+            </div>
 
-              <h1 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-neutral-900 tracking-tight leading-tight">
+            {/* 2. Product Name */}
+            <div>
+              <h1 className="font-serif-luxury text-2xl sm:text-3xl lg:text-4xl font-bold text-neutral-900 tracking-tight leading-tight">
                 {product.name}
               </h1>
+              <p className="text-xs text-neutral-500 uppercase tracking-widest mt-1 font-medium">
+                {product.category.replace(/-/g, ' ')} • {product.material}
+              </p>
+            </div>
 
-              {/* Pricing */}
-              <div className="flex flex-wrap items-baseline gap-3 mt-4">
-                <span className="text-3xl font-bold text-neutral-900">
-                  Rs. {getDiscountedPrice(product.price).toLocaleString()}
-                </span>
-                <span className="text-lg text-neutral-400 line-through font-medium">
+            {/* 3. Pricing & Genuine Savings Breakdown */}
+            <div className="p-4 bg-neutral-50 rounded-2xl border border-neutral-200/80">
+              <div className="flex flex-wrap items-baseline gap-2.5 sm:gap-3">
+                <span className="text-3xl sm:text-4xl font-bold text-neutral-900 tracking-tight">
                   Rs. {product.price.toLocaleString()}
                 </span>
-                {product.priceSubtitle && (
-                  <span className="text-base font-normal text-neutral-500">
-                    {product.priceSubtitle}
-                  </span>
+
+                {hasGenuineDiscount && (
+                  <>
+                    <span className="text-base sm:text-lg text-neutral-400 line-through font-medium">
+                      Rs. {product.compareAtPrice!.toLocaleString()}
+                    </span>
+                    <span className="text-xs font-bold text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md border border-emerald-200">
+                      SAVE Rs. {savingsAmount.toLocaleString()} ({discountPercent}% OFF)
+                    </span>
+                  </>
                 )}
-                <span className="text-xs font-bold text-white bg-[#01411C] px-3 py-1 rounded-md border border-emerald-600/40">
-                  14% OFF (AZADI SALE)
+              </div>
+
+              {product.priceSubtitle && (
+                <p className="text-xs font-medium text-neutral-500 mt-1">
+                  {product.priceSubtitle}
+                </p>
+              )}
+
+              <div className="mt-2.5 pt-2.5 border-t border-neutral-200/60 flex items-center justify-between text-xs text-neutral-600">
+                <span className="flex items-center space-x-1 font-medium text-emerald-700">
+                  <Check className="w-3.5 h-3.5 shrink-0" />
+                  <span>In Stock & Ready to Dispatch</span>
                 </span>
+                <span className="text-neutral-500">Delivery: Rs. 250</span>
               </div>
+            </div>
 
-              <p className="text-sm text-neutral-600 font-light mt-4 leading-relaxed">
-                {product.description}
-              </p>
+            {/* 4. Why You'll Love It (Short & Scannable Selling Points) */}
+            <div className="p-4 bg-white rounded-2xl border border-neutral-200 space-y-2.5">
+              <h3 className="text-xs font-bold text-neutral-900 uppercase tracking-wider flex items-center space-x-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#FF9F61]" />
+                <span>Why You'll Love It</span>
+              </h3>
+              <ul className="space-y-1.5 text-xs text-neutral-700 font-medium">
+                <li className="flex items-start space-x-2">
+                  <Check className="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0" />
+                  <span>Premium handcrafted finish with tarnish-resistant coating</span>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <Check className="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0" />
+                  <span>High-grade sparkling zircon & crystal embellishments</span>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <Check className="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0" />
+                  <span>Lightweight and hypoallergenic — comfortable for everyday & festive wear</span>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <Check className="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0" />
+                  <span>Arrives in signature Sparklez Siege luxury packaging — perfect for gifting</span>
+                </li>
+              </ul>
+            </div>
 
-              {/* Material Badge */}
-              <div className="mt-6 p-3.5 bg-[#FF9F61]/10 rounded-2xl border border-[#FF9F61]/25 flex items-center space-x-3">
-                <Gem className="w-5 h-5 text-[#FF9F61] shrink-0" />
-                <div className="text-xs">
-                  <span className="font-semibold text-neutral-900 block">Crafted Material</span>
-                  <span className="text-neutral-600">{product.material}</span>
-                </div>
-              </div>
-
+            {/* 5. Variants (Sizes & Colors) & Quantity */}
+            <div className="space-y-4 pt-1">
               {/* Sizes if applicable */}
-              {product.sizes && (
-                <div className="mt-6">
+              {product.sizes && product.sizes.length > 0 && (
+                <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-bold text-neutral-900 uppercase tracking-wider">
-                      Size:
-                    </span>
-                    <span className="text-xs text-neutral-500 underline cursor-pointer">
-                      Size Guide
+                      Select Size: <span className="font-semibold text-[#FF9F61]">{selectedSize}</span>
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-2.5">
+                  <div className="flex flex-wrap gap-2">
                     {product.sizes.map((sz) => (
                       <button
                         key={sz}
+                        type="button"
                         onClick={() => setSelectedSize(sz)}
-                        className={`text-xs px-4 py-2.5 rounded-xl font-semibold border transition-all cursor-pointer ${
+                        className={`text-xs px-4 py-2.5 rounded-xl font-bold border transition-all cursor-pointer ${
                           selectedSize === sz
-                            ? 'border-emerald-800 bg-emerald-900/10 text-neutral-900 shadow-xs'
-                            : 'border-neutral-200 text-neutral-700 hover:border-neutral-300'
+                            ? 'border-neutral-900 bg-neutral-900 text-white shadow-xs'
+                            : 'border-neutral-200 text-neutral-800 bg-white hover:border-neutral-400'
                         }`}
                       >
                         {sz}
@@ -368,26 +457,27 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               )}
 
               {/* Colors if applicable */}
-              {product.colors && (
-                <div className="mt-6">
+              {product.colors && product.colors.length > 0 && (
+                <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-bold text-neutral-900 uppercase tracking-wider">
-                      Color Option: <span className="font-semibold text-emerald-800">{selectedColor}</span>
+                      Color: <span className="font-semibold text-neutral-900">{selectedColor}</span>
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-2.5">
+                  <div className="flex flex-wrap gap-2">
                     {product.colors.map((color) => (
                       <button
                         key={color}
+                        type="button"
                         onClick={() => handleSelectColor(color)}
-                        className={`text-xs px-5 py-2.5 rounded-xl font-bold border transition-all cursor-pointer flex items-center space-x-2 ${
+                        className={`text-xs px-4 py-2.5 rounded-xl font-bold border transition-all cursor-pointer flex items-center space-x-2 ${
                           selectedColor === color
-                            ? 'border-emerald-800 bg-emerald-900 text-white shadow-md'
-                            : 'border-neutral-200 bg-white text-neutral-800 hover:border-emerald-700'
+                            ? 'border-neutral-900 bg-neutral-900 text-white shadow-xs'
+                            : 'border-neutral-200 bg-white text-neutral-800 hover:border-neutral-400'
                         }`}
                       >
                         <span
-                          className={`w-3.5 h-3.5 rounded-full border border-black/20 ${
+                          className={`w-3 h-3 rounded-full border border-black/20 ${
                             color.toLowerCase().includes('red') || color.toLowerCase().includes('ruby')
                               ? 'bg-rose-600'
                               : color.toLowerCase().includes('green') || color.toLowerCase().includes('emerald')
@@ -415,88 +505,148 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               )}
 
               {/* Quantity Selector */}
-              <div className="mt-6 flex items-center space-x-4">
+              <div className="flex items-center space-x-4">
                 <span className="text-xs font-bold text-neutral-900 uppercase tracking-wider">
                   Quantity:
                 </span>
-                <div className="flex items-center border border-neutral-200 rounded-xl overflow-hidden bg-neutral-50">
+                <div className="flex items-center border border-neutral-300 rounded-xl overflow-hidden bg-white shadow-2xs">
                   <button
+                    type="button"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-3.5 py-2 text-neutral-600 hover:bg-neutral-200 text-sm font-bold cursor-pointer"
+                    className="px-3.5 py-2 text-neutral-700 hover:bg-neutral-100 text-sm font-bold cursor-pointer"
+                    aria-label="Decrease quantity"
                   >
                     -
                   </button>
-                  <span className="px-4 py-2 text-sm font-bold text-neutral-900">
+                  <span className="px-4 py-2 text-sm font-bold text-neutral-900 min-w-[2.5rem] text-center">
                     {quantity}
                   </span>
                   <button
+                    type="button"
                     onClick={() => setQuantity(quantity + 1)}
-                    className="px-3.5 py-2 text-neutral-600 hover:bg-neutral-200 text-sm font-bold cursor-pointer"
+                    className="px-3.5 py-2 text-neutral-700 hover:bg-neutral-100 text-sm font-bold cursor-pointer"
+                    aria-label="Increase quantity"
                   >
                     +
                   </button>
                 </div>
               </div>
+            </div>
 
-              {/* Action Buttons: Add to Cart & Buy Now */}
-              <div className="mt-8 space-y-3">
-                <div className="flex items-center space-x-3">
-                  <button
-                    onClick={handleAddToCart}
-                    className="flex-1 bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-semibold text-base py-4 px-6 rounded-2xl transition-all cursor-pointer shadow-md flex items-center justify-center space-x-2"
-                  >
-                    <ShoppingBag className="w-5 h-5" />
-                    <span>Add to Cart</span>
-                  </button>
+            {/* 6. PRIMARY CALL TO ACTION (BUY NOW IS MAIN ACTION) */}
+            <div ref={mainBuyButtonRef} className="space-y-3 pt-2">
+              {/* BUY NOW BUTTON (DOMINANT & HIGH VISIBILITY) */}
+              <button
+                type="button"
+                onClick={handleBuyNow}
+                className="w-full bg-[#FF9F61] hover:bg-[#f08f4f] active:scale-[0.99] text-neutral-950 font-extrabold text-base sm:text-lg py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all cursor-pointer flex items-center justify-center space-x-2 border border-[#FF9F61]"
+              >
+                <Zap className="w-5 h-5 fill-current" />
+                <span>BUY NOW — Rs. {currentTotalPrice.toLocaleString()}</span>
+              </button>
 
-                  <button
-                    onClick={() => onToggleWishlist(product)}
-                    className={`p-4 rounded-2xl border transition-colors cursor-pointer ${
-                      isWishlisted
-                        ? 'bg-rose-50 border-rose-200 text-rose-600'
-                        : 'border-neutral-200 text-neutral-600 hover:text-rose-600 hover:border-rose-200'
-                    }`}
-                  >
-                    <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
-                  </button>
-                </div>
+              {/* SECONDARY ROW: Add to Cart + Wishlist */}
+              <div className="flex items-center space-x-3">
+                <button
+                  type="button"
+                  onClick={handleAddToCart}
+                  className="flex-1 bg-white hover:bg-neutral-900 text-neutral-900 hover:text-white border-2 border-neutral-900 font-bold text-sm sm:text-base py-3.5 px-5 rounded-2xl transition-all cursor-pointer flex items-center justify-center space-x-2"
+                >
+                  <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span>Add to Cart</span>
+                </button>
 
                 <button
-                  onClick={handleBuyNow}
-                  className="w-full bg-[#FF9F61] hover:bg-[#e88d51] text-neutral-950 font-bold text-base py-4 px-6 rounded-2xl transition-all cursor-pointer shadow-md"
+                  type="button"
+                  onClick={() => onToggleWishlist(product)}
+                  className={`p-3.5 rounded-2xl border-2 transition-colors cursor-pointer ${
+                    isWishlisted
+                      ? 'bg-rose-50 border-rose-500 text-rose-600'
+                      : 'border-neutral-300 text-neutral-700 hover:text-rose-600 hover:border-rose-300 bg-white'
+                  }`}
+                  aria-label="Add to wishlist"
                 >
-                  Buy Now
+                  <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current text-rose-600' : ''}`} />
                 </button>
               </div>
+            </div>
 
-              {/* Value Badges */}
-              <div className="mt-8 grid grid-cols-3 gap-3 pt-6 border-t border-neutral-100 text-center">
-                <div className="flex flex-col items-center p-3 bg-neutral-50 rounded-xl">
-                  <Truck className="w-5 h-5 text-[#FF9F61] mb-1" />
-                  <span className="text-[11px] font-semibold text-neutral-800">Deliver All Over Pakistan (Rs. 250)</span>
+            {/* 7. SHORT TRUST SIGNALS & DOUBT REMOVAL (Immediately below Buy Now) */}
+            <div className="p-4 bg-emerald-50/70 rounded-2xl border border-emerald-200/80 space-y-2.5">
+              <div className="grid grid-cols-2 gap-3 text-xs text-neutral-800">
+                <div className="flex items-center space-x-2">
+                  <Truck className="w-4 h-4 text-emerald-700 shrink-0" />
+                  <div>
+                    <span className="font-bold block text-neutral-900">Nationwide Delivery</span>
+                    <span className="text-[11px] text-neutral-600">3-5 business days</span>
+                  </div>
                 </div>
-                <div className="flex flex-col items-center p-3 bg-neutral-50 rounded-xl">
-                  <RotateCcw className="w-5 h-5 text-[#FF9F61] mb-1" />
-                  <span className="text-[11px] font-semibold text-neutral-800">7-Day Exchange & Returns</span>
+
+                <div className="flex items-center space-x-2">
+                  <span className="text-base shrink-0">💵</span>
+                  <div>
+                    <span className="font-bold block text-neutral-900">Cash on Delivery</span>
+                    <span className="text-[11px] text-neutral-600">Pay at your doorstep</span>
+                  </div>
                 </div>
-                <div className="flex flex-col items-center p-3 bg-neutral-50 rounded-xl">
-                  <ShieldCheck className="w-5 h-5 text-[#FF9F61] mb-1" />
-                  <span className="text-[11px] font-semibold text-neutral-800">100% Handcrafted</span>
+
+                <div className="flex items-center space-x-2">
+                  <RotateCcw className="w-4 h-4 text-emerald-700 shrink-0" />
+                  <div>
+                    <span className="font-bold block text-neutral-900">7-Day Easy Exchange</span>
+                    <span className="text-[11px] text-neutral-600">Hassle-free guarantee</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
+                  <div>
+                    <span className="font-bold block text-neutral-900">100% Genuine</span>
+                    <span className="text-[11px] text-neutral-600">Premium quality piece</span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Expandable Accordions for Delivery, Returns, Specifications */}
-            <div className="mt-10 border-t border-neutral-100 pt-4 space-y-3">
-              {/* Delivery info */}
-              <div className="border border-neutral-200 rounded-2xl overflow-hidden">
+            {/* 8. EXPANDABLE ACCORDIONS (Reduced information overload) */}
+            <div className="border-t border-neutral-200 pt-4 space-y-2.5">
+              {/* Product Details */}
+              <div className="border border-neutral-200 rounded-xl overflow-hidden">
                 <button
+                  type="button"
+                  onClick={() => setOpenAccordion(openAccordion === 'details' ? null : 'details')}
+                  className="w-full p-3.5 text-left font-bold text-xs sm:text-sm text-neutral-900 flex items-center justify-between bg-neutral-50/70 hover:bg-neutral-100 transition-colors"
+                >
+                  <span className="flex items-center space-x-2">
+                    <Gem className="w-4 h-4 text-[#FF9F61]" />
+                    <span>Product Details & Description</span>
+                  </span>
+                  <ChevronDown
+                    className={`w-4 h-4 text-neutral-500 transition-transform ${
+                      openAccordion === 'details' ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+                {openAccordion === 'details' && (
+                  <div className="p-4 text-xs text-neutral-700 bg-white leading-relaxed border-t border-neutral-100 space-y-2">
+                    <p>{product.description}</p>
+                    <p className="font-semibold text-neutral-800">
+                      Material: <span className="font-normal text-neutral-600">{product.material}</span>
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Delivery & Cash on Delivery */}
+              <div className="border border-neutral-200 rounded-xl overflow-hidden">
+                <button
+                  type="button"
                   onClick={() => setOpenAccordion(openAccordion === 'delivery' ? null : 'delivery')}
-                  className="w-full p-4 text-left font-semibold text-sm text-neutral-900 flex items-center justify-between bg-neutral-50/50 hover:bg-neutral-50 transition-colors"
+                  className="w-full p-3.5 text-left font-bold text-xs sm:text-sm text-neutral-900 flex items-center justify-between bg-neutral-50/70 hover:bg-neutral-100 transition-colors"
                 >
                   <span className="flex items-center space-x-2">
                     <Truck className="w-4 h-4 text-[#FF9F61]" />
-                    <span>Delivery Information</span>
+                    <span>Delivery & Cash on Delivery Info</span>
                   </span>
                   <ChevronDown
                     className={`w-4 h-4 text-neutral-500 transition-transform ${
@@ -505,23 +655,24 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   />
                 </button>
                 {openAccordion === 'delivery' && (
-                  <div className="p-4 text-xs text-neutral-600 bg-white space-y-2 border-t border-neutral-100">
-                    <p>• We deliver all over Pakistan with standard courier services.</p>
-                    <p>• Fixed Delivery Charges: <strong>Rs. 250</strong> on all orders.</p>
-                    <p>• Estimated Delivery Time: 3 to 5 business days with tracking.</p>
+                  <div className="p-4 text-xs text-neutral-600 bg-white space-y-1.5 border-t border-neutral-100">
+                    <p>• <strong>Cash on Delivery (COD)</strong> is available for all cities and towns across Pakistan.</p>
+                    <p>• Standard Flat Delivery Fee: <strong>Rs. 250</strong> per order.</p>
+                    <p>• Orders are dispatched within 24 hours and delivered in 3 to 5 business days with active SMS/WhatsApp tracking.</p>
                   </div>
                 )}
               </div>
 
-              {/* Return & Exchange Policy */}
-              <div className="border border-neutral-200 rounded-2xl overflow-hidden">
+              {/* 7-Day Exchange Policy */}
+              <div className="border border-neutral-200 rounded-xl overflow-hidden">
                 <button
+                  type="button"
                   onClick={() => setOpenAccordion(openAccordion === 'returns' ? null : 'returns')}
-                  className="w-full p-4 text-left font-semibold text-sm text-neutral-900 flex items-center justify-between bg-neutral-50/50 hover:bg-neutral-50 transition-colors"
+                  className="w-full p-3.5 text-left font-bold text-xs sm:text-sm text-neutral-900 flex items-center justify-between bg-neutral-50/70 hover:bg-neutral-100 transition-colors"
                 >
                   <span className="flex items-center space-x-2">
                     <RotateCcw className="w-4 h-4 text-[#FF9F61]" />
-                    <span>Exchange & Return Policy</span>
+                    <span>7-Day Easy Exchange Policy</span>
                   </span>
                   <ChevronDown
                     className={`w-4 h-4 text-neutral-500 transition-transform ${
@@ -530,42 +681,71 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   />
                 </button>
                 {openAccordion === 'returns' && (
-                  <div className="p-4 text-xs text-neutral-600 bg-white space-y-2 border-t border-neutral-100">
-                    <p>• <strong>Damaged/Defective Items:</strong> Free exchange within 7 days of delivery.</p>
-                    <p>• <strong>Standard Returns:</strong> Items can be returned within 7 days, but the customer must pay the return delivery charges.</p>
-                    <p>• All returned items must be unworn and in original luxury packaging with invoice.</p>
+                  <div className="p-4 text-xs text-neutral-600 bg-white space-y-1.5 border-t border-neutral-100">
+                    <p>• <strong>7-Day Exchange:</strong> If you receive a damaged piece or need a size adjustment, contact us within 7 days of receiving your parcel.</p>
+                    <p>• Items must be unworn and in original luxury Sparklez Siege packaging.</p>
+                    <p>• Simply message us on WhatsApp with your order number for immediate assistance.</p>
                   </div>
                 )}
               </div>
 
               {/* Specifications */}
-              <div className="border border-neutral-200 rounded-2xl overflow-hidden">
+              {product.specifications && product.specifications.length > 0 && (
+                <div className="border border-neutral-200 rounded-xl overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setOpenAccordion(openAccordion === 'specs' ? null : 'specs')}
+                    className="w-full p-3.5 text-left font-bold text-xs sm:text-sm text-neutral-900 flex items-center justify-between bg-neutral-50/70 hover:bg-neutral-100 transition-colors"
+                  >
+                    <span className="flex items-center space-x-2">
+                      <ShieldCheck className="w-4 h-4 text-[#FF9F61]" />
+                      <span>Specifications & Dimensions</span>
+                    </span>
+                    <ChevronDown
+                      className={`w-4 h-4 text-neutral-500 transition-transform ${
+                        openAccordion === 'specs' ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+                  {openAccordion === 'specs' && (
+                    <div className="p-4 text-xs text-neutral-600 bg-white border-t border-neutral-100">
+                      <table className="w-full text-left border-collapse">
+                        <tbody>
+                          {product.specifications.map((spec, i) => (
+                            <tr key={i} className="border-b border-neutral-100 last:border-0 py-1.5">
+                              <td className="py-2 font-semibold text-neutral-800 w-1/2">{spec.key}</td>
+                              <td className="py-2 text-neutral-600 w-1/2">{spec.value}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Care Instructions */}
+              <div className="border border-neutral-200 rounded-xl overflow-hidden">
                 <button
-                  onClick={() => setOpenAccordion(openAccordion === 'specs' ? null : 'specs')}
-                  className="w-full p-4 text-left font-semibold text-sm text-neutral-900 flex items-center justify-between bg-neutral-50/50 hover:bg-neutral-50 transition-colors"
+                  type="button"
+                  onClick={() => setOpenAccordion(openAccordion === 'care' ? null : 'care')}
+                  className="w-full p-3.5 text-left font-bold text-xs sm:text-sm text-neutral-900 flex items-center justify-between bg-neutral-50/70 hover:bg-neutral-100 transition-colors"
                 >
                   <span className="flex items-center space-x-2">
-                    <ShieldCheck className="w-4 h-4 text-[#FF9F61]" />
-                    <span>Specifications & Certification</span>
+                    <Sparkles className="w-4 h-4 text-[#FF9F61]" />
+                    <span>Jewellery Care Guide</span>
                   </span>
                   <ChevronDown
                     className={`w-4 h-4 text-neutral-500 transition-transform ${
-                      openAccordion === 'specs' ? 'rotate-180' : ''
+                      openAccordion === 'care' ? 'rotate-180' : ''
                     }`}
                   />
                 </button>
-                {openAccordion === 'specs' && (
-                  <div className="p-4 text-xs text-neutral-600 bg-white border-t border-neutral-100">
-                    <table className="w-full text-left border-collapse">
-                      <tbody>
-                        {product.specifications.map((spec, i) => (
-                          <tr key={i} className="border-b border-neutral-100 last:border-0 py-1.5">
-                            <td className="py-2 font-semibold text-neutral-800 w-1/2">{spec.key}</td>
-                            <td className="py-2 text-neutral-600 w-1/2">{spec.value}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                {openAccordion === 'care' && (
+                  <div className="p-4 text-xs text-neutral-600 bg-white space-y-1.5 border-t border-neutral-100">
+                    <p>• Avoid direct contact with perfume, hairspray, lotions, and harsh sanitizers.</p>
+                    <p>• Store in the provided airtight box or pouch when not in use.</p>
+                    <p>• Wipe gently with a soft micro-fiber cloth after each wear to maintain brilliance.</p>
                   </div>
                 )}
               </div>
@@ -574,22 +754,31 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
         </div>
 
         {/* Customer Reviews Section */}
-        <div className="mt-20 pt-12 border-t border-neutral-200">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
+        <div id="reviews-section" className="mt-16 sm:mt-24 pt-12 border-t border-neutral-200">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
             <div>
               <span className="text-xs font-semibold uppercase tracking-widest text-[#FF9F61] block mb-1">
                 Verified Opinions
               </span>
-              <h2 className="font-serif-luxury text-3xl font-bold text-neutral-900">
-                Customer Reviews
-              </h2>
+              <div className="flex items-center space-x-3">
+                <h2 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-neutral-900">
+                  Customer Reviews
+                </h2>
+                <span className="bg-neutral-100 text-neutral-800 text-xs font-bold px-2.5 py-1 rounded-full">
+                  ★ {product.rating.toFixed(1)} / 5.0
+                </span>
+              </div>
+              <p className="text-xs text-neutral-500 mt-1">
+                Real feedback from verified buyers across Pakistan.
+              </p>
             </div>
 
             <button
+              type="button"
               onClick={() => setShowReviewForm(!showReviewForm)}
-              className="mt-4 sm:mt-0 bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-semibold text-xs py-2.5 px-5 rounded-xl transition-colors cursor-pointer"
+              className="self-start sm:self-auto bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold text-xs py-2.5 px-5 rounded-xl transition-colors cursor-pointer"
             >
-              {showReviewForm ? 'Cancel Review' : 'Write a Review'}
+              {showReviewForm ? 'Cancel' : 'Write a Review'}
             </button>
           </div>
 
@@ -598,7 +787,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             <form onSubmit={handleAddReview} className="bg-neutral-50 p-6 rounded-3xl border border-neutral-200 mb-8 max-w-2xl space-y-4">
               <h3 className="text-sm font-bold text-neutral-900">Share Your Experience</h3>
               <div>
-                <label className="block text-xs font-medium text-neutral-700 mb-1">Rating</label>
+                <label className="block text-xs font-medium text-neutral-700 mb-1">Your Rating</label>
                 <div className="flex space-x-1 text-[#FF9F61]">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
@@ -606,6 +795,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                       type="button"
                       onClick={() => setNewRating(star)}
                       className="p-1 cursor-pointer focus:outline-hidden"
+                      aria-label={`${star} star rating`}
                     >
                       <Star className={`w-5 h-5 ${star <= newRating ? 'fill-current' : 'text-neutral-300'}`} />
                     </button>
@@ -626,7 +816,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-neutral-700 mb-1">Review Title</label>
+                  <label className="block text-xs font-medium text-neutral-700 mb-1">Review Headline</label>
                   <input
                     type="text"
                     value={newTitle}
@@ -638,11 +828,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-neutral-700 mb-1">Comment</label>
+                <label className="block text-xs font-medium text-neutral-700 mb-1">Your Review</label>
                 <textarea
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Write details about the shine, weight, packaging, or fit..."
+                  placeholder="Share details about the sparkle, finishing, packaging, or delivery..."
                   className="w-full py-2 px-3 bg-white border border-neutral-200 rounded-xl text-xs h-24"
                   required
                 />
@@ -658,11 +848,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
           )}
 
           {/* Reviews List */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {reviewsList.map((rev) => (
-              <div key={rev.id} className="p-6 bg-neutral-50 rounded-2xl border border-neutral-100 flex flex-col justify-between">
+              <div key={rev.id} className="p-5 bg-neutral-50 rounded-2xl border border-neutral-100 flex flex-col justify-between space-y-3">
                 <div>
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center justify-between mb-1.5">
                     <div className="flex text-[#FF9F61]">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className={`w-3.5 h-3.5 ${i < rev.rating ? 'fill-current' : 'text-neutral-200'}`} />
@@ -671,15 +861,16 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                     <span className="text-[10px] text-neutral-400">{rev.date}</span>
                   </div>
 
-                  <h4 className="font-serif-luxury text-base font-bold text-neutral-900 mb-1">{rev.title}</h4>
+                  <h4 className="font-serif-luxury text-sm font-bold text-neutral-900 mb-1">{rev.title}</h4>
                   <p className="text-xs text-neutral-600 leading-relaxed">{rev.comment}</p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-neutral-200/60 flex items-center justify-between text-xs">
-                  <span className="font-semibold text-neutral-800">{rev.author}</span>
+                <div className="pt-3 border-t border-neutral-200/60 flex items-center justify-between text-xs">
+                  <span className="font-bold text-neutral-800">{rev.author}</span>
                   {rev.verified && (
-                    <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-md">
-                      Verified Buyer
+                    <span className="text-[10px] text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded-md flex items-center space-x-1">
+                      <Check className="w-3 h-3" />
+                      <span>Verified Buyer</span>
                     </span>
                   )}
                 </div>
@@ -689,12 +880,12 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
         </div>
 
         {/* Related Products Section */}
-        <div className="mt-20 pt-12 border-t border-neutral-200">
+        <div className="mt-16 sm:mt-24 pt-12 border-t border-neutral-200">
           <span className="text-xs font-semibold uppercase tracking-widest text-[#FF9F61] block mb-2 text-center">
-            You May Also Admire
+            You May Also Like
           </span>
-          <h2 className="font-serif-luxury text-3xl font-bold text-neutral-900 text-center mb-10">
-            Related Jewellery
+          <h2 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-neutral-900 text-center mb-8">
+            Complete The Look
           </h2>
 
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
@@ -712,6 +903,38 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
           </div>
         </div>
       </div>
+
+      {/* 3. STICKY MOBILE BUY BUTTON BAR */}
+      {showStickyBar && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-neutral-200 px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] sm:hidden transition-all duration-300">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <span className="text-[10px] text-neutral-500 uppercase tracking-wider block font-medium">
+                Total Price
+              </span>
+              <div className="flex items-baseline space-x-1.5">
+                <span className="text-base font-extrabold text-neutral-900">
+                  Rs. {currentTotalPrice.toLocaleString()}
+                </span>
+                {hasGenuineDiscount && (
+                  <span className="text-[10px] text-neutral-400 line-through">
+                    Rs. {(product.compareAtPrice! * quantity).toLocaleString()}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleBuyNow}
+              className="flex-1 bg-[#FF9F61] active:bg-[#e88d51] text-neutral-950 font-extrabold text-sm py-3 px-4 rounded-xl shadow-md flex items-center justify-center space-x-1.5 cursor-pointer whitespace-nowrap"
+            >
+              <Zap className="w-4 h-4 fill-current" />
+              <span>BUY NOW</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

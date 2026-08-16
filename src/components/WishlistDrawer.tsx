@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { Heart, X, ShoppingBag, Trash2 } from 'lucide-react';
-import { getDiscountedPrice } from '../utils/price';
 
 interface WishlistDrawerProps {
   isOpen: boolean;
@@ -90,11 +89,13 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
                       <p className="text-xs text-neutral-500 capitalize mt-0.5">{prod.category}</p>
                       <div className="flex items-baseline space-x-2 mt-1">
                         <span className="text-sm font-bold text-neutral-900">
-                          Rs. {getDiscountedPrice(prod.price).toLocaleString()}
-                        </span>
-                        <span className="text-xs text-neutral-400 line-through">
                           Rs. {prod.price.toLocaleString()}
                         </span>
+                        {prod.compareAtPrice && prod.compareAtPrice > prod.price && (
+                          <span className="text-xs text-neutral-400 line-through">
+                            Rs. {prod.compareAtPrice.toLocaleString()}
+                          </span>
+                        )}
                       </div>
 
                       <div className="mt-3 flex items-center space-x-2">
