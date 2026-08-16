@@ -153,7 +153,9 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 ))}
               </div>
               <span className="font-bold text-neutral-900">{product.rating.toFixed(1)}</span>
-              <span className="text-neutral-400">({product.reviewCount} reviews)</span>
+              <span className="text-neutral-400">
+                ({product.reviewCount} {product.reviewCount === 1 ? 'review' : 'reviews'})
+              </span>
             </div>
 
             {/* Title */}

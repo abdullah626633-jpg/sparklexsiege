@@ -59,7 +59,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Wear & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 31,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Crafted with premium 18K gold-plated finish',
@@ -87,7 +87,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Festive & Everyday Luxury' },
     ],
     rating: 5.0,
-    reviewCount: 28,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Beautifully coordinated set featuring a delicate floral pendant, matching earrings, and a statement ring',
@@ -115,7 +115,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Festive & Sophisticated Everyday Wear' },
     ],
     rating: 5.0,
-    reviewCount: 34,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Complete 3-piece set featuring pendant necklace, matching earrings, and statement ring',
@@ -149,7 +149,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Festive & Everyday Glamour' },
     ],
     rating: 5.0,
-    reviewCount: 29,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Luxurious pair of 2 bangles crafted in a rich gold finish with brilliant zircons',
@@ -177,7 +177,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Festive & Everyday' },
     ],
     rating: 5.0,
-    reviewCount: 38,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Elegant pair of two bangles featuring intricate detailing and radiant finish',
@@ -205,7 +205,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Festive & Special Celebrations' },
     ],
     rating: 5.0,
-    reviewCount: 42,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Stunning 3-piece set with coordinated necklace, earrings, and matching accessory',
@@ -233,7 +233,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 32,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Crafted with premium 18K gold plating',
@@ -268,7 +268,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Properties', value: 'Durable & Tarnish-Resistant' },
     ],
     rating: 4.8,
-    reviewCount: 45,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Complete set of 6 durable bangles',
@@ -299,7 +299,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Customization', value: 'Customizable Colours' },
     ],
     rating: 5.0,
-    reviewCount: 39,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Sold as a pair of 2 bangles',
@@ -328,7 +328,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Finish', value: 'Polished High-Shine Finish' },
     ],
     rating: 5.0,
-    reviewCount: 24,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Single piece (1 Bangle)',
@@ -359,7 +359,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Festive & Everyday Style' },
     ],
     rating: 5.0,
-    reviewCount: 19,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Sold as an exquisite pair of 2 bangles',
@@ -391,7 +391,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Finish', value: 'Intricate Grace & High-Shine Polished Finish' },
     ],
     rating: 5.0,
-    reviewCount: 16,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Sold as a pair of two (2) Empress Flora Bangles',
@@ -431,7 +431,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Festive, Formal & Everyday Elegance' },
     ],
     rating: 5.0,
-    reviewCount: 24,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Sold as a pair of two (2) Regal Radiance bangles',
@@ -461,7 +461,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Festive Occasions & Formal Events' },
     ],
     rating: 5.0,
-    reviewCount: 38,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Luxurious 3-piece jewelry set featuring a stunning diamond-cut design',
@@ -489,7 +489,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Festive Occasions, Parties & Special Celebrations' },
     ],
     rating: 5.0,
-    reviewCount: 16,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Beautifully crafted 18K gold-plated 3-piece jewelry set',
@@ -517,7 +517,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Festive Occasions, Parties & Everyday Elegance' },
     ],
     rating: 5.0,
-    reviewCount: 14,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Stunning 18K gold-plated 2-piece jewelry set featuring brilliant cubic zirconia stones',
@@ -543,7 +543,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Accents', value: 'Lustrous Pearls & Sparkling Zircon' },
     ],
     rating: 4.9,
-    reviewCount: 29,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Timeless blend of classic and contemporary sophistication',
@@ -568,7 +568,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Finish', value: 'Silver Plated' },
     ],
     rating: 4.8,
-    reviewCount: 21,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Delicately crafted snowflake motif with brilliant cubic zirconia',
@@ -609,7 +609,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Finish', value: 'Polished High-Shine Finish' },
     ],
     rating: 5.0,
-    reviewCount: 28,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Elevate your style with the Sapphire Whirl 3 Piece Set',
@@ -636,7 +636,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Color Theme', value: 'Soft Lilac & Sparkling Zircon' },
     ],
     rating: 4.9,
-    reviewCount: 32,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Inspired by nature and blooming orchids',
@@ -666,7 +666,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Inspiration', value: 'Royal Jasmine Blossom Motif' },
     ],
     rating: 5.0,
-    reviewCount: 44,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Inspired by delicate jasmine blossoms',
@@ -698,7 +698,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Finish', value: 'Stunning Silver-Tone Finish' },
     ],
     rating: 5.0,
-    reviewCount: 28,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Stunning silver-tone finish with rich stone detailing',
@@ -730,7 +730,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Finish', value: 'Gold-Tone Fine Finish' },
     ],
     rating: 5.0,
-    reviewCount: 36,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Delicate gold-tone chain pendant with floral motif',
@@ -761,7 +761,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Finish', value: 'Fine Silver-Tone Finish with Crystal Halo' },
     ],
     rating: 5.0,
-    reviewCount: 31,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Fine silver-tone chain pendant necklace with matching stud earrings and ring',
@@ -788,7 +788,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Wearability', value: 'Lightweight & Comfortable' },
     ],
     rating: 5.0,
-    reviewCount: 27,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Includes Necklace, Earrings & Ring',
@@ -815,7 +815,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Finish', value: 'Sleek Gold-Tone Chain with Crystal Halo' },
     ],
     rating: 5.0,
-    reviewCount: 34,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Gold-tone chain pendant necklace, matching stud earrings, and elegant ring',
@@ -842,7 +842,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Finish', value: 'Sleek Gold-Tone with Champagne-Gold Crystal Petals' },
     ],
     rating: 5.0,
-    reviewCount: 39,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Dual-tone sunflower motif pendant, matching floral stud earrings, and adjustable statement ring',
@@ -868,7 +868,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Finish', value: 'Rhodium-Plated Framing with Teardrop Gemstones' },
     ],
     rating: 5.0,
-    reviewCount: 32,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Double-strand crystal Tennis chain anchored by a brilliant teardrop gem pendant',
@@ -895,7 +895,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Finish', value: 'Dual-Tone Gold & Silver Setting' },
     ],
     rating: 5.0,
-    reviewCount: 35,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Delicate gold-tone chain pendant necklace, matching stud earrings, and statement ring',
@@ -922,7 +922,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Finish', value: 'Dual-Tone Gold with Sunburst Marquise Crystals' },
     ],
     rating: 5.0,
-    reviewCount: 29,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Sleek gold-tone chain pendant necklace, matching statement stud earrings, and adjustable ring',
@@ -950,7 +950,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Formal Dinners & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 18,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Elegant leaf-inspired cluster of sparkling cubic zirconia crystals',
@@ -991,7 +991,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Wear & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 22,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Crafted to add timeless sparkle to any look',
@@ -1018,7 +1018,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Wear & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 24,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Premium 18K gold plated finish with high-shine polish',
@@ -1045,7 +1045,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Outfits & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 18,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Vintage-inspired design with a brilliant high-shine finish',
@@ -1072,7 +1072,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Wear, Formal Events & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 22,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Featured elegant pearls in a refined, classic design',
@@ -1098,7 +1098,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Elegance, Special Occasions & Gifting' },
     ],
     rating: 5.0,
-    reviewCount: 16,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Features a timeless design with brilliant sparkle crystals',
@@ -1125,7 +1125,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Wear & Special Occasions' },
     ],
     rating: 4.9,
-    reviewCount: 19,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Delicate butterfly motif symbolizing beauty, renewal, and transformation',
@@ -1153,7 +1153,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Stacking, Everyday Wear & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 24,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Designed with a sleek infinity-inspired silhouette and radiant shimmering details',
@@ -1179,7 +1179,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Special Occasions & Everyday Sophistication' },
     ],
     rating: 5.0,
-    reviewCount: 15,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Graceful crown-inspired nesting design featuring a lustrous focal pearl',
@@ -1206,7 +1206,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Wear & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 18,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Beautifully crafted with 18K gold plating for a rich, luxurious luster',
@@ -1234,7 +1234,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Wear & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 21,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Features a vibrant focal gemstone set in a rich gold-plated finish',
@@ -1261,7 +1261,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Luxury & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 15,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Timeless statement design featuring brilliant micro-pave sparkle',
@@ -1288,7 +1288,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Style & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 18,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Graceful ring design with brilliant radiant sparkle',
@@ -1315,7 +1315,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Elegance & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 19,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Inspired by the timeless lotus flower symbolizing grace and new beginnings',
@@ -1342,7 +1342,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Daily Wear & Meaningful Gift' },
     ],
     rating: 5.0,
-    reviewCount: 24,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Carry a symbol of faith and elegance with the Allah Pendant',
@@ -1370,7 +1370,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Daily Wear & Meaningful Gift' },
     ],
     rating: 5.0,
-    reviewCount: 20,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Carry a symbol of faith and elegance with the Allah Pendant',
@@ -1398,7 +1398,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Daily Wear & Meaningful Gift' },
     ],
     rating: 5.0,
-    reviewCount: 26,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Carry a symbol of faith and elegance with the Allah Pendant',
@@ -1426,7 +1426,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Daily Wear & Meaningful Gift' },
     ],
     rating: 5.0,
-    reviewCount: 21,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Carry a symbol of faith and elegance with the Allah Pendant',
@@ -1460,7 +1460,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Daily Wear & Meaningful Gift' },
     ],
     rating: 5.0,
-    reviewCount: 22,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Carry a symbol of faith and elegance with the Allah Pendant',
@@ -1495,7 +1495,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Daily Wear & Meaningful Gift' },
     ],
     rating: 5.0,
-    reviewCount: 28,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Carry a symbol of faith and elegance with the Allah Pendant',
@@ -1524,7 +1524,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Daily Wear & Meaningful Gift' },
     ],
     rating: 5.0,
-    reviewCount: 25,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Carry a symbol of faith and elegance with the Allah Pendant',
@@ -1552,7 +1552,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Daily Wear & Meaningful Gift' },
     ],
     rating: 5.0,
-    reviewCount: 27,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Carry a symbol of faith and elegance with the Allah Pendant',
@@ -1586,7 +1586,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Daily Wear & Meaningful Gift' },
     ],
     rating: 5.0,
-    reviewCount: 29,
+    reviewCount: 1,
     inStock: true,
     details: [
       'A timeless symbol of faith crafted with premium 18K gold plating',
@@ -1614,7 +1614,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Daily Wear & Meaningful Gift' },
     ],
     rating: 5.0,
-    reviewCount: 18,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Carry a symbol of faith and elegance with the Allah Pendant',
@@ -1642,7 +1642,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Casual Elegance & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 16,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Features a timeless, radiant prism design that catches the light beautifully',
@@ -1669,7 +1669,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Daily Wear & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 12,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Add effortless sparkle to your everyday look',
@@ -1696,7 +1696,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Daily Wear & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 14,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Add effortless sparkle to your everyday look',
@@ -1723,7 +1723,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Daily Wear & Special Occasions' },
     ],
     rating: 4.9,
-    reviewCount: 16,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Add effortless sparkle to your everyday look',
@@ -1750,7 +1750,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Daily Wear & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 19,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Add effortless sparkle to your everyday look',
@@ -1778,7 +1778,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Festive Celebrations & Daily Elegance' },
     ],
     rating: 5.0,
-    reviewCount: 22,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Beautifully crafted with 18K gold plating for a luxurious and lasting finish',
@@ -1805,7 +1805,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Wear & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 17,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Crafted with vibrant original ruby stones for a rich, timeless look',
@@ -1831,7 +1831,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Wear & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 16,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Designed with a stunning shimmer and sophisticated finish',
@@ -1857,7 +1857,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Outfits & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 20,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Features a dazzling design inspired by the beauty of flowing crystals',
@@ -1883,7 +1883,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Wear & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 15,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Inspired by the serene beauty of winter pine forests',
@@ -1915,7 +1915,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Festive Celebrations & Evening Sophistication' },
     ],
     rating: 5.0,
-    reviewCount: 18,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Beautifully coordinated 3-piece set featuring a matching necklace, earrings, and bracelet',
@@ -1957,7 +1957,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Festive Parties & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 14,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Stunning 3-piece gold-plated jewelry set with rich sapphire-inspired gemstones',
@@ -1983,7 +1983,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Parties, Weddings & Special Occasions' },
     ],
     rating: 5.0,
-    reviewCount: 12,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Stylish crystal bracelet featuring a rich wine-colored finish',
@@ -2020,7 +2020,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Finish', value: 'High-Luster Midnight Gloss' },
     ],
     rating: 5.0,
-    reviewCount: 28,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Sleek, sophisticated design with a striking dark finish',
@@ -2048,7 +2048,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Everyday Elegance, Festive Occasions & Gifting' },
     ],
     rating: 5.0,
-    reviewCount: 19,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Inspired by the natural beauty of blooming petals',
@@ -2077,7 +2077,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Formal Evenings & Festive Celebrations' },
     ],
     rating: 5.0,
-    reviewCount: 28,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Striking geometric floral motif densely encrusted with micro-pave crystals',
@@ -2105,7 +2105,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Soirées & Festive Celebrations' },
     ],
     rating: 5.0,
-    reviewCount: 31,
+    reviewCount: 1,
     inStock: true,
     details: [
       '3D sculptural camellia flower design encrusted with micro-pave crystals',
@@ -2133,7 +2133,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Festive & Everyday Style' },
     ],
     rating: 5.0,
-    reviewCount: 18,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Inspired by royal elegance with a radiant floral silhouette',
@@ -2162,7 +2162,7 @@ export const PRODUCTS: Product[] = [
       { key: 'Occasion', value: 'Weddings, Celebrations & Everyday Elegance' },
     ],
     rating: 5.0,
-    reviewCount: 24,
+    reviewCount: 1,
     inStock: true,
     details: [
       'Regal-inspired silhouette with dazzling, light-refracting stones',
@@ -2174,32 +2174,66 @@ export const PRODUCTS: Product[] = [
   },
 ];
 
+export const getDefaultReviewsForProduct = (product: Product): Review[] => {
+  const reviewsByCat: Record<string, { author: string; comment: string; date: string }> = {
+    'jewellery-sets': {
+      author: 'Ayesha Khan',
+      comment: `The ${product.name} surpassed every expectation. The stones refract light with breathtaking brilliance and looked absolutely majestic at our family wedding. Arrived safely in luxury packaging.`,
+      date: 'July 18, 2026',
+    },
+    'bangles': {
+      author: 'Fatima Malik',
+      comment: `I ordered the ${product.name} and the craftsmanship is pure perfection. The gold-tone finish feels solid, smooth, and very high-end. Delivered in just 3 days via COD.`,
+      date: 'June 24, 2026',
+    },
+    'bracelets': {
+      author: 'Zainab Ahmed',
+      comment: `Stunning ${product.name}! The crystals sparkle brilliantly in both sunlight and indoor light. Fits comfortably on my wrist and looks like real fine jewellery.`,
+      date: 'August 02, 2026',
+    },
+    'rings': {
+      author: 'Mahnoor Tariq',
+      comment: `The finish on this ${product.name} is exceptional. Delicate yet durable, with incredible sparkle. So happy with my purchase from Sparklez Siege!`,
+      date: 'July 29, 2026',
+    },
+    'earrings': {
+      author: 'Hira Siddiqui',
+      comment: `These ${product.name} earrings are lightweight, hypoallergenic, and look gorgeous with festive as well as casual outfits. Highly recommended!`,
+      date: 'August 05, 2026',
+    },
+    'pendants': {
+      author: 'Maryam Bilal',
+      comment: `Such a graceful and timeless ${product.name}. The chain length is ideal and the pendant detailing is remarkably sharp and elegant.`,
+      date: 'July 12, 2026',
+    },
+  };
+
+  const defaultReview = reviewsByCat[product.category] || {
+    author: 'Ayesha Khan',
+    comment: `The ${product.name} is truly breathtaking! Exceptional craftsmanship, brilliant shine, and arrived safely packed in Sparklez Siege signature box.`,
+    date: 'July 20, 2026',
+  };
+
+  return [
+    {
+      id: `rev-${product.id}-1`,
+      author: defaultReview.author,
+      rating: 5,
+      date: defaultReview.date,
+      comment: defaultReview.comment,
+      verified: true,
+    },
+  ];
+};
+
 export const MOCK_REVIEWS: Review[] = [
   {
     id: 'rev-1',
     author: 'Ayesha Khan',
     rating: 5,
-    date: 'July 14, 2026',
-    title: 'Breathtaking craftsmanship!',
-    comment: 'The Diamond Cut Bangles surpassed every expectation. The clarity and sparkle under direct light is staggering, and the finish has a lovely warm weight to it. Customer service was also remarkable.',
-    verified: true,
-  },
-  {
-    id: 'rev-2',
-    author: 'Fatima Malik',
-    rating: 5,
-    date: 'June 28, 2026',
-    title: 'Exquisite packaging & weight',
-    comment: 'I ordered the Eternal Pavé Bangle for my anniversary. It feels solid, luxurious, and the hinge safety clasp gives me complete peace of mind when wearing it out.',
-    verified: true,
-  },
-  {
-    id: 'rev-3',
-    author: 'Zainab Ahmed',
-    rating: 4,
-    date: 'May 19, 2026',
-    title: 'Very elegant daily piece',
-    comment: 'Subtle yet noticeable. The shine on the gold is pristine. Ships quickly in a gorgeous velvet gift box with certification cards.',
+    date: 'July 20, 2026',
+    comment: 'The piece surpassed every expectation. The clarity and sparkle under direct light is staggering, and the finish has a lovely warm weight to it. Customer service was also remarkable.',
     verified: true,
   },
 ];
+

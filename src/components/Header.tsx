@@ -64,6 +64,15 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
+      {/* Top Announcement Bar */}
+      <div className="w-full bg-[#001E20] text-emerald-200 text-[11px] sm:text-xs font-semibold py-1.5 sm:py-2 px-3 text-center border-b border-emerald-900/60 flex items-center justify-center space-x-2 tracking-wide select-none">
+        <span className="inline-block w-2 h-2 rounded-full bg-[#FF9F61] animate-pulse"></span>
+        <span className="text-white font-bold tracking-wider">
+          SPECIAL OFFER: <span className="text-[#FF9F61] underline underline-offset-2">GET FREE DELIVERY ON BANK TRANSFER</span>
+        </span>
+        <span className="hidden md:inline text-emerald-400/80">• Cash on Delivery (Rs. 250) Also Available Nationwide</span>
+      </div>
+
       <header
         className={`sticky top-0 z-40 w-full transition-all duration-300 ${
           isScrolled
@@ -271,9 +280,12 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
               </div>
 
-              <div className="p-5 border-t border-emerald-900/80 bg-[#011e17]">
-                <p className="text-xs text-emerald-200/80 text-center font-light">
-                  We Deliver All Over Pakistan &bull; Delivery Charges Rs. 250
+              <div className="p-5 border-t border-emerald-900/80 bg-[#011e17] space-y-1">
+                <p className="text-xs text-[#FF9F61] text-center font-bold">
+                  ✨ GET FREE DELIVERY ON BANK TRANSFER
+                </p>
+                <p className="text-[11px] text-emerald-200/70 text-center font-light">
+                  Cash on Delivery Also Available (Rs. 250) Across Pakistan
                 </p>
               </div>
             </motion.div>

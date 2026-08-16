@@ -3,7 +3,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Product, Review } from '../types';
 import { ProductCard } from '../components/ProductCard';
-import { MOCK_REVIEWS } from '../data/products';
+import { getDefaultReviewsForProduct, MOCK_REVIEWS } from '../data/products';
 import { trackViewContent } from '../utils/metaPixel';
 import {
   Star,
@@ -67,7 +67,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const [addedToast, setAddedToast] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<'details' | 'specs' | 'delivery' | 'returns' | 'care' | null>('delivery');
 
-  // Reviews state with localStorage persistence per product
+  // Reviews state with localStorage persistence per product (1 review per product initially)
   const storageKey = `sparklez_reviews_${product.id}`;
 
   const [reviewsList, setReviewsList] = useState<Review[]>(() => {
@@ -76,13 +76,17 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          // If previous version had legacy 3 mock reviews, reset to single tailored product review
+          const isLegacyMock = parsed.length === 3 && parsed[0]?.id === 'rev-1' && parsed[1]?.id === 'rev-2';
+          if (!isLegacyMock) {
+            return parsed;
+          }
         }
       }
     } catch {
       // fallback
     }
-    return MOCK_REVIEWS;
+    return getDefaultReviewsForProduct(product);
   });
 
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -98,14 +102,17 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setReviewsList(parsed);
-          return;
+          const isLegacyMock = parsed.length === 3 && parsed[0]?.id === 'rev-1' && parsed[1]?.id === 'rev-2';
+          if (!isLegacyMock) {
+            setReviewsList(parsed);
+            return;
+          }
         }
       }
     } catch {
       // fallback
     }
-    setReviewsList(MOCK_REVIEWS);
+    setReviewsList(getDefaultReviewsForProduct(product));
   }, [product.id]);
 
   // Dynamic review count & rating calculation based on real persisted reviews
@@ -461,12 +468,14 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 </p>
               )}
 
-              <div className="mt-2.5 pt-2.5 border-t border-neutral-200/60 flex items-center justify-between text-xs text-neutral-600">
+              <div className="mt-2.5 pt-2.5 border-t border-neutral-200/60 flex items-center justify-between text-xs text-neutral-600 flex-wrap gap-1">
                 <span className="flex items-center space-x-1 font-medium text-emerald-700">
                   <Check className="w-3.5 h-3.5 shrink-0" />
                   <span>In Stock & Ready to Dispatch</span>
                 </span>
-                <span className="text-neutral-500">Delivery: Rs. 250</span>
+                <span className="font-bold text-[#FF9F61] bg-neutral-950 px-2 py-0.5 rounded-md text-[11px]">
+                  FREE DELIVERY on Bank Transfer
+                </span>
               </div>
             </div>
 
@@ -646,8 +655,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 <div className="flex items-center space-x-2">
                   <Truck className="w-4 h-4 text-emerald-700 shrink-0" />
                   <div>
-                    <span className="font-bold block text-neutral-900">Nationwide Delivery</span>
-                    <span className="text-[11px] text-neutral-600">3-5 business days</span>
+                    <span className="font-bold block text-neutral-900">FREE Delivery Available</span>
+                    <span className="text-[11px] text-emerald-800 font-semibold">On Bank Transfer</span>
                   </div>
                 </div>
 
@@ -724,9 +733,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   />
                 </button>
                 {openAccordion === 'delivery' && (
-                  <div className="p-4 text-xs text-neutral-600 bg-white space-y-1.5 border-t border-neutral-100">
-                    <p>• <strong>Cash on Delivery (COD)</strong> is available for all cities and towns across Pakistan.</p>
-                    <p>• Standard Flat Delivery Fee: <strong>Rs. 250</strong> per order.</p>
+                  <div className="p-4 text-xs text-neutral-700 bg-white space-y-2 border-t border-neutral-100">
+                    <div className="p-2.5 bg-emerald-50 rounded-xl border border-emerald-200 text-emerald-900 font-medium">
+                      🎉 <strong>SPECIAL PROMOTION:</strong> GET FREE DELIVERY ON BANK TRANSFER nationwide!
+                    </div>
+                    <p>• <strong>Cash on Delivery (COD)</strong> is also available for all cities and towns across Pakistan for Rs. 250 standard delivery.</p>
                     <p>• Orders are dispatched within 24 hours and delivered in 3 to 5 business days with active SMS/WhatsApp tracking.</p>
                   </div>
                 )}
@@ -937,11 +948,19 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               <p className="text-xs sm:text-sm text-neutral-600">No reviews yet for this product. Be the first to leave one!</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div
+              className={`grid gap-5 ${
+                reviewsList.length === 1
+                  ? 'grid-cols-1 max-w-xl'
+                  : reviewsList.length === 2
+                  ? 'grid-cols-1 md:grid-cols-2 max-w-4xl'
+                  : 'grid-cols-1 md:grid-cols-3'
+              }`}
+            >
               {reviewsList.map((rev) => (
                 <div
                   key={rev.id}
-                  className="p-5 bg-neutral-50 rounded-2xl border border-neutral-200/80 flex flex-col justify-between space-y-3 hover:border-neutral-300 transition-colors"
+                  className="p-5 sm:p-6 bg-neutral-50 rounded-2xl border border-neutral-200/80 flex flex-col justify-between space-y-3 hover:border-neutral-300 transition-colors shadow-2xs"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-2">
@@ -963,7 +982,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                         {rev.title}
                       </h4>
                     )}
-                    <p className="text-xs text-neutral-700 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-neutral-700 leading-relaxed">
                       "{rev.comment}"
                     </p>
                   </div>

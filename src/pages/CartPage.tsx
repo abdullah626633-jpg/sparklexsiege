@@ -70,9 +70,10 @@ export const CartPage: React.FC<CartPageProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <div className="max-w-xl mx-auto text-center mb-8">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#FF9F61] block mb-1">
-            Review Your Items
-          </span>
+          <div className="inline-flex items-center space-x-2 bg-[#002D2F] text-emerald-100 text-xs font-bold px-3.5 py-1.5 rounded-full mb-3 border border-emerald-800">
+            <span className="w-2 h-2 rounded-full bg-[#FF9F61] animate-pulse"></span>
+            <span>GET FREE DELIVERY ON BANK TRANSFER!</span>
+          </div>
           <h1 className="font-serif-luxury text-2xl sm:text-4xl font-bold text-neutral-900">
             Shopping Bag ({cartItems.reduce((acc, i) => acc + i.quantity, 0)} Items)
           </h1>
@@ -273,11 +274,26 @@ export const CartPage: React.FC<CartPageProps> = ({
                     </div>
                   )}
 
-                  <div className="flex justify-between text-neutral-600">
-                    <span>Delivery Charges (Pakistan)</span>
-                    <span className="font-semibold text-neutral-900">
-                      {shipping === 0 ? 'FREE' : `Rs. ${shipping}`}
+                  <div className="flex justify-between items-center text-neutral-600">
+                    <span>Delivery Charges</span>
+                    <span className="font-semibold text-neutral-900 text-right">
+                      {shipping === 0 ? (
+                        'FREE'
+                      ) : (
+                        <span>
+                          Rs. 250 <span className="text-[10px] text-emerald-700 font-bold block">(FREE on Bank Transfer)</span>
+                        </span>
+                      )}
                     </span>
+                  </div>
+
+                  <div className="p-2.5 bg-emerald-50 rounded-xl border border-emerald-200 text-[11px] text-emerald-900 space-y-0.5">
+                    <p className="font-bold flex items-center space-x-1 text-emerald-800">
+                      <span>✨ Special Offer:</span>
+                    </p>
+                    <p>
+                      <strong>GET FREE DELIVERY ON BANK TRANSFER</strong> at checkout! (Save Rs. 250)
+                    </p>
                   </div>
 
                   <div className="border-t border-neutral-200 pt-3 flex justify-between items-baseline">

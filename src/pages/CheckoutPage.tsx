@@ -16,7 +16,8 @@ import {
   MessageSquare,
   Lock,
   RotateCcw,
-  Check
+  Check,
+  Copy
 } from 'lucide-react';
 import { sendOrderEmail } from '../services/emailService';
 import { trackInitiateCheckout, trackPurchase } from '../utils/metaPixel';
@@ -69,6 +70,15 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const [city, setCity] = useState('Lahore');
   const [customCity, setCustomCity] = useState('');
   const [notes, setNotes] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState<'bank_transfer' | 'cod'>('bank_transfer');
+  const [confirmedPaymentMethod, setConfirmedPaymentMethod] = useState<'bank_transfer' | 'cod'>('bank_transfer');
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard?.writeText(text);
+    setCopiedField(label);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
 
   // Validation error strings
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -78,7 +88,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     0
   );
 
-  const shipping = subtotal === 0 ? 0 : 250;
+  // FREE Delivery on Bank Transfer, Rs. 250 on Cash on Delivery
+  const shipping = subtotal === 0 ? 0 : paymentMethod === 'bank_transfer' ? 0 : 250;
   const total = subtotal + shipping;
 
   React.useEffect(() => {
@@ -113,6 +124,10 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     const orderNum = `SKS-${Math.floor(100000 + Math.random() * 900000)}`;
     const finalCity = city === 'Other City' ? customCity.trim() : city;
     const finalEmail = email.trim() || 'orders@sparkleziege.shop';
+    const paymentMethodLabel =
+      paymentMethod === 'bank_transfer'
+        ? 'Bank Transfer (GET FREE DELIVERY)'
+        : 'Cash on Delivery (COD)';
 
     const emailRes = await sendOrderEmail({
       order_id: orderNum,
@@ -125,12 +140,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       notes: notes.trim() || undefined,
       cartItems: cartItems,
       subtotal: `Rs. ${subtotal.toLocaleString()}`,
-      shipping: shipping === 0 ? 'FREE' : `Rs. ${shipping}`,
+      shipping: shipping === 0 ? 'FREE (Bank Transfer Special)' : `Rs. ${shipping}`,
       total_amount: `Rs. ${total.toLocaleString()}`,
-      payment_method: 'Cash on Delivery (COD)',
+      payment_method: paymentMethodLabel,
     });
 
     setConfirmedTotal(total);
+    setConfirmedPaymentMethod(paymentMethod);
     setEmailSentSuccess(emailRes.success);
     setPlacedOrder(orderNum);
     trackPurchase(orderNum, total);
@@ -141,6 +157,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   // SUCCESS CONFIRMATION VIEW
   if (placedOrder) {
     const finalCity = city === 'Other City' ? customCity : city;
+    const isBankTransfer = confirmedPaymentMethod === 'bank_transfer';
 
     return (
       <div className="bg-neutral-50 min-h-screen py-10 px-4 flex items-center justify-center">
@@ -175,9 +192,15 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
               <span className="font-bold text-neutral-900 text-sm">Rs. {confirmedTotal.toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
+              <span className="text-neutral-500">Delivery Charges:</span>
+              <span className="font-bold text-emerald-700">
+                {isBankTransfer ? 'FREE (Bank Transfer Offer)' : 'Rs. 250'}
+              </span>
+            </div>
+            <div className="flex justify-between">
               <span className="text-neutral-500">Payment Mode:</span>
               <span className="font-semibold text-emerald-800 bg-emerald-100/70 px-2 py-0.5 rounded">
-                💵 Cash on Delivery (COD)
+                {isBankTransfer ? '💳 Bank Transfer (FREE Delivery)' : '💵 Cash on Delivery (COD)'}
               </span>
             </div>
             <div className="flex justify-between">
@@ -188,20 +211,80 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
             </div>
           </div>
 
+          {/* Bank Transfer Details if customer chose Bank Transfer */}
+          {isBankTransfer && (
+            <div className="p-3.5 sm:p-4 bg-emerald-950 text-white rounded-2xl border border-emerald-700 text-xs text-left space-y-2.5 shadow-md">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-1.5 font-bold text-emerald-200">
+                  <span>🏦</span>
+                  <span className="text-xs uppercase tracking-wider">HBL Bank Details (Free Delivery)</span>
+                </div>
+                <span className="text-[10px] font-black bg-[#FF9F61] text-neutral-950 px-2 py-0.5 rounded-full">
+                  FREE DELIVERY
+                </span>
+              </div>
+
+              <div className="bg-emerald-900/80 rounded-xl p-2.5 border border-emerald-700/60 space-y-1.5 text-[11px]">
+                <div className="flex items-center justify-between text-emerald-200 border-b border-emerald-800/80 pb-1">
+                  <span><strong>Bank:</strong> Habib Bank Limited (HBL)</span>
+                  <span><strong>Title:</strong> Sparklez Siege</span>
+                </div>
+
+                <div className="flex items-center justify-between bg-black/25 px-2 py-1 rounded-lg">
+                  <span className="text-emerald-300 font-semibold">Account #:</span>
+                  <div className="flex items-center space-x-1.5">
+                    <span className="font-mono font-bold text-white tracking-wider">50327000381203</span>
+                    <button
+                      type="button"
+                      onClick={() => copyToClipboard('50327000381203', 'conf-acc')}
+                      className="text-[10px] bg-white/10 hover:bg-white/20 text-emerald-100 px-1.5 py-0.5 rounded flex items-center space-x-1 transition-colors"
+                      title="Copy Account Number"
+                    >
+                      {copiedField === 'conf-acc' ? <span className="text-[#FF9F61] font-bold">Copied!</span> : <Copy className="w-3 h-3" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between bg-black/25 px-2 py-1 rounded-lg">
+                  <span className="text-emerald-300 font-semibold">IBAN:</span>
+                  <div className="flex items-center space-x-1.5">
+                    <span className="font-mono font-bold text-[#FF9F61] tracking-wide text-[10px] sm:text-[11px]">PK59HABB0050327000381203</span>
+                    <button
+                      type="button"
+                      onClick={() => copyToClipboard('PK59HABB0050327000381203', 'conf-iban')}
+                      className="text-[10px] bg-white/10 hover:bg-white/20 text-emerald-100 px-1.5 py-0.5 rounded flex items-center space-x-1 transition-colors"
+                      title="Copy IBAN"
+                    >
+                      {copiedField === 'conf-iban' ? <span className="text-[#FF9F61] font-bold">Copied!</span> : <Copy className="w-3 h-3" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-[11px] text-emerald-200 font-medium">
+                👉 Transfer <strong className="text-white">Rs. {confirmedTotal.toLocaleString()}</strong> to HBL and click below to send your receipt slip on WhatsApp for instant dispatch!
+              </p>
+            </div>
+          )}
+
           <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-800 text-left flex items-start space-x-2">
             <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-            <span>Our team will dispatch your parcel within 24 hours. You will receive delivery updates via SMS/WhatsApp.</span>
+            <span>Our team will dispatch your parcel within 24 hours. Tracked courier delivery in 3-5 days.</span>
           </div>
 
           <div className="space-y-2 pt-2">
             <a
-              href={`https://wa.me/923039117733?text=${encodeURIComponent(`Hi Sparklez Siege! I just placed Order #${placedOrder} for ${fullName}. Could you please confirm tracking?`)}`}
+              href={`https://wa.me/923039117733?text=${encodeURIComponent(
+                isBankTransfer
+                  ? `Hi Sparklez Siege! I just placed Order #${placedOrder} for ${fullName} with Bank Transfer (Rs. ${confirmedTotal.toLocaleString()}). Here is my payment confirmation slip.`
+                  : `Hi Sparklez Siege! I just placed Order #${placedOrder} for ${fullName} with Cash on Delivery (Rs. ${confirmedTotal.toLocaleString()}). Could you please confirm tracking?`
+              )}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs py-3.5 rounded-xl flex items-center justify-center space-x-2 transition-colors shadow-sm"
             >
               <MessageSquare className="w-4 h-4" />
-              <span>Track / Inquire on WhatsApp</span>
+              <span>{isBankTransfer ? 'Send Payment Slip on WhatsApp' : 'Track / Inquire on WhatsApp'}</span>
             </a>
 
             <button
@@ -266,17 +349,21 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         </div>
 
         <div className="mb-6">
+          <div className="inline-flex items-center space-x-2 bg-[#002D2F] text-emerald-100 text-xs font-bold px-3.5 py-1.5 rounded-full mb-2 border border-emerald-800">
+            <span className="w-2 h-2 rounded-full bg-[#FF9F61] animate-pulse"></span>
+            <span>GET FREE DELIVERY ON BANK TRANSFER!</span>
+          </div>
           <h1 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-neutral-900">
             Express Checkout
           </h1>
           <p className="text-xs text-neutral-500 mt-1">
-            Complete your order with Cash on Delivery — pay when your parcel arrives.
+            Choose Bank Transfer for <strong className="text-emerald-700 font-bold">100% Free Delivery</strong> or Cash on Delivery nationwide.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
-          {/* 1. ORDER SUMMARY COLUMN (Prominently displayed before/beside form) */}
+          {/* 1. ORDER SUMMARY COLUMN */}
           <div className="lg:col-span-5 order-2 lg:order-2 space-y-4">
             <div className="bg-white rounded-3xl p-5 sm:p-6 border border-neutral-200 shadow-sm space-y-4">
               <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
@@ -332,12 +419,33 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                   <span>Subtotal:</span>
                   <span className="font-semibold text-neutral-900">Rs. {subtotal.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between text-neutral-600">
-                  <span>Delivery Charges (Pakistan):</span>
-                  <span className="font-semibold text-neutral-900">
-                    {shipping === 0 ? 'FREE' : `Rs. ${shipping}`}
-                  </span>
+                <div className="flex justify-between items-center text-neutral-600">
+                  <span>Delivery Charges:</span>
+                  {paymentMethod === 'bank_transfer' ? (
+                    <span className="font-bold text-emerald-700 flex items-center space-x-1.5">
+                      <span className="line-through text-neutral-400 font-normal text-[11px]">Rs. 250</span>
+                      <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full text-[11px]">FREE</span>
+                    </span>
+                  ) : (
+                    <span className="font-semibold text-neutral-900">Rs. 250</span>
+                  )}
                 </div>
+
+                {paymentMethod === 'bank_transfer' ? (
+                  <div className="p-2.5 bg-emerald-50 rounded-xl border border-emerald-200 text-[11px] text-emerald-800 font-medium flex items-center space-x-1.5">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span><strong>Free Delivery Applied!</strong> You save Rs. 250 on this order.</span>
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => setPaymentMethod('bank_transfer')}
+                    className="p-2.5 bg-amber-50 rounded-xl border border-amber-200 text-[11px] text-amber-900 cursor-pointer hover:bg-amber-100/70 transition-colors flex items-center justify-between"
+                  >
+                    <span>💡 Switch to <strong>Bank Transfer</strong> for FREE delivery!</span>
+                    <span className="font-bold underline text-[10px] uppercase tracking-wider">Save Rs. 250</span>
+                  </div>
+                )}
+
                 <div className="border-t border-neutral-200 pt-3 flex justify-between items-baseline">
                   <span className="text-sm font-bold text-neutral-900">Total Payable:</span>
                   <span className="text-2xl font-extrabold text-neutral-900">
@@ -350,7 +458,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
               <div className="pt-3 border-t border-neutral-100 space-y-2 text-[11px] text-neutral-600">
                 <div className="flex items-center space-x-2">
                   <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Cash on Delivery across Pakistan</span>
+                  <span>Free Delivery on Bank Transfer • COD also available</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
@@ -358,7 +466,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 </div>
                 <div className="flex items-center space-x-2">
                   <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Tracked courier delivery in 3-5 days</span>
+                  <span>Tracked courier delivery nationwide in 3-5 days</span>
                 </div>
               </div>
             </div>
@@ -521,26 +629,122 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 />
               </div>
 
-              {/* 6. PAYMENT METHOD: CLEAR & REASSURING COD */}
-              <div className="pt-3 border-t border-neutral-100">
-                <label className="block text-xs font-bold text-neutral-800 mb-2">
-                  Payment Method
-                </label>
+              {/* 6. PAYMENT METHOD: SELECTABLE BANK TRANSFER (FREE DELIVERY) OR COD */}
+              <div className="pt-3 border-t border-neutral-100 space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-neutral-900 uppercase tracking-wider">
+                    Select Payment Method <span className="text-rose-500">*</span>
+                  </label>
+                  <span className="text-[11px] font-bold text-[#FF9F61] bg-neutral-950 px-2.5 py-0.5 rounded-full">
+                    FREE DELIVERY on Bank Transfer
+                  </span>
+                </div>
 
-                <div className="p-4 bg-emerald-50 rounded-2xl border-2 border-emerald-300/80 flex items-start space-x-3">
-                  <div className="text-2xl mt-0.5">💵</div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-extrabold text-neutral-900 uppercase tracking-wider">
-                        Cash on Delivery (COD)
-                      </span>
-                      <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
-                        No Upfront Payment
+                {/* Option 1: Bank Transfer (Free Delivery) */}
+                <div
+                  onClick={() => setPaymentMethod('bank_transfer')}
+                  className={`p-3.5 rounded-2xl border-2 transition-all cursor-pointer ${
+                    paymentMethod === 'bank_transfer'
+                      ? 'bg-emerald-950 text-white border-emerald-500 shadow-md ring-2 ring-emerald-500/20'
+                      : 'bg-white border-neutral-200 hover:border-neutral-300'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center space-x-2.5">
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        checked={paymentMethod === 'bank_transfer'}
+                        onChange={() => setPaymentMethod('bank_transfer')}
+                        className="accent-emerald-500 cursor-pointer w-4 h-4"
+                      />
+                      <span className={`text-xs sm:text-sm font-extrabold ${paymentMethod === 'bank_transfer' ? 'text-white' : 'text-neutral-900'}`}>
+                        💳 HBL Bank Transfer
                       </span>
                     </div>
-                    <p className="text-xs text-neutral-600 mt-1 leading-relaxed">
-                      Pay cash safely to the courier delivery agent when your parcel is delivered to your doorstep.
-                    </p>
+                    <span className="text-[10px] sm:text-[11px] font-black text-neutral-950 bg-[#FF9F61] px-2.5 py-0.5 rounded-full uppercase tracking-wider shrink-0 shadow-2xs">
+                      FREE DELIVERY (Rs. 0)
+                    </span>
+                  </div>
+
+                  {paymentMethod === 'bank_transfer' && (
+                    <div className="mt-2.5 pt-2.5 border-t border-emerald-800/80 space-y-2 text-xs">
+                      {/* Compact Prominent HBL Details Box */}
+                      <div className="bg-emerald-900/90 rounded-xl p-2.5 border border-emerald-700/80 space-y-1.5 font-mono text-[11px]">
+                        <div className="flex items-center justify-between text-emerald-200 font-sans text-[11px] pb-0.5 border-b border-emerald-800">
+                          <span><strong>Bank:</strong> Habib Bank Ltd (HBL)</span>
+                          <span><strong>Title:</strong> Sparklez Siege</span>
+                        </div>
+
+                        <div className="flex items-center justify-between bg-black/30 px-2.5 py-1 rounded-lg">
+                          <span className="text-emerald-300 font-sans font-semibold text-[10px]">ACC #:</span>
+                          <div className="flex items-center space-x-1.5">
+                            <span className="font-bold text-white tracking-wider">50327000381203</span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                copyToClipboard('50327000381203', 'form-acc');
+                              }}
+                              className="text-[10px] bg-white/15 hover:bg-white/30 text-emerald-100 px-1.5 py-0.5 rounded flex items-center space-x-1 transition-colors"
+                              title="Copy Account Number"
+                            >
+                              {copiedField === 'form-acc' ? <span className="text-[#FF9F61] font-bold">Copied!</span> : <Copy className="w-3 h-3" />}
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between bg-black/30 px-2.5 py-1 rounded-lg">
+                          <span className="text-emerald-300 font-sans font-semibold text-[10px]">IBAN:</span>
+                          <div className="flex items-center space-x-1.5">
+                            <span className="font-bold text-[#FF9F61] tracking-wide text-[10px] sm:text-[11px]">PK59HABB0050327000381203</span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                copyToClipboard('PK59HABB0050327000381203', 'form-iban');
+                              }}
+                              className="text-[10px] bg-white/15 hover:bg-white/30 text-emerald-100 px-1.5 py-0.5 rounded flex items-center space-x-1 transition-colors"
+                              title="Copy IBAN"
+                            >
+                              {copiedField === 'form-iban' ? <span className="text-[#FF9F61] font-bold">Copied!</span> : <Copy className="w-3 h-3" />}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <p className="text-[10px] sm:text-[11px] text-emerald-200 font-medium">
+                        ✓ Transfer <strong className="text-white">Rs. {total.toLocaleString()}</strong> & share screenshot on WhatsApp (0303-9117733) for instant dispatch.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Option 2: Cash on Delivery (COD) */}
+                <div
+                  onClick={() => setPaymentMethod('cod')}
+                  className={`p-3.5 rounded-2xl border-2 transition-all cursor-pointer ${
+                    paymentMethod === 'cod'
+                      ? 'bg-neutral-50 border-neutral-900 shadow-sm'
+                      : 'bg-white border-neutral-200 hover:border-neutral-300'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center space-x-2.5">
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        checked={paymentMethod === 'cod'}
+                        onChange={() => setPaymentMethod('cod')}
+                        className="accent-neutral-900 cursor-pointer w-4 h-4"
+                      />
+                      <span className="text-xs sm:text-sm font-extrabold text-neutral-900">
+                        💵 Cash on Delivery (COD)
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-bold text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded-md shrink-0">
+                      Rs. 250 Delivery
+                    </span>
                   </div>
                 </div>
               </div>
@@ -558,7 +762,10 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                       <span>Placing Your Order...</span>
                     </>
                   ) : (
-                    <span>PLACE ORDER — Rs. {total.toLocaleString()}</span>
+                    <span>
+                      PLACE ORDER — Rs. {total.toLocaleString()}
+                      {paymentMethod === 'bank_transfer' && ' (FREE DELIVERY)'}
+                    </span>
                   )}
                 </button>
 
