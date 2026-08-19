@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CartItem, PageType, Product } from '../types';
 import { PRODUCTS } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
+import { validateDiscountCode, DiscountCode } from '../data/discountCodes';
 import { 
   Trash2, 
   ArrowLeft, 
@@ -13,7 +14,9 @@ import {
   Truck, 
   RotateCcw,
   Check,
-  Zap
+  Zap,
+  GraduationCap,
+  X
 } from 'lucide-react';
 
 interface CartPageProps {
@@ -31,29 +34,58 @@ export const CartPage: React.FC<CartPageProps> = ({
 }) => {
   const navigate = useNavigate();
   const [couponCode, setCouponCode] = useState('');
-  const [discountPercent, setDiscountPercent] = useState(0);
+  const [appliedDiscount, setAppliedDiscount] = useState<DiscountCode | null>(null);
   const [couponMessage, setCouponMessage] = useState<{ text: string; error: boolean } | null>(null);
+
+  // Restore discount from sessionStorage if available
+  useEffect(() => {
+    try {
+      const savedCode = sessionStorage.getItem('sparklez_discount_code');
+      if (savedCode) {
+        const result = validateDiscountCode(savedCode);
+        if (result.valid && result.discount) {
+          setAppliedDiscount(result.discount);
+          setCouponCode(result.discount.code);
+          setCouponMessage({ text: result.message, error: false });
+        }
+      }
+    } catch {
+      // Ignore storage errors
+    }
+  }, []);
 
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
 
+  const discountPercent = appliedDiscount ? appliedDiscount.percentage : 0;
   const discountAmount = Math.round((subtotal * discountPercent) / 100);
   const shipping = subtotal === 0 ? 0 : 250;
   const total = subtotal - discountAmount + shipping;
 
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
-    if (couponCode.trim().toUpperCase() === 'SPARKLE10') {
-      setDiscountPercent(10);
-      setCouponMessage({ text: 'Coupon SPARKLE10 applied! 10% off', error: false });
-    } else if (couponCode.trim().toUpperCase() === 'VIP20') {
-      setDiscountPercent(20);
-      setCouponMessage({ text: 'VIP Coupon VIP20 applied! 20% off', error: false });
+    const result = validateDiscountCode(couponCode);
+    if (result.valid && result.discount) {
+      setAppliedDiscount(result.discount);
+      setCouponMessage({ text: result.message, error: false });
+      try {
+        sessionStorage.setItem('sparklez_discount_code', result.discount.code);
+      } catch {}
     } else {
-      setCouponMessage({ text: 'Invalid coupon code. Try SPARKLE10 for 10% off.', error: true });
+      setAppliedDiscount(null);
+      setCouponMessage({ text: result.message, error: true });
     }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedDiscount(null);
+    setCouponCode('');
+    setCouponMessage(null);
+    try {
+      sessionStorage.removeItem('sparklez_discount_code');
+    } catch {}
   };
 
   const handleProceedToCheckout = () => {
@@ -227,38 +259,72 @@ export const CartPage: React.FC<CartPageProps> = ({
                 </h2>
 
                 {/* Coupon Input */}
-                <form onSubmit={handleApplyCoupon} className="mb-4">
-                  <label className="block text-[11px] font-bold text-neutral-700 mb-1">
-                    Have a Promo Code?
-                  </label>
-                  <div className="flex space-x-2">
-                    <div className="relative flex-1">
-                      <Tag className="w-3.5 h-3.5 absolute left-3 top-3 text-neutral-400" />
-                      <input
-                        type="text"
-                        value={couponCode}
-                        onChange={(e) => setCouponCode(e.target.value)}
-                        placeholder="e.g. SPARKLE10"
-                        className="w-full pl-8 pr-2 py-2 bg-white border border-neutral-200 rounded-xl text-xs uppercase focus:outline-hidden focus:border-[#FF9F61]"
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      className="bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold text-xs px-3.5 rounded-xl transition-colors cursor-pointer"
-                    >
-                      Apply
-                    </button>
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[11px] font-bold text-neutral-800 flex items-center space-x-1">
+                      <Tag className="w-3 h-3 text-[#FF9F61]" />
+                      <span>Discount / CIE Student Code</span>
+                    </label>
+                    <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-full">
+                      CIE Student Offers
+                    </span>
                   </div>
-                  {couponMessage && (
-                    <p
-                      className={`text-xs mt-1.5 font-medium ${
-                        couponMessage.error ? 'text-rose-600' : 'text-emerald-700'
-                      }`}
-                    >
-                      {couponMessage.text}
-                    </p>
+
+                  {appliedDiscount ? (
+                    <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-emerald-900 text-xs flex items-center space-x-1.5">
+                          <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Code: <strong>{appliedDiscount.code}</strong> ({appliedDiscount.percentage}% OFF)</span>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={handleRemoveCoupon}
+                          className="text-[11px] font-bold text-rose-600 hover:text-rose-800 underline cursor-pointer flex items-center space-x-0.5"
+                        >
+                          <X className="w-3 h-3" />
+                          <span>Remove</span>
+                        </button>
+                      </div>
+                      {appliedDiscount.isCieStudentCode && (
+                        <p className="text-[10px] text-emerald-800 leading-tight flex items-start space-x-1">
+                          <GraduationCap className="w-3 h-3 shrink-0 mt-0.5 text-emerald-700" />
+                          <span>Valid for students with CIE Results. Share result on WhatsApp after ordering.</span>
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <form onSubmit={handleApplyCoupon} className="space-y-1.5">
+                      <div className="flex space-x-2">
+                        <div className="relative flex-1">
+                          <Tag className="w-3.5 h-3.5 absolute left-3 top-3 text-neutral-400" />
+                          <input
+                            type="text"
+                            value={couponCode}
+                            onChange={(e) => setCouponCode(e.target.value)}
+                            placeholder="e.g. CIE10, CIE15, CIE30..."
+                            className="w-full pl-8 pr-2 py-2 bg-white border border-neutral-200 rounded-xl text-xs uppercase focus:outline-hidden focus:border-[#FF9F61]"
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          className="bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold text-xs px-3.5 rounded-xl transition-colors cursor-pointer"
+                        >
+                          Apply
+                        </button>
+                      </div>
+                      {couponMessage && (
+                        <p
+                          className={`text-xs mt-1 font-medium ${
+                            couponMessage.error ? 'text-rose-600' : 'text-emerald-700'
+                          }`}
+                        >
+                          {couponMessage.text}
+                        </p>
+                      )}
+                    </form>
                   )}
-                </form>
+                </div>
 
                 {/* Breakdown */}
                 <div className="space-y-2.5 text-xs border-t border-neutral-200/80 pt-3">

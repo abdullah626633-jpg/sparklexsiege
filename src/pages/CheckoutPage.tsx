@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CartItem, PageType } from '../types';
+import { validateDiscountCode, DiscountCode } from '../data/discountCodes';
 import { 
   CheckCircle2, 
   ArrowLeft, 
@@ -17,7 +18,10 @@ import {
   Lock,
   RotateCcw,
   Check,
-  Copy
+  Copy,
+  Tag,
+  GraduationCap,
+  X
 } from 'lucide-react';
 import { sendOrderEmail } from '../services/emailService';
 import { trackInitiateCheckout, trackPurchase } from '../utils/metaPixel';
@@ -59,6 +63,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   // Success screen state
   const [placedOrder, setPlacedOrder] = useState<string | null>(null);
   const [confirmedTotal, setConfirmedTotal] = useState<number>(0);
+  const [confirmedDiscountAmount, setConfirmedDiscountAmount] = useState<number>(0);
+  const [confirmedDiscountCode, setConfirmedDiscountCode] = useState<string | null>(null);
+  const [confirmedIsCieStudent, setConfirmedIsCieStudent] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailSentSuccess, setEmailSentSuccess] = useState<boolean>(true);
 
@@ -74,6 +81,26 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const [confirmedPaymentMethod, setConfirmedPaymentMethod] = useState<'bank_transfer' | 'cod'>('bank_transfer');
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
+  // Discount code state
+  const [discountInput, setDiscountInput] = useState('');
+  const [appliedDiscount, setAppliedDiscount] = useState<DiscountCode | null>(null);
+  const [discountMessage, setDiscountMessage] = useState<{ text: string; error: boolean } | null>(null);
+
+  // Restore coupon from session if set in Cart
+  useEffect(() => {
+    try {
+      const savedCode = sessionStorage.getItem('sparklez_discount_code');
+      if (savedCode) {
+        const result = validateDiscountCode(savedCode);
+        if (result.valid && result.discount) {
+          setAppliedDiscount(result.discount);
+          setDiscountInput(result.discount.code);
+          setDiscountMessage({ text: result.message, error: false });
+        }
+      }
+    } catch {}
+  }, []);
+
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard?.writeText(text);
     setCopiedField(label);
@@ -88,15 +115,43 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     0
   );
 
+  const discountPercent = appliedDiscount ? appliedDiscount.percentage : 0;
+  const discountAmount = Math.round((subtotal * discountPercent) / 100);
+  const discountedSubtotal = Math.max(0, subtotal - discountAmount);
+
   // FREE Delivery on Bank Transfer, Rs. 250 on Cash on Delivery
   const shipping = subtotal === 0 ? 0 : paymentMethod === 'bank_transfer' ? 0 : 250;
-  const total = subtotal + shipping;
+  const total = discountedSubtotal + shipping;
 
   React.useEffect(() => {
     if (cartItems.length > 0) {
       trackInitiateCheckout(total, cartItems.length);
     }
   }, []);
+
+  const handleApplyDiscount = (e: React.FormEvent) => {
+    e.preventDefault();
+    const result = validateDiscountCode(discountInput);
+    if (result.valid && result.discount) {
+      setAppliedDiscount(result.discount);
+      setDiscountMessage({ text: result.message, error: false });
+      try {
+        sessionStorage.setItem('sparklez_discount_code', result.discount.code);
+      } catch {}
+    } else {
+      setAppliedDiscount(null);
+      setDiscountMessage({ text: result.message, error: true });
+    }
+  };
+
+  const handleRemoveDiscount = () => {
+    setAppliedDiscount(null);
+    setDiscountInput('');
+    setDiscountMessage(null);
+    try {
+      sessionStorage.removeItem('sparklez_discount_code');
+    } catch {}
+  };
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -140,18 +195,26 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       notes: notes.trim() || undefined,
       cartItems: cartItems,
       subtotal: `Rs. ${subtotal.toLocaleString()}`,
+      discount: discountAmount > 0 ? `Rs. ${discountAmount.toLocaleString()} (${appliedDiscount?.code} • ${discountPercent}% OFF)` : undefined,
+      discount_code: appliedDiscount ? appliedDiscount.code : undefined,
       shipping: shipping === 0 ? 'FREE (Bank Transfer Special)' : `Rs. ${shipping}`,
       total_amount: `Rs. ${total.toLocaleString()}`,
       payment_method: paymentMethodLabel,
     });
 
     setConfirmedTotal(total);
+    setConfirmedDiscountAmount(discountAmount);
+    setConfirmedDiscountCode(appliedDiscount ? appliedDiscount.code : null);
+    setConfirmedIsCieStudent(!!appliedDiscount?.isCieStudentCode);
     setConfirmedPaymentMethod(paymentMethod);
     setEmailSentSuccess(emailRes.success);
     setPlacedOrder(orderNum);
     trackPurchase(orderNum, total);
     setIsSubmitting(false);
     onClearCart();
+    try {
+      sessionStorage.removeItem('sparklez_discount_code');
+    } catch {}
   };
 
   // SUCCESS CONFIRMATION VIEW
@@ -188,14 +251,27 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
               <span className="font-bold text-neutral-900">{phone}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-neutral-500">Total Payable:</span>
-              <span className="font-bold text-neutral-900 text-sm">Rs. {confirmedTotal.toLocaleString()}</span>
+              <span className="text-neutral-500">Subtotal:</span>
+              <span className="font-semibold text-neutral-800">Rs. {subtotal.toLocaleString()}</span>
             </div>
+            {confirmedDiscountAmount > 0 && (
+              <div className="flex justify-between text-emerald-700 font-bold bg-emerald-50 px-2 py-1 rounded-lg">
+                <span className="flex items-center space-x-1">
+                  <GraduationCap className="w-3.5 h-3.5" />
+                  <span>Discount ({confirmedDiscountCode}):</span>
+                </span>
+                <span>-Rs. {confirmedDiscountAmount.toLocaleString()}</span>
+              </div>
+            )}
             <div className="flex justify-between">
               <span className="text-neutral-500">Delivery Charges:</span>
               <span className="font-bold text-emerald-700">
                 {isBankTransfer ? 'FREE (Bank Transfer Offer)' : 'Rs. 250'}
               </span>
+            </div>
+            <div className="flex justify-between border-t border-neutral-200/80 pt-1.5">
+              <span className="text-neutral-700 font-bold">Total Payable:</span>
+              <span className="font-bold text-neutral-900 text-sm">Rs. {confirmedTotal.toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-neutral-500">Payment Mode:</span>
@@ -210,6 +286,19 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
               </span>
             </div>
           </div>
+
+          {/* Student CIE Verification Notice if CIE Discount applied */}
+          {confirmedIsCieStudent && (
+            <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900 text-left space-y-1">
+              <div className="font-bold flex items-center space-x-1.5 text-amber-950">
+                <GraduationCap className="w-4 h-4 text-amber-700 shrink-0" />
+                <span>CIE Student Result Verification</span>
+              </div>
+              <p className="text-[11px] text-amber-800 leading-relaxed">
+                You used student code <strong>{confirmedDiscountCode}</strong>. Please attach a photo of your official <strong>CIE Result Statement</strong> when clicking WhatsApp below.
+              </p>
+            </div>
+          )}
 
           {/* Bank Transfer Details if customer chose Bank Transfer */}
           {isBankTransfer && (
@@ -275,7 +364,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
           <div className="space-y-2 pt-2">
             <a
               href={`https://wa.me/923039117733?text=${encodeURIComponent(
-                isBankTransfer
+                confirmedIsCieStudent
+                  ? `Hi Sparklez Siege! I just placed Order #${placedOrder} for ${fullName} with CIE Student Discount (${confirmedDiscountCode}, Rs. ${confirmedDiscountAmount.toLocaleString()} OFF). Total payable: Rs. ${confirmedTotal.toLocaleString()} via ${isBankTransfer ? 'HBL Bank Transfer' : 'COD'}. Here is my CIE Result Statement ${isBankTransfer ? '& payment slip' : ''} for verification.`
+                  : isBankTransfer
                   ? `Hi Sparklez Siege! I just placed Order #${placedOrder} for ${fullName} with Bank Transfer (Rs. ${confirmedTotal.toLocaleString()}). Here is my payment confirmation slip.`
                   : `Hi Sparklez Siege! I just placed Order #${placedOrder} for ${fullName} with Cash on Delivery (Rs. ${confirmedTotal.toLocaleString()}). Could you please confirm tracking?`
               )}`}
@@ -284,7 +375,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
               className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs py-3.5 rounded-xl flex items-center justify-center space-x-2 transition-colors shadow-sm"
             >
               <MessageSquare className="w-4 h-4" />
-              <span>{isBankTransfer ? 'Send Payment Slip on WhatsApp' : 'Track / Inquire on WhatsApp'}</span>
+              <span>
+                {confirmedIsCieStudent
+                  ? 'Send CIE Result & Slip on WhatsApp'
+                  : isBankTransfer
+                  ? 'Send Payment Slip on WhatsApp'
+                  : 'Track / Inquire on WhatsApp'}
+              </span>
             </a>
 
             <button
@@ -413,12 +510,95 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 })}
               </div>
 
+              {/* Discount / CIE Student Promo Code Section */}
+              <div className="border-t border-neutral-100 pt-3">
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-[11px] font-bold text-neutral-800 flex items-center space-x-1.5">
+                    <Tag className="w-3.5 h-3.5 text-[#FF9F61]" />
+                    <span>Discount / CIE Student Code</span>
+                  </label>
+                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100/90 px-2 py-0.5 rounded-full flex items-center space-x-1">
+                    <GraduationCap className="w-3 h-3" />
+                    <span>CIE Student Offer</span>
+                  </span>
+                </div>
+
+                {appliedDiscount ? (
+                  <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-emerald-900 text-xs flex items-center space-x-1.5">
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Code: <strong>{appliedDiscount.code}</strong> ({appliedDiscount.percentage}% OFF)</span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleRemoveDiscount}
+                        className="text-[11px] font-bold text-rose-600 hover:text-rose-800 underline cursor-pointer flex items-center space-x-0.5"
+                      >
+                        <X className="w-3 h-3" />
+                        <span>Remove</span>
+                      </button>
+                    </div>
+                    {appliedDiscount.isCieStudentCode && (
+                      <p className="text-[10px] text-emerald-800 leading-tight flex items-start space-x-1">
+                        <GraduationCap className="w-3 h-3 shrink-0 mt-0.5 text-emerald-700" />
+                        <span>Valid for students with CIE Results. Attach your result on WhatsApp after checkout.</span>
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <form onSubmit={handleApplyDiscount} className="space-y-1.5">
+                    <div className="flex space-x-2">
+                      <div className="relative flex-1">
+                        <Tag className="w-3.5 h-3.5 absolute left-3 top-3 text-neutral-400" />
+                        <input
+                          type="text"
+                          value={discountInput}
+                          onChange={(e) => setDiscountInput(e.target.value)}
+                          placeholder="e.g. CIE10, CIE15, CIE30..."
+                          className="w-full pl-8 pr-2 py-2 bg-neutral-50 border border-neutral-200 rounded-xl text-xs uppercase focus:bg-white focus:outline-hidden focus:border-[#FF9F61] transition-colors"
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        className="bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold text-xs px-3.5 rounded-xl transition-colors cursor-pointer shrink-0"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                    {discountMessage && (
+                      <p
+                        className={`text-xs mt-1 font-medium ${
+                          discountMessage.error ? 'text-rose-600' : 'text-emerald-700'
+                        }`}
+                      >
+                        {discountMessage.text}
+                      </p>
+                    )}
+                    <p className="text-[10px] text-neutral-500">
+                      🎓 Students: Use code <strong className="text-neutral-800">CIE10</strong>, <strong className="text-neutral-800">CIE15</strong>, <strong className="text-neutral-800">CIE30</strong>, <strong className="text-neutral-800">CIE40</strong>, or <strong className="text-neutral-800">CIE50</strong>.
+                    </p>
+                  </form>
+                )}
+              </div>
+
               {/* Cost breakdown */}
               <div className="border-t border-neutral-100 pt-3 space-y-2 text-xs">
                 <div className="flex justify-between text-neutral-600">
                   <span>Subtotal:</span>
                   <span className="font-semibold text-neutral-900">Rs. {subtotal.toLocaleString()}</span>
                 </div>
+
+                {discountAmount > 0 && (
+                  <div className="flex justify-between text-emerald-700 font-bold bg-emerald-50/80 px-2 py-1 rounded-lg">
+                    <span className="flex items-center space-x-1">
+                      <GraduationCap className="w-3.5 h-3.5" />
+                      <span>Discount ({appliedDiscount?.code} • {discountPercent}%):</span>
+                    </span>
+                    <span>-Rs. {discountAmount.toLocaleString()}</span>
+                  </div>
+                )}
+
                 <div className="flex justify-between items-center text-neutral-600">
                   <span>Delivery Charges:</span>
                   {paymentMethod === 'bank_transfer' ? (

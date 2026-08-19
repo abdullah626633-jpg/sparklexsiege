@@ -35,6 +35,8 @@ export interface OrderEmailParams {
   notes?: string;
   cartItems: CartItem[];
   subtotal: string;
+  discount?: string;
+  discount_code?: string;
   shipping: string;
   total_amount: string;
   payment_method: string;
@@ -197,7 +199,7 @@ ${orderItemsPlainText}
 
 PAYMENT & TOTALS:
 - Payment Method: ${params.payment_method}
-- Subtotal: ${params.subtotal}
+- Subtotal: ${params.subtotal}${params.discount ? `\n- Discount (${params.discount_code || 'Promo'}): -${params.discount}` : ''}
 - Delivery Fee: ${params.shipping}
 - Total Amount: ${params.total_amount}
 `.trim();
@@ -252,6 +254,10 @@ PAYMENT & TOTALS:
 
     // 7. Pricing & Totals
     subtotal: params.subtotal,
+    discount: params.discount || 'Rs. 0',
+    discount_code: params.discount_code || '',
+    discount_amount: params.discount || 'Rs. 0',
+    coupon_code: params.discount_code || '',
     shipping: params.shipping,
     delivery_charges: params.shipping,
     total: params.total_amount,
