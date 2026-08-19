@@ -510,78 +510,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 })}
               </div>
 
-              {/* Discount / CIE Student Promo Code Section */}
-              <div className="border-t border-neutral-100 pt-3">
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-[11px] font-bold text-neutral-800 flex items-center space-x-1.5">
-                    <Tag className="w-3.5 h-3.5 text-[#FF9F61]" />
-                    <span>Discount / CIE Student Code</span>
-                  </label>
-                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100/90 px-2 py-0.5 rounded-full flex items-center space-x-1">
-                    <GraduationCap className="w-3 h-3" />
-                    <span>CIE Student Offer</span>
-                  </span>
-                </div>
-
-                {appliedDiscount ? (
-                  <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-emerald-900 text-xs flex items-center space-x-1.5">
-                        <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Code: <strong>{appliedDiscount.code}</strong> ({appliedDiscount.percentage}% OFF)</span>
-                      </span>
-                      <button
-                        type="button"
-                        onClick={handleRemoveDiscount}
-                        className="text-[11px] font-bold text-rose-600 hover:text-rose-800 underline cursor-pointer flex items-center space-x-0.5"
-                      >
-                        <X className="w-3 h-3" />
-                        <span>Remove</span>
-                      </button>
-                    </div>
-                    {appliedDiscount.isCieStudentCode && (
-                      <p className="text-[10px] text-emerald-800 leading-tight flex items-start space-x-1">
-                        <GraduationCap className="w-3 h-3 shrink-0 mt-0.5 text-emerald-700" />
-                        <span>Valid for students with CIE Results. Attach your result on WhatsApp after checkout.</span>
-                      </p>
-                    )}
-                  </div>
-                ) : (
-                  <form onSubmit={handleApplyDiscount} className="space-y-1.5">
-                    <div className="flex space-x-2">
-                      <div className="relative flex-1">
-                        <Tag className="w-3.5 h-3.5 absolute left-3 top-3 text-neutral-400" />
-                        <input
-                          type="text"
-                          value={discountInput}
-                          onChange={(e) => setDiscountInput(e.target.value)}
-                          placeholder="e.g. CIE10, CIE15, CIE30..."
-                          className="w-full pl-8 pr-2 py-2 bg-neutral-50 border border-neutral-200 rounded-xl text-xs uppercase focus:bg-white focus:outline-hidden focus:border-[#FF9F61] transition-colors"
-                        />
-                      </div>
-                      <button
-                        type="submit"
-                        className="bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold text-xs px-3.5 rounded-xl transition-colors cursor-pointer shrink-0"
-                      >
-                        Apply
-                      </button>
-                    </div>
-                    {discountMessage && (
-                      <p
-                        className={`text-xs mt-1 font-medium ${
-                          discountMessage.error ? 'text-rose-600' : 'text-emerald-700'
-                        }`}
-                      >
-                        {discountMessage.text}
-                      </p>
-                    )}
-                    <p className="text-[10px] text-neutral-500">
-                      🎓 Students: Use code <strong className="text-neutral-800">CIE10</strong>, <strong className="text-neutral-800">CIE15</strong>, <strong className="text-neutral-800">CIE30</strong>, <strong className="text-neutral-800">CIE40</strong>, or <strong className="text-neutral-800">CIE50</strong>.
-                    </p>
-                  </form>
-                )}
-              </div>
-
+              {/* Discount / CIE Student Promo Code Section moved below */}
               {/* Cost breakdown */}
               <div className="border-t border-neutral-100 pt-3 space-y-2 text-xs">
                 <div className="flex justify-between text-neutral-600">
@@ -807,6 +736,76 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                   placeholder="e.g. Please deliver after 2 PM or call on arrival"
                   className="w-full py-2.5 px-3 bg-neutral-50 border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-hidden focus:border-[#FF9F61] focus:bg-white"
                 />
+              </div>
+
+              {/* Discount / CIE Student Promo Code Section */}
+              <div className="pt-3 border-t border-neutral-100">
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-[11px] font-bold text-neutral-800 flex items-center space-x-1.5">
+                    <Tag className="w-3.5 h-3.5 text-[#FF9F61]" />
+                    <span>Discount / CIE Student Code</span>
+                  </label>
+                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100/90 px-2 py-0.5 rounded-full flex items-center space-x-1">
+                    <GraduationCap className="w-3 h-3" />
+                    <span>CIE Student Offer</span>
+                  </span>
+                </div>
+
+                {appliedDiscount ? (
+                  <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-emerald-900 text-xs flex items-center space-x-1.5">
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Code: <strong>{appliedDiscount.code}</strong> ({appliedDiscount.percentage}% OFF)</span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleRemoveDiscount}
+                        className="text-[11px] font-bold text-rose-600 hover:text-rose-800 underline cursor-pointer flex items-center space-x-0.5"
+                      >
+                        <X className="w-3 h-3" />
+                        <span>Remove</span>
+                      </button>
+                    </div>
+                    {appliedDiscount.isCieStudentCode && (
+                      <p className="text-[10px] text-emerald-800 leading-tight flex items-start space-x-1">
+                        <GraduationCap className="w-3 h-3 shrink-0 mt-0.5 text-emerald-700" />
+                        <span>Valid for students with CIE Results. Attach your result on WhatsApp after checkout.</span>
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-1.5">
+                    <div className="flex space-x-2">
+                      <div className="relative flex-1">
+                        <Tag className="w-3.5 h-3.5 absolute left-3 top-3 text-neutral-400" />
+                        <input
+                          type="text"
+                          value={discountInput}
+                          onChange={(e) => setDiscountInput(e.target.value)}
+                          placeholder="e.g. STUDENT24"
+                          className="w-full pl-8 pr-2 py-2 bg-neutral-50 border border-neutral-200 rounded-xl text-xs uppercase focus:bg-white focus:outline-hidden focus:border-[#FF9F61] transition-colors"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleApplyDiscount}
+                        className="bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold text-xs px-3.5 rounded-xl transition-colors cursor-pointer shrink-0"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                    {discountMessage && (
+                      <p
+                        className={`text-xs mt-1 font-medium ${
+                          discountMessage.error ? 'text-rose-600' : 'text-emerald-700'
+                        }`}
+                      >
+                        {discountMessage.text}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* 6. PAYMENT METHOD: SELECTABLE BANK TRANSFER (FREE DELIVERY) OR COD */}

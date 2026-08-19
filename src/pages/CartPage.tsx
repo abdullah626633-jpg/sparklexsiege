@@ -302,7 +302,7 @@ export const CartPage: React.FC<CartPageProps> = ({
                             type="text"
                             value={couponCode}
                             onChange={(e) => setCouponCode(e.target.value)}
-                            placeholder="e.g. CIE10, CIE15, CIE30..."
+                            placeholder="e.g. STUDENT24"
                             className="w-full pl-8 pr-2 py-2 bg-white border border-neutral-200 rounded-xl text-xs uppercase focus:outline-hidden focus:border-[#FF9F61]"
                           />
                         </div>
