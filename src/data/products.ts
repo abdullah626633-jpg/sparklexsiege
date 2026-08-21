@@ -859,13 +859,26 @@ export const PRODUCTS: Product[] = [
     formattedPrice: 'Rs. 3,450',
     featured: true,
     isNew: true,
-    images: ['/velvet-tear-crystal.jpg'],
+    colors: ['Green', 'Pink'],
+    images: [
+      '/a31c4f25-4c7a-4a26-95db-a8161105d61b.jpg',
+      '/5ebc95fe-dfb0-4e3a-b9a1-c4874b070155.jpg',
+      '/cdba3b8d-021a-4068-b0dd-791c6ac992e8.jpg',
+      '/b190fef9-1216-42dc-aafb-c8c9ef4059d1.jpg',
+      '/c9762415-46fb-4f8e-8e08-ba4f5ff752c4.jpg',
+      '/d5c97ddc-cd50-4d3d-8e18-67a603589edc.jpg'
+    ],
+    colorImages: {
+      Green: '/a31c4f25-4c7a-4a26-95db-a8161105d61b.jpg',
+      Pink: '/b190fef9-1216-42dc-aafb-c8c9ef4059d1.jpg'
+    },
     description: 'Elevate your evening attire with the Velvet Tear Crystal Jewellery Set. Featuring a double-strand crystal Tennis chain anchored by a brilliant teardrop gem pendant and accompanied by matching drop earrings, this set shines with understated glamour. Designed with rhodium-plated framing and vibrant teardrop stones set against rich emerald velvet, it brings a sophisticated, sparkling finish to any formal or celebration ensemble.',
     material: 'Rhodium-Plated Framing with Double-Strand Crystal Tennis Chain & Teardrop Gemstones',
     specifications: [
       { key: 'Set Includes', value: 'Double-Strand Tennis Chain Necklace + Teardrop Pendant + Matching Drop Earrings' },
       { key: 'Chain Style', value: 'Double-Strand Crystal Tennis Chain' },
       { key: 'Finish', value: 'Rhodium-Plated Framing with Teardrop Gemstones' },
+      { key: 'Color Options', value: 'Green, Pink' }
     ],
     rating: 5.0,
     reviewCount: 1,
