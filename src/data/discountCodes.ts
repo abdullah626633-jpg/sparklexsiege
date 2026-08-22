@@ -76,6 +76,20 @@ export const CIE_STUDENT_DISCOUNT_CODES: Record<string, DiscountCode> = {
     isCieStudentCode: true,
   },
 
+  // 6: 70% Discount
+  CIE70: {
+    code: 'CIE70',
+    percentage: 70,
+    description: '70% Student Discount (Valid with CIE Result)',
+    isCieStudentCode: true,
+  },
+  STUDENT70: {
+    code: 'CIE70',
+    percentage: 70,
+    description: '70% Student Discount (Valid with CIE Result)',
+    isCieStudentCode: true,
+  },
+
   // General Store Coupons
   SPARKLE10: {
     code: 'SPARKLE10',
@@ -118,6 +132,6 @@ export const validateDiscountCode = (inputCode: string): { valid: boolean; disco
 
   return {
     valid: false,
-    message: 'Invalid discount code. For student discounts, enter your CIE code (e.g. CIE10, CIE15, CIE30, CIE40, CIE50).',
+    message: 'Invalid discount code. For student discounts, enter your CIE code (e.g. CIE10, CIE15, CIE30, CIE40, CIE50, CIE70).',
   };
 };
