@@ -39,7 +39,7 @@ export const CATEGORIES: CategoryInfo[] = [
   },
 ];
 
-export const PRODUCTS: Product[] = [
+const RAW_PRODUCTS: Product[] = [
   {
     id: 'prod-star-dust-bracelet',
     name: 'Star Dust Bracelet',
@@ -2375,6 +2375,19 @@ export const PRODUCTS: Product[] = [
     ],
   },
 ];
+
+export const PRODUCTS: Product[] = RAW_PRODUCTS.map(product => {
+  const originalPrice = product.price;
+  const discountedPrice = Math.floor(originalPrice * 0.9);
+  
+  return {
+    ...product,
+    compareAtPrice: originalPrice,
+    price: discountedPrice,
+    isSale: true,
+    formattedPrice: `Rs. ${discountedPrice.toLocaleString()}`,
+  };
+});
 
 export const getDefaultReviewsForProduct = (product: Product): Review[] => {
   const reviewsByCat: Record<string, { author: string; comment: string; date: string }> = {

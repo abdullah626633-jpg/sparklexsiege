@@ -93,6 +93,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onShopNow }) => {
 
         {/* Bottom Left Content Container (Shop Button) */}
         <div className="relative z-20 w-full pb-7 px-6 sm:pb-12 sm:px-12 flex flex-col items-start text-left">
+          <div className="mb-4 inline-block bg-neutral-950/80 backdrop-blur-md border border-[#FF9F61]/50 px-4 py-2 rounded-sm shadow-xl">
+             <p className="text-[#FF9F61] font-extrabold text-xs sm:text-sm tracking-widest uppercase">
+               Flash Sale • 10% OFF Storewide
+             </p>
+          </div>
           <button
             onClick={handleButtonClick}
             className="inline-flex items-center justify-center space-x-2.5 bg-gradient-to-r from-[#FF9F61] to-[#f98239] hover:from-[#f98239] hover:to-[#FF9F61] text-neutral-950 font-bold tracking-widest uppercase text-xs sm:text-sm py-3.5 px-7 sm:py-4 sm:px-9 rounded-none shadow-2xl active:scale-95 transition-all duration-300 border border-[#FF9F61] cursor-pointer group"

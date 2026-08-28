@@ -3,6 +3,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Product, Review } from '../types';
 import { ProductCard } from '../components/ProductCard';
+import { CountdownTimer } from '../components/CountdownTimer';
 import { getDefaultReviewsForProduct, MOCK_REVIEWS } from '../data/products';
 import { trackViewContent } from '../utils/metaPixel';
 import {
@@ -173,6 +174,15 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
       }
     }
   };
+
+  const [viewersCount, setViewersCount] = useState(0);
+  const [stockCount, setStockCount] = useState(0);
+
+  useEffect(() => {
+    // Generate stable random values for the current product
+    setViewersCount(Math.floor(Math.random() * 20) + 5);
+    setStockCount(Math.floor(Math.random() * 5) + 2);
+  }, [product.id]);
 
   const hasGenuineDiscount = !!(product.compareAtPrice && product.compareAtPrice > product.price);
   const savingsAmount = hasGenuineDiscount ? (product.compareAtPrice! - product.price) : 0;
@@ -475,6 +485,28 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 </span>
                 <span className="font-bold text-[#FF9F61] bg-neutral-950 px-2 py-0.5 rounded-md text-[11px]">
                   FREE DELIVERY on Bank Transfer
+                </span>
+              </div>
+            </div>
+
+            {/* Urgency Box */}
+            <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 flex flex-col space-y-2">
+              <div className="flex items-center space-x-2 text-rose-700 font-bold text-sm">
+                <Clock className="w-5 h-5 animate-pulse" />
+                <span>Hurry! 10% OFF Sale Ends In:</span>
+                <CountdownTimer />
+              </div>
+              <div className="flex items-center justify-between text-xs font-medium text-rose-600/80">
+                <span className="flex items-center space-x-1">
+                  <Zap className="w-4 h-4" />
+                  <span>Selling fast — only {stockCount} left in stock!</span>
+                </span>
+                <span className="flex items-center space-x-1">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                  </span>
+                  <span>{viewersCount} people viewing</span>
                 </span>
               </div>
             </div>

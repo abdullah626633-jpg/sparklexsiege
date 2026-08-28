@@ -11,6 +11,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { CategoryType, PageType } from '../types';
+import { CountdownTimer } from './CountdownTimer';
 
 interface HeaderProps {
   cartCount: number;
@@ -65,12 +66,12 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <>
       {/* Top Announcement Bar */}
-      <div className="w-full bg-[#001E20] text-emerald-200 text-[11px] sm:text-xs font-semibold py-1.5 sm:py-2 px-3 text-center border-b border-emerald-900/60 flex items-center justify-center space-x-2 tracking-wide select-none">
+      <div className="w-full bg-[#001E20] text-emerald-200 text-[11px] sm:text-xs font-semibold py-1.5 sm:py-2 px-3 text-center border-b border-emerald-900/60 flex items-center justify-center space-x-2 sm:space-x-4 tracking-wide select-none flex-wrap">
         <span className="inline-block w-2 h-2 rounded-full bg-[#FF9F61] animate-pulse"></span>
         <span className="text-white font-bold tracking-wider">
-          SPECIAL OFFER: <span className="text-[#FF9F61] underline underline-offset-2">GET FREE DELIVERY ON BANK TRANSFER</span>
+          <span className="text-[#FF9F61]">10% OFF ALL PRODUCTS</span> • SALE ENDS IN: <CountdownTimer />
         </span>
-        <span className="hidden md:inline text-emerald-400/80">• Cash on Delivery (Rs. 250) Also Available Nationwide</span>
+        <span className="hidden md:inline text-emerald-400/80">• FREE DELIVERY ON BANK TRANSFER</span>
       </div>
 
       <header
