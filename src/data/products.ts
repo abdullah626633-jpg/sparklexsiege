@@ -2329,7 +2329,7 @@ export const PRODUCTS: Product[] = [
     formattedPrice: 'Rs. 2,450',
     featured: true,
     isNew: true,
-    images: ['/WhatsApp Image 2026-08-26 at 3.52.49 PM.jpeg', '/45430497-dd9e-4d17-b1d0-9a692b9a059f-1.jpg'],
+    images: ['/WhatsApp Image 2026-08-26 at 3.52.49 PM (1).jpeg', '/45430497-dd9e-4d17-b1d0-9a692b9a059f-1.jpg'],
     description: 'An enduring symbol of effortless luxury. This classic tennis bracelet features a seamless line of sparkling, hand-set crystal accents linked within a fluid, flexible setting designed to move comfortably with your wrist.',
     material: 'Continuous line of precision-cut sparkling crystals',
     specifications: [
