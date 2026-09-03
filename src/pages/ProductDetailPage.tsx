@@ -459,6 +459,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 <span className="text-3xl sm:text-4xl font-bold text-neutral-900 tracking-tight">
                   Rs. {product.price.toLocaleString()}
                 </span>
+                {!product.inStock && (
+                  <span className="text-xs font-bold text-rose-800 bg-rose-100 px-2.5 py-1 rounded-md border border-rose-200 uppercase tracking-widest">
+                    Sold Out
+                  </span>
+                )}
 
                 {hasGenuineDiscount && (
                   <>

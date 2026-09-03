@@ -61,17 +61,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Badges */}
         <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 flex flex-col gap-1">
-          {hasDiscount && (
+          {!product.inStock && (
+            <span className="bg-neutral-900 text-white text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 shadow-md inline-block">
+              Sold Out
+            </span>
+          )}
+          {hasDiscount && product.inStock && (
             <span className="bg-rose-600 text-white text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 shadow-md inline-block">
               {discountPercent}% OFF
             </span>
           )}
-          {product.isSale && !hasDiscount && (
+          {product.isSale && !hasDiscount && product.inStock && (
             <span className="bg-rose-600 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 shadow-xs inline-block">
               Sale
             </span>
           )}
-          {product.isNew && (
+          {product.isNew && product.inStock && (
             <span className="bg-black text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 shadow-xs inline-block">
               New
             </span>
@@ -143,11 +148,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               </span>
             )}
           </div>
-
           <button
-            onClick={() => onAddToCart(product)}
-            className="bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 p-2.5 transition-colors cursor-pointer border border-neutral-900 hover:border-[#FF9F61] flex items-center justify-center shrink-0"
-            title="Add to Cart"
+            onClick={() => product.inStock && onAddToCart(product)}
+            disabled={!product.inStock}
+            className={`p-2.5 transition-colors border flex items-center justify-center shrink-0 ${
+              product.inStock
+                ? 'bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 border-neutral-900 hover:border-[#FF9F61] cursor-pointer'
+                : 'bg-neutral-100 text-neutral-400 border-neutral-200 cursor-not-allowed'
+            }`}
+            title={product.inStock ? "Add to Cart" : "Out of Stock"}
           >
             <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
