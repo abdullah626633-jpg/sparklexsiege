@@ -32,26 +32,6 @@ interface CheckoutPageProps {
   onNavigate?: (page: PageType) => void;
 }
 
-const COMMON_CITIES = [
-  'Lahore',
-  'Karachi',
-  'Islamabad',
-  'Rawalpindi',
-  'Faisalabad',
-  'Multan',
-  'Peshawar',
-  'Quetta',
-  'Sialkot',
-  'Gujranwala',
-  'Hyderabad',
-  'Abbottabad',
-  'Bahawalpur',
-  'Sargodha',
-  'Sukkur',
-  'Jhelum',
-  'Gujrat',
-  'Other City',
-];
 
 export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   cartItems,
@@ -65,8 +45,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const [confirmedTotal, setConfirmedTotal] = useState<number>(0);
   const [confirmedDiscountAmount, setConfirmedDiscountAmount] = useState<number>(0);
   const [confirmedDiscountCode, setConfirmedDiscountCode] = useState<string | null>(null);
-  const [confirmedIsCieStudent, setConfirmedIsCieStudent] = useState<boolean>(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailSentSuccess, setEmailSentSuccess] = useState<boolean>(true);
 
   // Form fields
@@ -74,9 +53,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
-  const [city, setCity] = useState('Lahore');
-  const [customCity, setCustomCity] = useState('');
-  const [notes, setNotes] = useState('');
+  const [city, setCity] = useState('');
+    const [notes, setNotes] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'bank_transfer' | 'cod'>('bank_transfer');
   const [confirmedPaymentMethod, setConfirmedPaymentMethod] = useState<'bank_transfer' | 'cod'>('bank_transfer');
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -170,14 +148,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       setErrorMsg('Please enter your complete delivery street address.');
       return;
     }
-    if (city === 'Other City' && !customCity.trim()) {
-      setErrorMsg('Please enter your city name.');
-      return;
-    }
+    
 
     setIsSubmitting(true);
     const orderNum = `SKS-${Math.floor(100000 + Math.random() * 900000)}`;
-    const finalCity = city === 'Other City' ? customCity.trim() : city;
+    const finalCity = city.trim();
     const finalEmail = email.trim() || 'orders@sparkleziege.shop';
     const paymentMethodLabel =
       paymentMethod === 'bank_transfer'
@@ -205,8 +180,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     setConfirmedTotal(total);
     setConfirmedDiscountAmount(discountAmount);
     setConfirmedDiscountCode(appliedDiscount ? appliedDiscount.code : null);
-    setConfirmedIsCieStudent(!!appliedDiscount?.isCieStudentCode);
-    setConfirmedPaymentMethod(paymentMethod);
+        setConfirmedPaymentMethod(paymentMethod);
     setEmailSentSuccess(emailRes.success);
     setPlacedOrder(orderNum);
     trackPurchase(orderNum, total);
@@ -219,7 +193,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
   // SUCCESS CONFIRMATION VIEW
   if (placedOrder) {
-    const finalCity = city === 'Other City' ? customCity : city;
+    const finalCity = city;
     const isBankTransfer = confirmedPaymentMethod === 'bank_transfer';
 
     return (
@@ -287,18 +261,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
             </div>
           </div>
 
-          {/* Student CIE Verification Notice if CIE Discount applied */}
-          {confirmedIsCieStudent && (
-            <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900 text-left space-y-1">
-              <div className="font-bold flex items-center space-x-1.5 text-amber-950">
-                <GraduationCap className="w-4 h-4 text-amber-700 shrink-0" />
-                <span>CIE Student Result Verification</span>
-              </div>
-              <p className="text-[11px] text-amber-800 leading-relaxed">
-                You used student code <strong>{confirmedDiscountCode}</strong>. Please attach a photo of your official <strong>CIE Result Statement</strong> when clicking WhatsApp below.
-              </p>
-            </div>
-          )}
+          
 
           {/* Bank Transfer Details if customer chose Bank Transfer */}
           {isBankTransfer && (
@@ -376,9 +339,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
             >
               <MessageSquare className="w-4 h-4" />
               <span>
-                {confirmedIsCieStudent
-                  ? 'Send CIE Result & Slip on WhatsApp'
-                  : isBankTransfer
+                {isBankTransfer
                   ? 'Send Payment Slip on WhatsApp'
                   : 'Track / Inquire on WhatsApp'}
               </span>
@@ -510,7 +471,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 })}
               </div>
 
-              {/* Discount / CIE Student Promo Code Section moved below */}
+              {/* Discount Section moved below */}
               {/* Cost breakdown */}
               <div className="border-t border-neutral-100 pt-3 space-y-2 text-xs">
                 <div className="flex justify-between text-neutral-600">
@@ -738,17 +699,14 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 />
               </div>
 
-              {/* Discount / CIE Student Promo Code Section */}
+              {/* Discount Section */}
               <div className="pt-3 border-t border-neutral-100">
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-[11px] font-bold text-neutral-800 flex items-center space-x-1.5">
                     <Tag className="w-3.5 h-3.5 text-[#FF9F61]" />
-                    <span>Discount / CIE Student Code</span>
+                    <span>Discount Code</span>
                   </label>
-                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100/90 px-2 py-0.5 rounded-full flex items-center space-x-1">
-                    <GraduationCap className="w-3 h-3" />
-                    <span>CIE Student Offer</span>
-                  </span>
+                  
                 </div>
 
                 {appliedDiscount ? (
@@ -767,12 +725,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         <span>Remove</span>
                       </button>
                     </div>
-                    {appliedDiscount.isCieStudentCode && (
-                      <p className="text-[10px] text-emerald-800 leading-tight flex items-start space-x-1">
-                        <GraduationCap className="w-3 h-3 shrink-0 mt-0.5 text-emerald-700" />
-                        <span>Valid for students with CIE Results. Attach your result on WhatsApp after checkout.</span>
-                      </p>
-                    )}
+                    
                   </div>
                 ) : (
                   <div className="space-y-1.5">

@@ -60,7 +60,7 @@ const RAW_PRODUCTS: Product[] = [
     ],
     rating: 5.0,
     reviewCount: 1,
-    inStock: true,
+    inStock: false,
     details: [
       'Crafted with premium 18K gold-plated finish',
       'Adorned with shimmering celestial stones for subtle brilliance',
@@ -77,7 +77,12 @@ const RAW_PRODUCTS: Product[] = [
     formattedPrice: 'Rs. 5,450',
     featured: true,
     isNew: true,
-    images: ['/IMG_4178.png'],
+    images: [
+      '/WhatsApp Image 2026-09-03 at 1.23.23 PM.jpeg',
+      '/WhatsApp Image 2026-09-03 at 1.22.00 PM.jpeg',
+      '/WhatsApp Image 2026-09-03 at 1.22.00 PM (1).jpeg',
+      '/WhatsApp Image 2026-09-03 at 1.21.59 PM.jpeg'
+    ],
     description: 'Embrace timeless elegance with the Floral Pendant Set. This beautifully coordinated set features a delicate floral pendant, matching earrings, and a statement ring, all adorned with dazzling stones and finished in 18K gold plating. Perfect for weddings, festive occasions, or adding a graceful touch of luxury to your everyday style.',
     material: '18K Gold Plated with Dazzling Floral Stones',
     specifications: [
@@ -1836,7 +1841,7 @@ const RAW_PRODUCTS: Product[] = [
     formattedPrice: 'Rs. 3,450',
     featured: true,
     isNew: true,
-    images: ['/frostfire-bracelet.jpg'],
+    images: ['/Gemini_Generated_Image_re0h68re0h68re0h.jpg'],
     description: 'Add a touch of elegance to your style with the Frostfire Bracelet, designed with a stunning shimmer and sophisticated finish. A perfect blend of modern charm and timeless beauty, this bracelet is ideal for everyday wear or special occasions.',
     material: 'Shimmering Alloy & Fine Finished Accent Stones',
     specifications: [
@@ -2329,7 +2334,7 @@ const RAW_PRODUCTS: Product[] = [
     formattedPrice: 'Rs. 2,450',
     featured: true,
     isNew: true,
-    images: ['/WhatsApp Image 2026-08-26 at 3.52.49 PM (1).jpeg', '/45430497-dd9e-4d17-b1d0-9a692b9a059f-1.jpg'],
+    images: ['/Gemini_Generated_Image_1jtszg1jtszg1jts.jpg', '/WhatsApp Image 2026-08-26 at 3.52.49 PM (1).jpeg'],
     description: 'An enduring symbol of effortless luxury. This classic tennis bracelet features a seamless line of sparkling, hand-set crystal accents linked within a fluid, flexible setting designed to move comfortably with your wrist.',
     material: 'Continuous line of precision-cut sparkling crystals',
     specifications: [
