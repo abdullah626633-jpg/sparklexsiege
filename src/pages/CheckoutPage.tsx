@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CartItem, PageType } from '../types';
-import { validateDiscountCode, DiscountCode } from '../data/discountCodes';
 import { 
   CheckCircle2, 
   ArrowLeft, 
@@ -43,9 +42,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   // Success screen state
   const [placedOrder, setPlacedOrder] = useState<string | null>(null);
   const [confirmedTotal, setConfirmedTotal] = useState<number>(0);
-  const [confirmedDiscountAmount, setConfirmedDiscountAmount] = useState<number>(0);
-  const [confirmedDiscountCode, setConfirmedDiscountCode] = useState<string | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+        const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailSentSuccess, setEmailSentSuccess] = useState<boolean>(true);
 
   // Form fields
@@ -54,30 +51,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
-    const [notes, setNotes] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState<'bank_transfer' | 'cod'>('bank_transfer');
+    const [paymentMethod, setPaymentMethod] = useState<'bank_transfer' | 'cod'>('bank_transfer');
   const [confirmedPaymentMethod, setConfirmedPaymentMethod] = useState<'bank_transfer' | 'cod'>('bank_transfer');
   const [copiedField, setCopiedField] = useState<string | null>(null);
-
-  // Discount code state
-  const [discountInput, setDiscountInput] = useState('');
-  const [appliedDiscount, setAppliedDiscount] = useState<DiscountCode | null>(null);
-  const [discountMessage, setDiscountMessage] = useState<{ text: string; error: boolean } | null>(null);
-
-  // Restore coupon from session if set in Cart
-  useEffect(() => {
-    try {
-      const savedCode = sessionStorage.getItem('sparklez_discount_code');
-      if (savedCode) {
-        const result = validateDiscountCode(savedCode);
-        if (result.valid && result.discount) {
-          setAppliedDiscount(result.discount);
-          setDiscountInput(result.discount.code);
-          setDiscountMessage({ text: result.message, error: false });
-        }
-      }
-    } catch {}
-  }, []);
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard?.writeText(text);
@@ -93,43 +69,15 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     0
   );
 
-  const discountPercent = appliedDiscount ? appliedDiscount.percentage : 0;
-  const discountAmount = Math.round((subtotal * discountPercent) / 100);
-  const discountedSubtotal = Math.max(0, subtotal - discountAmount);
-
   // FREE Delivery on Bank Transfer, Rs. 250 on Cash on Delivery
   const shipping = subtotal === 0 ? 0 : paymentMethod === 'bank_transfer' ? 0 : 250;
-  const total = discountedSubtotal + shipping;
+  const total = subtotal + shipping;
 
   React.useEffect(() => {
     if (cartItems.length > 0) {
       trackInitiateCheckout(total, cartItems.length);
     }
   }, []);
-
-  const handleApplyDiscount = (e: React.FormEvent) => {
-    e.preventDefault();
-    const result = validateDiscountCode(discountInput);
-    if (result.valid && result.discount) {
-      setAppliedDiscount(result.discount);
-      setDiscountMessage({ text: result.message, error: false });
-      try {
-        sessionStorage.setItem('sparklez_discount_code', result.discount.code);
-      } catch {}
-    } else {
-      setAppliedDiscount(null);
-      setDiscountMessage({ text: result.message, error: true });
-    }
-  };
-
-  const handleRemoveDiscount = () => {
-    setAppliedDiscount(null);
-    setDiscountInput('');
-    setDiscountMessage(null);
-    try {
-      sessionStorage.removeItem('sparklez_discount_code');
-    } catch {}
-  };
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,29 +115,21 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       address: address.trim(),
       city: finalCity,
       state: 'Pakistan',
-      notes: notes.trim() || undefined,
       cartItems: cartItems,
       subtotal: `Rs. ${subtotal.toLocaleString()}`,
-      discount: discountAmount > 0 ? `Rs. ${discountAmount.toLocaleString()} (${appliedDiscount?.code} • ${discountPercent}% OFF)` : undefined,
-      discount_code: appliedDiscount ? appliedDiscount.code : undefined,
       shipping: shipping === 0 ? 'FREE (Bank Transfer Special)' : `Rs. ${shipping}`,
       total_amount: `Rs. ${total.toLocaleString()}`,
       payment_method: paymentMethodLabel,
     });
 
     setConfirmedTotal(total);
-    setConfirmedDiscountAmount(discountAmount);
-    setConfirmedDiscountCode(appliedDiscount ? appliedDiscount.code : null);
-        setConfirmedPaymentMethod(paymentMethod);
+    setConfirmedPaymentMethod(paymentMethod);
     setEmailSentSuccess(emailRes.success);
     setPlacedOrder(orderNum);
     trackPurchase(orderNum, total);
     setIsSubmitting(false);
     onClearCart();
-    try {
-      sessionStorage.removeItem('sparklez_discount_code');
-    } catch {}
-  };
+    };
 
   // SUCCESS CONFIRMATION VIEW
   if (placedOrder) {
@@ -228,15 +168,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
               <span className="text-neutral-500">Subtotal:</span>
               <span className="font-semibold text-neutral-800">Rs. {subtotal.toLocaleString()}</span>
             </div>
-            {confirmedDiscountAmount > 0 && (
-              <div className="flex justify-between text-emerald-700 font-bold bg-emerald-50 px-2 py-1 rounded-lg">
-                <span className="flex items-center space-x-1">
-                  <GraduationCap className="w-3.5 h-3.5" />
-                  <span>Discount ({confirmedDiscountCode}):</span>
-                </span>
-                <span>-Rs. {confirmedDiscountAmount.toLocaleString()}</span>
-              </div>
-            )}
+            
             <div className="flex justify-between">
               <span className="text-neutral-500">Delivery Charges:</span>
               <span className="font-bold text-emerald-700">
@@ -327,9 +259,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
           <div className="space-y-2 pt-2">
             <a
               href={`https://wa.me/923039117733?text=${encodeURIComponent(
-                confirmedIsCieStudent
-                  ? `Hi Sparklez Siege! I just placed Order #${placedOrder} for ${fullName} with CIE Student Discount (${confirmedDiscountCode}, Rs. ${confirmedDiscountAmount.toLocaleString()} OFF). Total payable: Rs. ${confirmedTotal.toLocaleString()} via ${isBankTransfer ? 'HBL Bank Transfer' : 'COD'}. Here is my CIE Result Statement ${isBankTransfer ? '& payment slip' : ''} for verification.`
-                  : isBankTransfer
+                isBankTransfer
                   ? `Hi Sparklez Siege! I just placed Order #${placedOrder} for ${fullName} with Bank Transfer (Rs. ${confirmedTotal.toLocaleString()}). Here is my payment confirmation slip.`
                   : `Hi Sparklez Siege! I just placed Order #${placedOrder} for ${fullName} with Cash on Delivery (Rs. ${confirmedTotal.toLocaleString()}). Could you please confirm tracking?`
               )}`}
@@ -471,7 +401,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 })}
               </div>
 
-              {/* Discount Section moved below */}
+              
               {/* Cost breakdown */}
               <div className="border-t border-neutral-100 pt-3 space-y-2 text-xs">
                 <div className="flex justify-between text-neutral-600">
@@ -479,15 +409,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                   <span className="font-semibold text-neutral-900">Rs. {subtotal.toLocaleString()}</span>
                 </div>
 
-                {discountAmount > 0 && (
-                  <div className="flex justify-between text-emerald-700 font-bold bg-emerald-50/80 px-2 py-1 rounded-lg">
-                    <span className="flex items-center space-x-1">
-                      <GraduationCap className="w-3.5 h-3.5" />
-                      <span>Discount ({appliedDiscount?.code} • {discountPercent}%):</span>
-                    </span>
-                    <span>-Rs. {discountAmount.toLocaleString()}</span>
-                  </div>
-                )}
+                
 
                 <div className="flex justify-between items-center text-neutral-600">
                   <span>Delivery Charges:</span>
@@ -617,57 +539,21 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 </div>
               </div>
 
-              {/* 4. City */}
+              {/* 4. City and Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-neutral-800 mb-1">
                     City <span className="text-rose-500">*</span>
                   </label>
-                  <select
+                  <input
+                    type="text"
+                    required
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    className="w-full py-3 px-3 bg-neutral-50 border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-hidden focus:border-[#FF9F61] focus:bg-white cursor-pointer"
-                  >
-                    {COMMON_CITIES.map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
+                    placeholder="Enter your city name"
+                    className="w-full py-3 px-3 bg-neutral-50 border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-hidden focus:border-[#FF9F61] focus:bg-white"
+                  />
                 </div>
-
-                {city === 'Other City' ? (
-                  <div>
-                    <label className="block text-xs font-bold text-neutral-800 mb-1">
-                      Type City Name <span className="text-rose-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={customCity}
-                      onChange={(e) => setCustomCity(e.target.value)}
-                      placeholder="Enter your city name"
-                      className="w-full py-3 px-3 bg-neutral-50 border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-hidden focus:border-[#FF9F61] focus:bg-white"
-                    />
-                  </div>
-                ) : (
-                  <div>
-                    <label className="block text-xs font-bold text-neutral-800 mb-1">
-                      Email Address <span className="text-neutral-400 font-normal">(Optional)</span>
-                    </label>
-                    <div className="relative">
-                      <Mail className="w-4 h-4 text-neutral-400 absolute left-3 top-3.5" />
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="For digital receipt"
-                        className="w-full py-3 pl-9 pr-3 bg-neutral-50 border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-hidden focus:border-[#FF9F61] focus:bg-white"
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* If city is 'Other City', show email below */}
-              {city === 'Other City' && (
                 <div>
                   <label className="block text-xs font-bold text-neutral-800 mb-1">
                     Email Address <span className="text-neutral-400 font-normal">(Optional)</span>
@@ -678,87 +564,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="For digital receipt (optional)"
+                      placeholder="For digital receipt"
                       className="w-full py-3 pl-9 pr-3 bg-neutral-50 border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-hidden focus:border-[#FF9F61] focus:bg-white"
                     />
                   </div>
                 </div>
-              )}
-
-              {/* 5. Special Note (Optional) */}
-              <div>
-                <label className="block text-xs font-semibold text-neutral-700 mb-1">
-                  Special Note for Courier <span className="text-neutral-400 font-normal">(Optional)</span>
-                </label>
-                <input
-                  type="text"
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="e.g. Please deliver after 2 PM or call on arrival"
-                  className="w-full py-2.5 px-3 bg-neutral-50 border border-neutral-200 rounded-xl text-xs text-neutral-900 focus:outline-hidden focus:border-[#FF9F61] focus:bg-white"
-                />
-              </div>
-
-              {/* Discount Section */}
-              <div className="pt-3 border-t border-neutral-100">
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-[11px] font-bold text-neutral-800 flex items-center space-x-1.5">
-                    <Tag className="w-3.5 h-3.5 text-[#FF9F61]" />
-                    <span>Discount Code</span>
-                  </label>
-                  
-                </div>
-
-                {appliedDiscount ? (
-                  <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-emerald-900 text-xs flex items-center space-x-1.5">
-                        <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Code: <strong>{appliedDiscount.code}</strong> ({appliedDiscount.percentage}% OFF)</span>
-                      </span>
-                      <button
-                        type="button"
-                        onClick={handleRemoveDiscount}
-                        className="text-[11px] font-bold text-rose-600 hover:text-rose-800 underline cursor-pointer flex items-center space-x-0.5"
-                      >
-                        <X className="w-3 h-3" />
-                        <span>Remove</span>
-                      </button>
-                    </div>
-                    
-                  </div>
-                ) : (
-                  <div className="space-y-1.5">
-                    <div className="flex space-x-2">
-                      <div className="relative flex-1">
-                        <Tag className="w-3.5 h-3.5 absolute left-3 top-3 text-neutral-400" />
-                        <input
-                          type="text"
-                          value={discountInput}
-                          onChange={(e) => setDiscountInput(e.target.value)}
-                          placeholder="e.g. STUDENT24"
-                          className="w-full pl-8 pr-2 py-2 bg-neutral-50 border border-neutral-200 rounded-xl text-xs uppercase focus:bg-white focus:outline-hidden focus:border-[#FF9F61] transition-colors"
-                        />
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleApplyDiscount}
-                        className="bg-neutral-900 hover:bg-[#FF9F61] text-white hover:text-neutral-950 font-bold text-xs px-3.5 rounded-xl transition-colors cursor-pointer shrink-0"
-                      >
-                        Apply
-                      </button>
-                    </div>
-                    {discountMessage && (
-                      <p
-                        className={`text-xs mt-1 font-medium ${
-                          discountMessage.error ? 'text-rose-600' : 'text-emerald-700'
-                        }`}
-                      >
-                        {discountMessage.text}
-                      </p>
-                    )}
-                  </div>
-                )}
               </div>
 
               {/* 6. PAYMENT METHOD: SELECTABLE BANK TRANSFER (FREE DELIVERY) OR COD */}
