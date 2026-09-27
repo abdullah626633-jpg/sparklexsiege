@@ -42,6 +42,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
   };
 
   const handleBuyNow = () => {
+    if (!product.inStock) return;
     onClose();
     onBuyNow(product, quantity, selectedSize, selectedColor);
     navigate('/checkout');
@@ -64,6 +65,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
   };
 
   const handleAdd = () => {
+    if (!product.inStock) return;
     onAddToCart(product, quantity, selectedSize, selectedColor);
     setAddedToast(true);
     setTimeout(() => setAddedToast(false), 2000);
@@ -99,7 +101,12 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
         {/* Left Side Gallery */}
         <div className="w-full md:w-1/2 bg-neutral-50 p-5 sm:p-6 flex flex-col justify-between">
           <div className="aspect-square w-full rounded-2xl border border-neutral-200 overflow-hidden bg-white mb-3 relative">
-            {hasGenuineDiscount && (
+            {!product.inStock && (
+              <span className="absolute top-3 left-3 z-10 bg-neutral-900 text-white text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-md shadow-md">
+                Sold Out
+              </span>
+            )}
+            {hasGenuineDiscount && product.inStock && (
               <span className="absolute top-3 left-3 z-10 bg-rose-600 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md shadow-md">
                 SAVE {discountPercent}%
               </span>
@@ -183,7 +190,11 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
             {/* Material & Stock reassurance */}
             <div className="mt-3 flex items-center justify-between text-xs text-neutral-600 bg-neutral-50 p-2.5 rounded-xl border border-neutral-100">
               <span>{product.material}</span>
-              <span className="font-semibold text-emerald-700">✓ In Stock (COD Available)</span>
+              {product.inStock ? (
+                <span className="font-semibold text-emerald-700">✓ In Stock (COD Available)</span>
+              ) : (
+                <span className="font-bold text-rose-600">Sold Out / Out of Stock</span>
+              )}
             </div>
 
             {/* Size Options if available */}
@@ -272,10 +283,15 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
             <button
               type="button"
               onClick={handleBuyNow}
-              className="w-full bg-[#FF9F61] hover:bg-[#f08f4f] text-neutral-950 font-extrabold text-sm py-3.5 px-4 rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center space-x-1.5"
+              disabled={!product.inStock}
+              className={`w-full font-extrabold text-sm py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center space-x-1.5 ${
+                product.inStock
+                  ? 'bg-[#FF9F61] hover:bg-[#f08f4f] text-neutral-950 cursor-pointer'
+                  : 'bg-neutral-200 text-neutral-500 border border-neutral-300 cursor-not-allowed shadow-none'
+              }`}
             >
               <Zap className="w-4 h-4 fill-current" />
-              <span>BUY NOW — Rs. {currentTotalPrice.toLocaleString()}</span>
+              <span>{product.inStock ? `BUY NOW — Rs. ${currentTotalPrice.toLocaleString()}` : 'SOLD OUT'}</span>
             </button>
 
             {/* SECONDARY ROW */}
@@ -283,10 +299,15 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
               <button
                 type="button"
                 onClick={handleAdd}
-                className="flex-1 bg-white hover:bg-neutral-900 text-neutral-900 hover:text-white border border-neutral-900 font-bold text-xs py-2.5 px-3 rounded-xl transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
+                disabled={!product.inStock}
+                className={`flex-1 border font-bold text-xs py-2.5 px-3 rounded-xl transition-colors flex items-center justify-center space-x-1.5 ${
+                  product.inStock
+                    ? 'bg-white hover:bg-neutral-900 text-neutral-900 hover:text-white border-neutral-900 cursor-pointer'
+                    : 'bg-neutral-100 text-neutral-400 border-neutral-200 cursor-not-allowed'
+                }`}
               >
                 <ShoppingBag className="w-3.5 h-3.5" />
-                <span>Add to Cart</span>
+                <span>{product.inStock ? 'Add to Cart' : 'Out of Stock'}</span>
               </button>
 
               <button

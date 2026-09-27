@@ -21,6 +21,7 @@ import {
   Clock,
   Sparkles,
   Award,
+  AlertCircle,
 } from 'lucide-react';
 
 interface ProductDetailPageProps {
@@ -193,11 +194,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const currentTotalPrice = product.price * quantity;
 
   const handleBuyNow = () => {
+    if (!product.inStock) return;
     onBuyNow(product, quantity, selectedSize, selectedColor);
     navigate('/checkout');
   };
 
   const handleAddToCart = () => {
+    if (!product.inStock) return;
     onAddToCart(product, quantity, selectedSize, selectedColor);
     setAddedToast(true);
     setTimeout(() => setAddedToast(false), 2500);
@@ -484,37 +487,53 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               )}
 
               <div className="mt-2.5 pt-2.5 border-t border-neutral-200/60 flex items-center justify-between text-xs text-neutral-600 flex-wrap gap-1">
-                <span className="flex items-center space-x-1 font-medium text-emerald-700">
-                  <Check className="w-3.5 h-3.5 shrink-0" />
-                  <span>In Stock & Ready to Dispatch</span>
-                </span>
+                {product.inStock ? (
+                  <span className="flex items-center space-x-1 font-medium text-emerald-700">
+                    <Check className="w-3.5 h-3.5 shrink-0" />
+                    <span>In Stock & Ready to Dispatch</span>
+                  </span>
+                ) : (
+                  <span className="flex items-center space-x-1 font-bold text-rose-600">
+                    <span>Sold Out / Out of Stock</span>
+                  </span>
+                )}
                 <span className="font-bold text-[#FF9F61] bg-neutral-950 px-2 py-0.5 rounded-md text-[11px]">
                   FREE DELIVERY on Bank Transfer
                 </span>
               </div>
             </div>
 
-            {/* Urgency Box */}
-            <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 flex flex-col space-y-2">
-              <div className="flex items-center space-x-2 text-rose-700 font-bold text-sm">
-                <Clock className="w-5 h-5 animate-pulse" />
-                <span>Hurry! 10% OFF Sale Ends In:</span>
-                <CountdownTimer />
-              </div>
-              <div className="flex items-center justify-between text-xs font-medium text-rose-600/80">
-                <span className="flex items-center space-x-1">
-                  <Zap className="w-4 h-4" />
-                  <span>Selling fast — only {stockCount} left in stock!</span>
-                </span>
-                <span className="flex items-center space-x-1">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+            {/* Urgency Box or Out of Stock Notice */}
+            {product.inStock ? (
+              <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 flex flex-col space-y-2">
+                <div className="flex items-center space-x-2 text-rose-700 font-bold text-sm">
+                  <Clock className="w-5 h-5 animate-pulse" />
+                  <span>Hurry! 10% OFF Sale Ends In:</span>
+                  <CountdownTimer />
+                </div>
+                <div className="flex items-center justify-between text-xs font-medium text-rose-600/80">
+                  <span className="flex items-center space-x-1">
+                    <Zap className="w-4 h-4" />
+                    <span>Selling fast — only {stockCount} left in stock!</span>
                   </span>
-                  <span>{viewersCount} people viewing</span>
-                </span>
+                  <span className="flex items-center space-x-1">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                    </span>
+                    <span>{viewersCount} people viewing</span>
+                  </span>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="bg-neutral-100 border border-neutral-300 rounded-2xl p-4 flex items-center space-x-3 text-neutral-800">
+                <AlertCircle className="w-5 h-5 text-neutral-600 shrink-0" />
+                <div className="text-xs">
+                  <strong className="font-bold block text-neutral-900 text-sm">Currently Out of Stock</strong>
+                  <span>This item is temporarily sold out. You can message us on WhatsApp to inquire about restocks or custom orders.</span>
+                </div>
+              </div>
+            )}
 
             {/* 4. Why You'll Love It (Short & Scannable Selling Points) */}
             <div className="p-4 bg-white rounded-2xl border border-neutral-200 space-y-2.5">
@@ -654,10 +673,15 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               <button
                 type="button"
                 onClick={handleBuyNow}
-                className="w-full bg-[#FF9F61] hover:bg-[#f08f4f] active:scale-[0.99] text-neutral-950 font-extrabold text-base sm:text-lg py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all cursor-pointer flex items-center justify-center space-x-2 border border-[#FF9F61]"
+                disabled={!product.inStock}
+                className={`w-full font-extrabold text-base sm:text-lg py-4 px-6 rounded-2xl shadow-lg transition-all flex items-center justify-center space-x-2 border ${
+                  product.inStock
+                    ? 'bg-[#FF9F61] hover:bg-[#f08f4f] active:scale-[0.99] text-neutral-950 hover:shadow-xl cursor-pointer border-[#FF9F61]'
+                    : 'bg-neutral-200 text-neutral-500 border-neutral-300 cursor-not-allowed shadow-none'
+                }`}
               >
                 <Zap className="w-5 h-5 fill-current" />
-                <span>BUY NOW — Rs. {currentTotalPrice.toLocaleString()}</span>
+                <span>{product.inStock ? `BUY NOW — Rs. ${currentTotalPrice.toLocaleString()}` : 'SOLD OUT'}</span>
               </button>
 
               {/* SECONDARY ROW: Add to Cart + Wishlist */}
@@ -665,10 +689,15 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 <button
                   type="button"
                   onClick={handleAddToCart}
-                  className="flex-1 bg-white hover:bg-neutral-900 text-neutral-900 hover:text-white border-2 border-neutral-900 font-bold text-sm sm:text-base py-3.5 px-5 rounded-2xl transition-all cursor-pointer flex items-center justify-center space-x-2"
+                  disabled={!product.inStock}
+                  className={`flex-1 border-2 font-bold text-sm sm:text-base py-3.5 px-5 rounded-2xl transition-all flex items-center justify-center space-x-2 ${
+                    product.inStock
+                      ? 'bg-white hover:bg-neutral-900 text-neutral-900 hover:text-white border-neutral-900 cursor-pointer'
+                      : 'bg-neutral-100 text-neutral-400 border-neutral-200 cursor-not-allowed'
+                  }`}
                 >
                   <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span>Add to Cart</span>
+                  <span>{product.inStock ? 'Add to Cart' : 'Out of Stock'}</span>
                 </button>
 
                 <button
@@ -1087,10 +1116,15 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             <button
               type="button"
               onClick={handleBuyNow}
-              className="flex-1 bg-[#FF9F61] active:bg-[#e88d51] text-neutral-950 font-extrabold text-sm py-3 px-4 rounded-xl shadow-md flex items-center justify-center space-x-1.5 cursor-pointer whitespace-nowrap"
+              disabled={!product.inStock}
+              className={`flex-1 font-extrabold text-sm py-3 px-4 rounded-xl shadow-md flex items-center justify-center space-x-1.5 whitespace-nowrap ${
+                product.inStock
+                  ? 'bg-[#FF9F61] active:bg-[#e88d51] text-neutral-950 cursor-pointer'
+                  : 'bg-neutral-200 text-neutral-500 cursor-not-allowed shadow-none'
+              }`}
             >
               <Zap className="w-4 h-4 fill-current" />
-              <span>BUY NOW</span>
+              <span>{product.inStock ? 'BUY NOW' : 'SOLD OUT'}</span>
             </button>
           </div>
         </div>
