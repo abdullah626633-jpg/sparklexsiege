@@ -18,6 +18,12 @@ const CATEGORY_ALIASES: Record<string, CategoryType> = {
   'necklaces': 'pendants',
   'sets': 'jewellery-sets',
   'jewellery-sets': 'jewellery-sets',
+  'sterling-luxury-set': 'sterling-luxury-sets',
+  'sterling-luxury-sets': 'sterling-luxury-sets',
+  'sterling-luxury': 'sterling-luxury-sets',
+  'sterling-sets': 'sterling-luxury-sets',
+  'sterling-set': 'sterling-luxury-sets',
+  'sterling': 'sterling-luxury-sets',
 };
 
 export const CategoryPage: React.FC<CategoryPageProps> = ({

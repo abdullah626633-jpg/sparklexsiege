@@ -75,7 +75,11 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
                       src={prod.images[0]}
                       alt={prod.name}
                       onClick={() => handleProductSelect(prod)}
-                      className="w-20 h-20 object-cover rounded-xl bg-white cursor-pointer"
+                      className={`w-20 h-20 ${
+                        prod.imageFit === 'contain' || prod.category === 'sterling-luxury-sets'
+                          ? 'object-contain p-1'
+                          : 'object-cover'
+                      } rounded-xl bg-white cursor-pointer`}
                       referrerPolicy="no-referrer"
                     />
 

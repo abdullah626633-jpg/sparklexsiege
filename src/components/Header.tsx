@@ -44,6 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
   const navLinks: { label: string; path: string; category?: CategoryType }[] = [
     { label: 'Home', path: '/' },
     { label: 'Shop', path: '/shop' },
+    { label: 'Sterling Luxury Sets', path: '/category/sterling-luxury-sets', category: 'sterling-luxury-sets' },
     { label: 'Jewellery Sets', path: '/category/jewellery-sets', category: 'jewellery-sets' },
     { label: 'Pendants', path: '/category/pendants', category: 'pendants' },
     { label: 'Earrings', path: '/category/earrings', category: 'earrings' },
@@ -110,7 +111,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-7">
+            <nav className="hidden lg:flex items-center space-x-3.5 xl:space-x-6">
               {navLinks.map((link) => {
                 const active = isLinkActive(link.path);
                 return (
@@ -119,7 +120,7 @@ export const Header: React.FC<HeaderProps> = ({
                     whileHover={{ y: -1, scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleNavClick(link.path)}
-                    className={`text-sm font-medium tracking-wide transition-all duration-300 cursor-pointer relative py-1 ${
+                    className={`text-[13px] xl:text-sm font-medium tracking-wide transition-all duration-300 cursor-pointer relative py-1 whitespace-nowrap ${
                       active
                         ? 'text-white font-bold'
                         : 'text-emerald-100/90 hover:text-[#FF9F61]'

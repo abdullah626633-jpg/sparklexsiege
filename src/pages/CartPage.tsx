@@ -152,7 +152,11 @@ export const CartPage: React.FC<CartPageProps> = ({
                       <img
                         src={item.product.images[0]}
                         alt={item.product.name}
-                        className="w-18 h-18 sm:w-20 sm:h-20 object-cover rounded-xl bg-white border border-neutral-200 shrink-0"
+                        className={`w-18 h-18 sm:w-20 sm:h-20 ${
+                          item.product.imageFit === 'contain' || item.product.category === 'sterling-luxury-sets'
+                            ? 'object-contain p-1'
+                            : 'object-cover'
+                        } rounded-xl bg-white border border-neutral-200 shrink-0`}
                         referrerPolicy="no-referrer"
                       />
                       <div className="min-w-0 flex-1">
@@ -416,11 +420,15 @@ export const CartPage: React.FC<CartPageProps> = ({
                   onClick={() => navigate(`/product/${prod.slug || prod.id}`)}
                   className="group bg-white rounded-2xl border border-neutral-200 overflow-hidden shadow-2xs hover:shadow-md transition-all cursor-pointer flex flex-col"
                 >
-                  <div className="aspect-square bg-neutral-50 overflow-hidden relative">
+                  <div className="aspect-square bg-neutral-100 overflow-hidden relative flex items-center justify-center">
                     <img
                       src={prod.images[0]}
                       alt={prod.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className={`w-full h-full ${
+                        prod.imageFit === 'contain' || prod.category === 'sterling-luxury-sets'
+                          ? 'object-contain p-2'
+                          : 'object-cover'
+                      } group-hover:scale-105 transition-transform duration-300`}
                       referrerPolicy="no-referrer"
                     />
                   </div>

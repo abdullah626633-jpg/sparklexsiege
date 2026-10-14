@@ -79,6 +79,12 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
   const currentTotalPrice = product.price * quantity;
 
+  const isContain =
+    product.imageFit === 'contain' ||
+    product.category === 'sterling-luxury-sets' ||
+    product.name.toLowerCase().includes('maharani') ||
+    product.name.toLowerCase().includes('princess');
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
       {/* Backdrop */}
@@ -100,7 +106,15 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
         {/* Left Side Gallery */}
         <div className="w-full md:w-1/2 bg-neutral-50 p-5 sm:p-6 flex flex-col justify-between">
-          <div className="aspect-square w-full rounded-2xl border border-neutral-200 overflow-hidden bg-white mb-3 relative">
+          <div className="aspect-square w-full rounded-2xl border border-neutral-200 overflow-hidden bg-neutral-100 mb-3 relative flex items-center justify-center">
+            {/* Ambient blurred backdrop for luxury sets */}
+            {isContain && (
+              <div
+                className="absolute inset-0 bg-cover bg-center blur-md opacity-25 scale-110 pointer-events-none"
+                style={{ backgroundImage: `url("${encodeURI(product.images[activeImgIndex] || product.images[0])}")` }}
+              />
+            )}
+
             {!product.inStock && (
               <span className="absolute top-3 left-3 z-10 bg-neutral-900 text-white text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-md shadow-md">
                 Sold Out
@@ -114,7 +128,11 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
             <img
               src={product.images[activeImgIndex] || product.images[0]}
               alt={product.name}
-              className="w-full h-full object-cover object-center"
+              className={`w-full h-full relative z-2 ${
+                isContain
+                  ? 'object-contain object-center p-3'
+                  : 'object-cover object-center'
+              }`}
               referrerPolicy="no-referrer"
             />
           </div>
@@ -126,7 +144,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 <button
                   key={idx}
                   onClick={() => setActiveImgIndex(idx)}
-                  className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
+                  className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer bg-neutral-100 flex items-center justify-center ${
                     activeImgIndex === idx
                       ? 'border-[#FF9F61] shadow-2xs'
                       : 'border-neutral-200 opacity-70 hover:opacity-100'
@@ -135,7 +153,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                   <img
                     src={img}
                     alt=""
-                    className="w-full h-full object-cover"
+                    className={`w-full h-full ${isContain ? 'object-contain p-1' : 'object-cover'}`}
                     referrerPolicy="no-referrer"
                   />
                 </button>

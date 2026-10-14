@@ -1,4 +1,11 @@
-export type CategoryType = 'pendants' | 'bracelets' | 'bangles' | 'rings' | 'earrings' | 'jewellery-sets';
+export type CategoryType = 
+  | 'pendants' 
+  | 'bracelets' 
+  | 'bangles' 
+  | 'rings' 
+  | 'earrings' 
+  | 'jewellery-sets'
+  | 'sterling-luxury-sets';
 
 export interface Product {
   id: string;
@@ -13,6 +20,7 @@ export interface Product {
   isSale?: boolean;
   featured?: boolean;
   images: string[];
+  imageFit?: 'contain' | 'cover';
   description: string;
   material: string;
   sizes?: string[];

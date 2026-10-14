@@ -32,12 +32,29 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     ? Math.round(((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100)
     : 0;
 
+  const isContain =
+    product.imageFit === 'contain' ||
+    product.category === 'sterling-luxury-sets' ||
+    product.name.toLowerCase().includes('maharani') ||
+    product.name.toLowerCase().includes('princess');
+
   return (
     <div
       className="group relative bg-white border border-neutral-200 hover:border-neutral-900 transition-all duration-300 flex flex-col justify-between"
     >
       {/* Top Image Container */}
-      <div className="relative aspect-square bg-neutral-50 overflow-hidden cursor-pointer" onClick={handleProductClick}>
+      <div
+        className="relative aspect-square bg-neutral-100/70 overflow-hidden cursor-pointer flex items-center justify-center"
+        onClick={handleProductClick}
+      >
+        {/* Subtle ambient blurred backdrop for full-frame jewellery sets */}
+        {isContain && (
+          <div
+            className="absolute inset-0 bg-cover bg-center blur-md opacity-25 scale-110 pointer-events-none"
+            style={{ backgroundImage: `url("${encodeURI(product.images[0])}")` }}
+          />
+        )}
+
         {/* Subtle hover gradient tint */}
         <div className="absolute inset-0 bg-neutral-950/0 group-hover:bg-neutral-950/5 transition-colors duration-300 z-1 pointer-events-none" />
 
@@ -45,7 +62,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <img
           src={product.images[0]}
           alt={product.name}
-          className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-500 ease-out"
+          className={`w-full h-full relative z-2 ${
+            isContain
+              ? 'object-contain object-center p-2.5 sm:p-3'
+              : 'object-cover object-center'
+          } transform group-hover:scale-105 transition-transform duration-500 ease-out`}
           referrerPolicy="no-referrer"
         />
 
@@ -54,7 +75,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <img
             src={product.images[1]}
             alt={`${product.name} alternate view`}
-            className="absolute inset-0 w-full h-full object-cover object-center opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            className={`absolute inset-0 z-3 w-full h-full ${
+              isContain
+                ? 'object-contain object-center p-2.5 sm:p-3 bg-neutral-900/10 backdrop-blur-xs'
+                : 'object-cover object-center'
+            } opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
             referrerPolicy="no-referrer"
           />
         )}

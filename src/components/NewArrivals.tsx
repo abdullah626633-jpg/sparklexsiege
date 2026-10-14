@@ -111,6 +111,12 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({
         >
           {displayProducts.map((product) => {
             const isWishlisted = wishlistIds.includes(product.id);
+            const isContain =
+              product.imageFit === 'contain' ||
+              product.category === 'sterling-luxury-sets' ||
+              product.name.toLowerCase().includes('maharani') ||
+              product.name.toLowerCase().includes('princess');
+
             return (
               <div
                 key={product.id}
@@ -118,9 +124,17 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({
               >
                 {/* Image Container with Exact 3:4 Portrait Aspect Ratio */}
                 <div
-                  className="relative aspect-[3/4] bg-neutral-100 overflow-hidden cursor-pointer border border-neutral-200/80 hover:border-neutral-900 transition-colors"
+                  className="relative aspect-[3/4] bg-neutral-100 overflow-hidden cursor-pointer border border-neutral-200/80 hover:border-neutral-900 transition-colors flex items-center justify-center"
                   onClick={() => handleProductClick(product)}
                 >
+                  {/* Ambient backdrop for full-frame sets */}
+                  {isContain && (
+                    <div
+                      className="absolute inset-0 bg-cover bg-center blur-md opacity-25 scale-110 pointer-events-none"
+                      style={{ backgroundImage: `url("${encodeURI(product.images[0])}")` }}
+                    />
+                  )}
+
                   {/* Badges container */}
                   <div className="absolute top-0 left-0 z-10 flex flex-col gap-1">
                     {product.compareAtPrice && product.compareAtPrice > product.price && (
@@ -153,7 +167,11 @@ export const NewArrivals: React.FC<NewArrivalsProps> = ({
                   <img
                     src={product.images[0]}
                     alt={product.name}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+                    className={`w-full h-full relative z-2 ${
+                      isContain
+                        ? 'object-contain object-center p-2.5 sm:p-3'
+                        : 'object-cover object-center'
+                    } group-hover:scale-105 transition-transform duration-500 ease-out`}
                     referrerPolicy="no-referrer"
                   />
 

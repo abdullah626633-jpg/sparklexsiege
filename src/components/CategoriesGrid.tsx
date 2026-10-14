@@ -9,11 +9,13 @@ interface CategoriesGridProps {
 }
 
 const CATEGORY_TAGS: Record<string, string> = {
+  'sterling-luxury-sets': 'ROYAL 925',
   'jewellery-sets': 'HANDCRAFTED',
   'earrings': 'ARTISAN',
   'bangles': 'EMBROIDERED',
   'bracelets': 'LUXURY',
   'rings': 'TIMELESS',
+  'pendants': 'SPIRITUAL & GRACE',
 };
 
 export const CategoriesGrid: React.FC<CategoriesGridProps> = ({ onSelectCategory }) => {
@@ -38,8 +40,8 @@ export const CategoriesGrid: React.FC<CategoriesGridProps> = ({ onSelectCategory
           </h2>
         </div>
 
-        {/* 2-Column Portrait Grid Layout matching screenshot */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-6">
+        {/* Responsive Grid Layout */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-6">
           {CATEGORIES.map((cat) => {
             const eyebrow = CATEGORY_TAGS[cat.id] || 'EXCLUSIVE';
             return (

@@ -134,7 +134,11 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
                     <img
                       src={prod.images[0]}
                       alt={prod.name}
-                      className="w-16 h-16 object-cover rounded-xl bg-neutral-100"
+                      className={`w-16 h-16 ${
+                        prod.imageFit === 'contain' || prod.category === 'sterling-luxury-sets'
+                          ? 'object-contain p-1'
+                          : 'object-cover'
+                      } rounded-xl bg-neutral-100`}
                       referrerPolicy="no-referrer"
                     />
                     <div className="flex-1 min-w-0">

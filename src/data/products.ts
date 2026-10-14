@@ -2,6 +2,12 @@ import { CategoryInfo, Product, Review } from '../types';
 
 export const CATEGORIES: CategoryInfo[] = [
   {
+    id: 'sterling-luxury-sets',
+    name: 'Sterling Luxury Sets',
+    description: 'Opulent hallmarked 925 sterling silver bridal & evening sets encrusted with precision-cut zircon stones and timeless diamond brilliance.',
+    image: '/sterling-luxury-set.jpg',
+  },
+  {
     id: 'jewellery-sets',
     name: 'Jewellery Sets',
     description: 'Bespoke complete sets featuring matching necklace, earrings, and bracelet handcrafted in 18k gold & brilliant gems.',
@@ -2325,6 +2331,75 @@ const RAW_PRODUCTS: Product[] = [
       'Delivered in signature luxury gift packaging',
     ],
   },
+  {
+    id: 'prod-the-emerald-maharani-sterling-luxury-set',
+    name: 'The Emerald Maharani',
+    slug: 'the-emerald-maharani',
+    category: 'sterling-luxury-sets',
+    price: 34500,
+    formattedPrice: 'Rs. 34,500',
+    featured: true,
+    isNew: true,
+    imageFit: 'contain',
+    images: [
+      '/Untitled design (8).png',
+      '/Untitled design (9).png',
+    ],
+    description: 'The Emerald Maharani. An exquisite original luxury sterling set crafted with authentic original stones, radiating regal splendour. Colours can be customised according to your preference and bridal styling. Meticulously handcrafted in hallmarked solid 925 sterling silver, this statement royal set pairs majestic emerald-cut gemstones with brilliant micro-pavé work for unmatched royalty and heritage glamour.',
+    material: 'Solid 925 Sterling Silver with Authentic Original Stones & Emerald-Cut Jewels',
+    specifications: [
+      { key: 'Material', value: 'Solid 925 Sterling Silver (Hallmarked)' },
+      { key: 'Stones', value: '100% Authentic Original Stones' },
+      { key: 'Customisation', value: 'Colours can be customised' },
+      { key: 'Set Includes', value: 'Royal Statement Necklace + Matching Chandelier Drop Earrings' },
+      { key: 'Occasion', value: 'Bridal, Royal Receptions, Weddings & Heritage Galas' },
+      { key: 'Authenticity', value: 'Original Set with Original Stones' },
+    ],
+    rating: 5.0,
+    reviewCount: 14,
+    inStock: true,
+    details: [
+      'Original luxury set handcrafted with 100% authentic original stones',
+      'Colours can be customised according to your personal preference',
+      'Solid 925 sterling silver with protective tarnish-resistant finish',
+      'Includes statement royal necklace and coordinating chandelier drop earrings',
+      'Delivered in signature Sparklez Siege royal velvet keepsake packaging',
+    ],
+  },
+  {
+    id: 'prod-princess-drop-set-sterling-luxury-set',
+    name: 'Princess Drop Set',
+    slug: 'princess-drop-set',
+    category: 'sterling-luxury-sets',
+    price: 34500,
+    formattedPrice: 'Rs. 34,500',
+    featured: true,
+    isNew: true,
+    imageFit: 'contain',
+    images: [
+      '/Untitled design (7).png',
+      '/Untitled design (6).png',
+    ],
+    description: 'Princess Drop Set. An original luxury sterling set handcrafted with genuine original stones. Designed to captivate with fluid crystal movement and teardrop gemstone drops, this set delivers aristocratic allure and unmatched brilliance for your most special occasions.',
+    material: 'Solid 925 Sterling Silver with Authentic Original Stones',
+    specifications: [
+      { key: 'Material', value: 'Solid 925 Sterling Silver (Hallmarked)' },
+      { key: 'Stones', value: '100% Authentic Original Stones' },
+      { key: 'Set Includes', value: 'Princess Drop Necklace + Matching Drop Earrings' },
+      { key: 'Occasion', value: 'Bridal wear, formal galas, red carpet & momentous events' },
+      { key: 'Authenticity', value: 'Original Set with Original Stones' },
+    ],
+    rating: 5.0,
+    reviewCount: 11,
+    inStock: true,
+    details: [
+      'Original luxury set featuring authentic high-refraction original stones',
+      'Hallmarked solid 925 sterling silver with mirror-polished luxury finish',
+      'Graceful princess drop silhouette engineered for maximum diamond-like sparkle',
+      'Includes matching drop earrings with secure hypoallergenic backings',
+      'Delivered in Sparklez Siege signature luxury presentation box',
+    ],
+  },
 ];
 
 export const PRODUCTS: Product[] = RAW_PRODUCTS.map(product => {
@@ -2342,6 +2417,11 @@ export const PRODUCTS: Product[] = RAW_PRODUCTS.map(product => {
 
 export const getDefaultReviewsForProduct = (product: Product): Review[] => {
   const reviewsByCat: Record<string, { author: string; comment: string; date: string }> = {
+    'sterling-luxury-sets': {
+      author: 'Sana Qureshi',
+      comment: `The ${product.name} is breathtaking in real life! The 925 sterling silver finish with zircon brilliance looks genuinely like high-end diamond jewelry. Wore it to a reception and received non-stop compliments.`,
+      date: 'September 14, 2026',
+    },
     'jewellery-sets': {
       author: 'Ayesha Khan',
       comment: `The ${product.name} surpassed every expectation. The stones refract light with breathtaking brilliance and looked absolutely majestic at our family wedding. Arrived safely in luxury packaging.`,

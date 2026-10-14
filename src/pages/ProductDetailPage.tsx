@@ -22,6 +22,8 @@ import {
   Sparkles,
   Award,
   AlertCircle,
+  Maximize2,
+  X,
 } from 'lucide-react';
 
 interface ProductDetailPageProps {
@@ -67,7 +69,14 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   );
 
   const [addedToast, setAddedToast] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<'details' | 'specs' | 'delivery' | 'returns' | 'care' | null>('delivery');
+
+  const isContain =
+    product.imageFit === 'contain' ||
+    product.category === 'sterling-luxury-sets' ||
+    product.name.toLowerCase().includes('maharani') ||
+    product.name.toLowerCase().includes('princess');
 
   // Reviews state with localStorage persistence per product (1 review per product initially)
   const storageKey = `sparklez_reviews_${product.id}`;
@@ -361,7 +370,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   <button
                     key={idx}
                     onClick={() => setActiveImgIndex(idx)}
-                    className={`w-18 h-18 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
+                    className={`w-18 h-18 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer bg-neutral-100 flex items-center justify-center ${
                       activeImgIndex === idx
                         ? 'border-[#FF9F61] shadow-xs'
                         : 'border-neutral-200 opacity-70 hover:opacity-100'
@@ -370,7 +379,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                     <img
                       src={img}
                       alt=""
-                      className="w-full h-full object-cover"
+                      className={`w-full h-full ${isContain ? 'object-contain p-1' : 'object-cover'}`}
                       referrerPolicy="no-referrer"
                     />
                   </button>
@@ -379,16 +388,47 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             )}
 
             {/* Main Stage Image with hover zoom */}
-            <div className="flex-1 aspect-square bg-neutral-50 rounded-2xl overflow-hidden border border-neutral-200 relative group cursor-crosshair">
+            <div
+              className={`flex-1 ${
+                isContain ? 'aspect-[4/5] sm:aspect-square md:aspect-[4/5]' : 'aspect-square'
+              } bg-neutral-100 rounded-2xl overflow-hidden border border-neutral-200 relative group flex items-center justify-center cursor-pointer`}
+              onClick={() => setShowImageModal(true)}
+            >
+              {/* Ambient blurred backdrop for luxury sets */}
+              {isContain && (
+                <div
+                  className="absolute inset-0 bg-cover bg-center blur-lg opacity-30 scale-110 pointer-events-none"
+                  style={{ backgroundImage: `url("${encodeURI(product.images[activeImgIndex] || product.images[0])}")` }}
+                />
+              )}
+
               <img
                 src={product.images[activeImgIndex] || product.images[0]}
                 alt={product.name}
-                className="w-full h-full object-cover object-center transform group-hover:scale-110 transition-transform duration-500 ease-out"
+                className={`w-full h-full relative z-2 ${
+                  isContain
+                    ? 'object-contain object-center p-3 sm:p-5'
+                    : 'object-cover object-center'
+                } transform group-hover:scale-105 transition-transform duration-500 ease-out`}
                 referrerPolicy="no-referrer"
               />
 
+              {/* Full view trigger button */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowImageModal(true);
+                }}
+                className="absolute bottom-3 right-3 z-10 px-3 py-1.5 rounded-full bg-white/95 hover:bg-neutral-900 text-neutral-800 hover:text-white border border-neutral-200 text-[11px] sm:text-xs font-semibold shadow-md flex items-center space-x-1.5 transition-colors cursor-pointer"
+                aria-label="View Full Set Image"
+              >
+                <Maximize2 className="w-3.5 h-3.5" />
+                <span>Full Set View</span>
+              </button>
+
               {/* Discount / Sale Badges */}
-              <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
+              <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5 pointer-events-none">
                 {hasGenuineDiscount && (
                   <span className="bg-rose-600 text-white text-[10px] sm:text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-md shadow-md">
                     SAVE {discountPercent}%
@@ -403,8 +443,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
               {/* Wishlist Button */}
               <button
-                onClick={() => onToggleWishlist(product)}
-                className={`absolute top-3 right-3 p-3 rounded-full backdrop-blur-md border border-neutral-200 transition-colors cursor-pointer shadow-md ${
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleWishlist(product);
+                }}
+                className={`absolute top-3 right-3 p-3 rounded-full backdrop-blur-md border border-neutral-200 transition-colors cursor-pointer shadow-md z-10 ${
                   isWishlisted
                     ? 'bg-rose-600 text-white border-rose-600'
                     : 'bg-white/95 text-neutral-800 hover:bg-neutral-900 hover:text-white'
@@ -1126,6 +1169,51 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               <Zap className="w-4 h-4 fill-current" />
               <span>{product.inStock ? 'BUY NOW' : 'SOLD OUT'}</span>
             </button>
+          </div>
+        </div>
+      )}
+      {/* Full Set Lightbox Modal */}
+      {showImageModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-3 sm:p-6"
+          onClick={() => setShowImageModal(false)}
+        >
+          <button
+            onClick={() => setShowImageModal(false)}
+            className="absolute top-4 right-4 z-50 p-2.5 rounded-full bg-white/20 hover:bg-white text-white hover:text-black transition-colors cursor-pointer"
+            aria-label="Close full view"
+          >
+            <X className="w-6 h-6" />
+          </button>
+
+          <div
+            className="relative max-w-4xl max-h-[92vh] w-full flex flex-col items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={product.images[activeImgIndex] || product.images[0]}
+              alt={product.name}
+              className="max-h-[80vh] max-w-full object-contain rounded-2xl shadow-2xl bg-black/30"
+              referrerPolicy="no-referrer"
+            />
+            {product.images.length > 1 && (
+              <div className="flex space-x-3 mt-4 overflow-x-auto p-1">
+                {product.images.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveImgIndex(idx)}
+                    className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all cursor-pointer bg-neutral-900 ${
+                      activeImgIndex === idx ? 'border-[#FF9F61] scale-105 shadow-md' : 'border-white/30 opacity-70 hover:opacity-100'
+                    }`}
+                  >
+                    <img src={img} alt="" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
+                  </button>
+                ))}
+              </div>
+            )}
+            <p className="text-white/80 text-xs mt-2.5 font-medium tracking-wide">
+              {product.name} — Full Set View
+            </p>
           </div>
         </div>
       )}
